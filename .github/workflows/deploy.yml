@@ -29,7 +29,7 @@ jobs:
         uses: nickgronow/kubectl@master
         with:
           config_data: ${{ secrets.KUBE_CONFIG_DATA }}
-          args: -n getcaked set image deployment/getcaked homepage=registry.amosgross.com/getcaked:${{ steps.version.outputs.version }}
+          args: -n getcaked set image deployment/getcaked getcaked=registry.amosgross.com/getcaked:${{ steps.version.outputs.version }}
           
       - name: Create new Release
         uses: "marvinpinto/action-automatic-releases@latest"
