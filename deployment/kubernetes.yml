@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: getcaked
+  labels:
+    app: getcaked
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: getcaked
+  template:
+    metadata:
+      labels: 
+        app: getcaked
+    spec:
+      containers:
+        - image: registry.amosgross.com/getcaked:v0.0.0
+          name: getcaked
+          ports:
+            - containerPort: 3000
+              name: homepage
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: getcaked-service
+  labels:
+    app: getcaked
+spec:
+  selector:
+    app: getcaked
+  ports:
+    - protocol: TCP
+      port: 3000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: getcaked-ingressroutetls
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`getcaked.eu`)
+    kind: Rule
+    services:
+    - name: getcaked-service
+      port: 3000
+  tls:
+    certResolver: myresolver
