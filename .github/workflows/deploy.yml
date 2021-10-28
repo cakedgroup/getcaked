@@ -33,7 +33,7 @@ jobs:
           
       - name: Create new Release
         uses: "marvinpinto/action-automatic-releases@latest"
-        automatic_release_tag: ${{ steps.version.outputs.version }}
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: ${{ steps.version.outputs.version }}
           prerelease: false
