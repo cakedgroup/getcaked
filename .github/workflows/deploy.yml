@@ -21,7 +21,7 @@ jobs:
       - name: Docker Login
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login registry.amosgross.com -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - name: Build Docker Image
-        run: docker build -t registry.amosgross.com/getcaked:${{ steps.version.outputs.version }} .
+        run: docker build -t registry.amosgross.com/getcaked:${{ steps.version.outputs.version }} -f ./deployment/Dockerfile .
       - name: Push Docker Image
         run: docker push registry.amosgross.com/getcaked:${{ steps.version.outputs.version }}
 
@@ -29,7 +29,7 @@ jobs:
         uses: nickgronow/kubectl@master
         with:
           config_data: ${{ secrets.KUBE_CONFIG_DATA }}
-          args: -n homepage set image deployment/getcaked homepage=registry.amosgross.com/getcaked:${{ steps.version.outputs.version }}
+          args: -n getcaked set image deployment/getcaked homepage=registry.amosgross.com/getcaked:${{ steps.version.outputs.version }}
           
       - name: Create new Release
         uses: "marvinpinto/action-automatic-releases@latest"
