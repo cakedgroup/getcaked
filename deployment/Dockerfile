@@ -14,4 +14,4 @@ COPY . .
 RUN cd frontend && npm run-script build
 
 WORKDIR ./backend
-CMD ["npm", "run-script start"]
+CMD ["npm", "run-script", "start"]
