@@ -5,9 +5,9 @@ RUN npm install
 RUN npm run-script prod
 
 FROM node:16-alpine
-COPY ./backend /opt/gotcaked/backend
-COPY --from=builder /frontend/dist/ ./opt/gotcaked/frontend/dist
-WORKDIR /opt/gotcaked/backend
+COPY ./backend /opt/getcaked/backend
+COPY --from=builder /frontend/dist/ /opt/getcaked/frontend/dist
+WORKDIR /opt/getcaked/backend
 RUN npm install 
 
 CMD [ "npm", "run-script", "start" ]
