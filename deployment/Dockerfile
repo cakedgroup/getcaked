@@ -1,17 +1,13 @@
-FROM node:14.17.6
+FROM node:16-alpine AS builder
+COPY ./frontend /frontend
+WORKDIR /frontend
+RUN npm install
+RUN npm run-script prod
 
-WORKDIR /usr/src/app
-RUN mkdir frontend && mkdir backend
-COPY frontend/package*.json ./frontend/
-COPY backend/package*.json ./backend/
+FROM node:16-alpine
+COPY ./backend /opt/gotcaked/backend
+COPY --from=builder /frontend/dist/ ./opt/gotcaked/frontend/dist
+WORKDIR /opt/gotcaked/backend
+RUN npm ci --only=production
 
-RUN cd frontend && npm install
-RUN cd backend && npm install
-RUN npm i -g @angular/cli
-
-COPY . .
-
-RUN cd frontend && npm run-script build
-
-WORKDIR ./backend
-CMD ["npm", "run-script", "start"]
+CMD [ "npm", "run-script", "start" ]
