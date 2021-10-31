@@ -8,6 +8,6 @@ FROM node:16-alpine
 COPY ./backend /opt/gotcaked/backend
 COPY --from=builder /frontend/dist/ ./opt/gotcaked/frontend/dist
 WORKDIR /opt/gotcaked/backend
-RUN npm ci --only=production
+RUN npm install 
 
 CMD [ "npm", "run-script", "start" ]
