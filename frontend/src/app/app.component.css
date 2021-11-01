@@ -1,10 +1,30 @@
 :host {
-  display: flex;
-  flex-flow: column;
-  min-height: 100vh;
+  --primary-color: #512D1A;
+  --secondary-color: #A87C4F;
+  --highlight-color: #F2B7D3;
+
+  --primary-background-color: #FFFAF3;
+  --secondary-background-color: #FFEFD6;
+
+  --title-center-color: #FFFAF3;
+  --title-border-color: #512D1A;
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    --primary-color: #A87C4F;
+    --secondary-color: #FFFAF3;
+    --highlight-color: #F2B7D3;
+  
+    --primary-background-color: #361F13;
+    --secondary-background-color: #512D1A;
+
+    --title-center-color: #512D1A;
+    --title-border-color: #FFFAF3;
+  }
 }
 
 .main-content {
-  padding: 24px;
-  flex: 1;
+  background-color: var(--primary-background-color);
+  min-height: 100vh;
 }
