@@ -58,6 +58,7 @@
 
 .header-big-title-container {
   background-color: var(--secondary-background-color);
+  margin-bottom: 15rem;
 }
 
 .header-big-title-container::after {
@@ -66,8 +67,7 @@
   
   position: absolute;
   display: block;
-  /* top: 5rem; */
-  bottom: 10rem;
+  bottom: 13rem;
   
   background-color: var(--secondary-background-color);
   
@@ -89,11 +89,21 @@
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-  top: 17em;
+  top: 27vh;
   z-index: 45;
 }
 
+@media only screen and (min-width: 480px) {
+  .header-big-title-container {
+  margin-bottom: 25rem;
+  }
+}
+
 @media only screen and (min-width: 768px) {
+  .header-title-container {
+    margin-bottom: 20rem;
+  }
+
   .header-big-title-container::after {
     bottom: 15rem;
     transform: skewY(4deg);
@@ -105,6 +115,7 @@
   }
 
   .header-logo {
+    top: 17em;
     width: 30rem;
   }
 }
