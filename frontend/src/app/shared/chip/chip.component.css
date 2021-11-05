@@ -1,0 +1,20 @@
+.chip-container {
+    background-color: var(--secondary-background-color);
+    width: 75vw;
+    margin: 0 auto;
+    margin-bottom: 1.5rem;
+
+    padding: 1rem;
+    padding-left: 1.5rem;
+    border-radius: 2rem;
+
+    font-family: 'Quicksand', sans-serif;
+    font-weight: bolder;
+    color: var(--secondary-color);
+}
+
+@media only screen and (min-width: 768px) {
+    .chip-container {
+        max-width: 47rem;
+    }
+}

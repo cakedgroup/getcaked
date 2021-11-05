@@ -2,4 +2,31 @@ html, body {
   width: 100%;
   height: 100%;
   margin: 0;
+  background-color: var(--primary-background-color);
+}
+
+:root {
+  --primary-color: #512D1A;
+  --secondary-color: #A87C4F;
+  --highlight-color: #F2B7D3;
+
+  --primary-background-color: #FFFAF3;
+  --secondary-background-color: #FFEFD6;
+
+  --title-center-color: #FFFAF3;
+  --title-border-color: #512D1A;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #A87C4F;
+    --secondary-color: #FFFAF3;
+    --highlight-color: #F2B7D3;
+  
+    --primary-background-color: #361F13;
+    --secondary-background-color: #512D1A;
+
+    --title-center-color: #361F13;
+    --title-border-color: #FFFAF3;
+  }
 }

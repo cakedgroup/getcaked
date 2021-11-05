@@ -1,0 +1,9 @@
+.groupchip-text {
+    margin: 0;
+}
+
+.groupchip-icon {
+    height: 100%;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+}
