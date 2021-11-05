@@ -5,6 +5,12 @@ html, body {
   background-color: var(--primary-background-color);
 }
 
+/* Sizes */
+:root {
+  --content-width: 47rem;
+}
+
+/* Colors */
 :root {
   --primary-color: #512D1A;
   --secondary-color: #A87C4F;

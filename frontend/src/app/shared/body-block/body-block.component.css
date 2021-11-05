@@ -1,0 +1,12 @@
+.body-block-container {
+    width: 80vw;
+    max-width: var(--content-width);
+    margin: 0 auto;
+    
+    background-color: var(--secondary-background-color);
+    border-radius: 2em;
+    padding: 1em;
+
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.5rem;
+}
