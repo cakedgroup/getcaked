@@ -1,8 +1,7 @@
-<div class="header">
-  <div class="header-nav left">
-    Links
-  </div>
-  <div class="header-nav right">
-    Rechts
-  </div>
+<div [ngClass]="routeIsHomepage()?'header-big-title-container':'header-regular-title-container'" class="header-title-container" routerLink="/">
+  <h1 [ngClass]="routeIsHomepage()?'header-big-title-text':'header-regular-title-text'" class="header-title-text">Get Caked!</h1>
 </div>
+
+<img *ngIf="routeIsHomepage()" class="header-logo" src="assets/img/cake.png">
+
+
