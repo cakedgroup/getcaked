@@ -2,8 +2,9 @@
     width: 80vw;
     max-width: var(--content-width);
     margin: 0 auto;
-    
+
     background-color: var(--secondary-background-color);
+    color: var(--secondary-color);
     border-radius: 2em;
     padding: 1em;
 
