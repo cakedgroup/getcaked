@@ -1,4 +1,5 @@
 <div [ngClass]="routeIsHomepage()?'header-big-title-container':'header-regular-title-container'" class="header-title-container" routerLink="/">
+  <h1 [ngClass]="routeIsHomepage()?'header-big-title-text':'header-regular-title-text'" class="header-title-text header-title-text-with-stroke">Get Caked!</h1>
   <h1 [ngClass]="routeIsHomepage()?'header-big-title-text':'header-regular-title-text'" class="header-title-text">Get Caked!</h1>
   <img *ngIf="routeIsHomepage()" class="header-logo" src="assets/img/cake.png">
 </div>

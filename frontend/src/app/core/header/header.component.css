@@ -7,8 +7,15 @@
 }
 
 /* keep normal cursor when hovering over title */
-.header-title-container:hover {
-  cursor: default;
+.header-title-text:hover {
+  cursor: pointer;
+}
+
+.header-title-text-with-stroke {
+    /* Supported by all browsers relevant for assignment, would like a better solution however */
+    -webkit-text-stroke: var(--title-border-color);
+    -webkit-text-stroke-width: 0.6rem;
+    paint-order: stroke fill;
 }
 
 .header-title-text {
@@ -16,22 +23,15 @@
 
   color: var(--title-center-color);
 
-  /* Supported by all browsers relevant for assignment, would like a better solution however */
-  -webkit-text-stroke: var(--title-border-color);
-  -webkit-text-stroke-width: 0.6rem;
-
-  paint-order: stroke fill;
-
   font-family: 'Dancing Script', cursive;
 
-  position: relative;
+  position: absolute;
   text-align: center;
 
   max-width: 80vw;
   left: 50%;
   transform: translateX(-50%);
 }
-
 
 /* ---------------------------------- */
 /*             REGULAR                */
@@ -46,9 +46,12 @@
 }
 
 @media only screen and (min-width: 768px) {
+  .header-title-text-with-stroke {
+    -webkit-text-stroke-width: 0.7rem;
+  }
+
   .header-regular-title-text {
     font-size: 8rem;
-    -webkit-text-stroke-width: 0.7rem;
   }
 }
 
@@ -58,7 +61,7 @@
 
 .header-big-title-container {
   background-color: var(--secondary-background-color);
-  margin-bottom: 50vh;
+  margin-bottom: 75vh;
 }
 
 .header-big-title-container::after {
@@ -80,8 +83,7 @@
 .header-big-title-text {
   z-index: 50;
   font-size: 6rem;
-  top: 10rem;
-  min-height: 30vh;
+  top: 10vh;
 }
 
 /* TODO: fix scaling for long mobile devices */
@@ -97,15 +99,18 @@
 
 @media only screen and (min-width: 768px) {
   .header-big-title-container {
-    margin-bottom: 50vh;
+    margin-bottom: 80vh;
   }
 
   .header-big-title-container::after {
     transform: skewY(4deg);
   }
 
-  .header-big-title-text {
+  .header-title-text-with-stroke {
     -webkit-text-stroke-width: 1rem;
+  }
+
+  .header-big-title-text {
     font-size: 9rem;
   }
 
