@@ -3,8 +3,15 @@ html, body {
   height: 100%;
   margin: 0;
   background-color: var(--primary-background-color);
+  color: var(--primary-color);
 }
 
+/* Sizes */
+:root {
+  --content-width: 47rem;
+}
+
+/* Colors */
 :root {
   --primary-color: #512D1A;
   --secondary-color: #A87C4F;
@@ -22,7 +29,7 @@ html, body {
     --primary-color: #A87C4F;
     --secondary-color: #FFFAF3;
     --highlight-color: #F2B7D3;
-  
+
     --primary-background-color: #361F13;
     --secondary-background-color: #512D1A;
 

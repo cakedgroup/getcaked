@@ -1,6 +1,13 @@
-.footer {
-  background-color: #000000;
-  line-height: 56px;
+.footer-text {
   text-align: center;
-  color: #999999;
+  color: var(--secondary-color);
+}
+
+.footer-link {
+  text-decoration: underline;
+  color: var(--secondary-color);
+}
+
+.footer-link:hover {
+  color: var(--highlight-color)
 }

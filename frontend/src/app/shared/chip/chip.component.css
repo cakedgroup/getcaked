@@ -1,6 +1,7 @@
 .chip-container {
     background-color: var(--secondary-background-color);
     width: 75vw;
+    max-width: var(--content-width);
     margin: 0 auto;
     margin-bottom: 1.5rem;
 
@@ -15,6 +16,6 @@
 
 @media only screen and (min-width: 768px) {
     .chip-container {
-        max-width: 47rem;
+        
     }
 }
