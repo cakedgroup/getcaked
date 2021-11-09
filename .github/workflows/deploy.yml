@@ -45,7 +45,6 @@ jobs:
           PACKAGEJSON_DIR:  'frontend'
         with:
           skip-tag:  'true'
-          push: false
           
       - name:  'Bump Version backend'
         uses:  'phips28/gh-action-bump-version@master'
