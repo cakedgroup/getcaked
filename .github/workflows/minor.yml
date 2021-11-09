@@ -1,0 +1,45 @@
+name: Minor Update
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Get next version
+        uses: reecetech/version-increment@2021.10.4
+        id: version
+        with:
+          scheme: semver
+          increment: minor
+          
+      - name: Create new Release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.TOKEN }}"
+          automatic_release_tag: ${{ steps.version.outputs.version }}
+          prerelease: false
+           
+      - name:  'Bump Version frontend'
+        uses:  'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          PACKAGEJSON_DIR:  'frontend'
+        with:
+          skip-tag:  'true'
+          default: minor
+          
+      - name:  'Bump Version backend'
+        uses:  'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          PACKAGEJSON_DIR:  'backend'
+        with:
+          skip-tag:  'true'
+          default: minor
+          commit-message: 'ci: version change to {{version}} [skip ci]'
