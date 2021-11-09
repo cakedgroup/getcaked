@@ -30,6 +30,9 @@ jobs:
           PACKAGEJSON_DIR:  'frontend'
         with:
           skip-tag:  'true'
+          minor-wording:  ''
+          major-wording:  ''
+          patch-wording:  '' 
           default: minor
           
       - name:  'Bump Version backend'
