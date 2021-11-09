@@ -48,7 +48,6 @@
 
 .header-regular-title-text-with-stroke {
   position: absolute;
-  width: 100vw;
   top: 0;
   padding: 2rem;
 }
@@ -123,8 +122,7 @@
   }
 
   .header-logo {
-    top: 40vh;
-    width: 30rem;
-    height: auto;
+    top: 43vh;
+    height: 27vh;
   }
 }
