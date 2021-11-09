@@ -1,6 +1,7 @@
 {
-  "name": "frontend",
-  "version": "0.0.0",
+  "name": "getcaked-frontend",
+  "version": "0.0.7",
+  "description": "Cake all of your security vulnerabilities",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
