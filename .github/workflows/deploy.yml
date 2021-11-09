@@ -37,11 +37,21 @@ jobs:
 #           repo_token: "${{ secrets.TOKEN }}"
 #           automatic_release_tag: ${{ steps.version.outputs.version }}
 #           prerelease: false
-      
-      - name:  'Bump Version'
+           
+      - name:  'Bump Version frontend'
         uses:  'phips28/gh-action-bump-version@master'
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           skip-tag:  'true'
+          PACKAGEJSON_DIR:  'frontend'
+          commit-message: 'ci: version change to {{version}} [skip ci]'
+          
+      - name:  'Bump Version backend'
+        uses:  'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          skip-tag:  'true'
+          PACKAGEJSON_DIR:  'backend'
           commit-message: 'ci: version change to {{version}} [skip ci]'
