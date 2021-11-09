@@ -40,4 +40,7 @@ jobs:
         with:
           skip-tag:  'true'
           default: major
+          minor-wording:  ''
+          major-wording:  ''
+          patch-wording:  '' 
           commit-message: 'ci: version change to {{version}} [skip ci]'
