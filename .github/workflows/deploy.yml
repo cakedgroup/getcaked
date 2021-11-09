@@ -31,12 +31,12 @@ jobs:
           config_data: ${{ secrets.KUBE_CONFIG_DATA }}
           args: -n getcaked set image deployment/getcaked getcaked=registry.amosgross.com/getcaked:${{ steps.version.outputs.version }}
           
-#       - name: Create new Release
-#         uses: "marvinpinto/action-automatic-releases@latest"
-#         with:
-#           repo_token: "${{ secrets.TOKEN }}"
-#           automatic_release_tag: ${{ steps.version.outputs.version }}
-#           prerelease: false
+      - name: Create new Release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.TOKEN }}"
+          automatic_release_tag: ${{ steps.version.outputs.version }}
+          prerelease: false
            
       - name:  'Bump Version frontend'
         uses:  'phips28/gh-action-bump-version@master'
@@ -44,7 +44,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           PACKAGEJSON_DIR:  'frontend'
         with:
-          commit-message: 'ci: frontend version change to {{version}} [skip ci]'
+          skip-tag:  'true'
+          push: false
           
       - name:  'Bump Version backend'
         uses:  'phips28/gh-action-bump-version@master'
@@ -52,4 +53,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           PACKAGEJSON_DIR:  'backend'
         with:
-          commit-message: 'ci: backend version change to {{version}} [skip ci]'
+          skip-tag:  'true'
+          commit-message: 'ci: version change to {{version}} [skip ci]'
