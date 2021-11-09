@@ -30,6 +30,9 @@ jobs:
           PACKAGEJSON_DIR:  'frontend'
         with:
           skip-tag:  'true'
+          minor-wording:  ''
+          major-wording:  ''
+          patch-wording:  '' 
           default: major
           
       - name:  'Bump Version backend'
@@ -40,4 +43,7 @@ jobs:
         with:
           skip-tag:  'true'
           default: major
+          minor-wording:  ''
+          major-wording:  ''
+          patch-wording:  '' 
           commit-message: 'ci: version change to {{version}} [skip ci]'
