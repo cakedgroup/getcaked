@@ -39,7 +39,7 @@ jobs:
           prerelease: false
            
       - name:  'Bump Version frontend'
-        uses:  'phips28/gh-action-bump-version@latest'
+        uses:  'phips28/gh-action-bump-version@master'
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           PACKAGEJSON_DIR:  'frontend'
@@ -48,7 +48,7 @@ jobs:
           skip-tag:  'true'
           
       - name:  'Bump Version backend'
-        uses:  'phips28/gh-action-bump-version@latest'
+        uses:  'phips28/gh-action-bump-version@master'
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           PACKAGEJSON_DIR:  'backend'
