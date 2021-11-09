@@ -1,7 +1,7 @@
 {
-  "name": "beispiel",
-  "version": "0.0.1",
-  "description": "Boilerplate Backend",
+  "name": "getcaked-backend",
+  "version": "0.0.7",
+  "description": "Cake all of your security vulnerabilities",
   "main": "app.ts",
   "scripts": {
     "start": "ts-node app.ts",
