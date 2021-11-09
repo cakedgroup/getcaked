@@ -45,9 +45,8 @@ jobs:
           PACKAGEJSON_DIR:  'frontend'
         with:
           default: patch
-          minor-wording:  ''
-          major-wording:  ''
-          patch-wording:  '' 
+          minor-wording:  'tdrxnvaiqugfezündtrinxfqgertnüiabüdöt'
+          major-wording:  'uditrdtxrnfiqgipüdtöränpxfuqfeügenuai'
           skip-tag:  'true'
           
       - name:  'Bump Version backend'
@@ -58,7 +57,6 @@ jobs:
         with:
           skip-tag:  'true'
           default: patch
-          minor-wording:  ''
-          major-wording:  ''
-          patch-wording:  '' 
+          minor-wording:  'xqfvgiuhdtürpntrmxnvbutirüdträbzfudit'
+          major-wording:  'udornuaßgxvnqitudrnäütdrptmxunbudrian'
           commit-message: 'ci: version change to {{version}} [skip ci]'
