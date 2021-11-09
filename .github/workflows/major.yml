@@ -1,8 +1,6 @@
-name: Deploy
+name: Major Update
 
 on:
-  push:
-    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -16,20 +14,7 @@ jobs:
         id: version
         with:
           scheme: semver
-          increment: patch
-      
-      - name: Docker Login
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login registry.amosgross.com -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-      - name: Build Docker Image
-        run: docker build -t registry.amosgross.com/getcaked:${{ steps.version.outputs.version }} -f ./deployment/Dockerfile .
-      - name: Push Docker Image
-        run: docker push registry.amosgross.com/getcaked:${{ steps.version.outputs.version }}
-
-      - name: Kube Update Image
-        uses: nickgronow/kubectl@master
-        with:
-          config_data: ${{ secrets.KUBE_CONFIG_DATA }}
-          args: -n getcaked set image deployment/getcaked getcaked=registry.amosgross.com/getcaked:${{ steps.version.outputs.version }}
+          increment: major
           
       - name: Create new Release
         uses: "marvinpinto/action-automatic-releases@latest"
@@ -44,8 +29,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           PACKAGEJSON_DIR:  'frontend'
         with:
-          default: patch
           skip-tag:  'true'
+          default: major
           
       - name:  'Bump Version backend'
         uses:  'phips28/gh-action-bump-version@master'
@@ -54,5 +39,5 @@ jobs:
           PACKAGEJSON_DIR:  'backend'
         with:
           skip-tag:  'true'
-          default: patch
+          default: major
           commit-message: 'ci: version change to {{version}} [skip ci]'
