@@ -44,6 +44,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           PACKAGEJSON_DIR:  'frontend'
         with:
+          default: patch
           skip-tag:  'true'
           
       - name:  'Bump Version backend'
@@ -53,4 +54,5 @@ jobs:
           PACKAGEJSON_DIR:  'backend'
         with:
           skip-tag:  'true'
+          default: patch
           commit-message: 'ci: version change to {{version}} [skip ci]'
