@@ -7,7 +7,8 @@ router.use(cors());
 router.use(express.json());
 router.use(logger.logToConsole);
 
-router.use('/group', require('./controllers/groupController'));
+router.use('/groups', require('./controllers/groupController'));
+router.use('/users', require('./controllers/userController'))
 
 router.use((_req: express.Request, res: express.Response) => {
   res.status(404);

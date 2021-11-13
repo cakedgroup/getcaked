@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 
     for (let group of groups) {
         strippedGroups.push({
-            groupId: group.groupId.content,
+            groupId: group.groupId,
             groupName: group.groupName,
             type: group.type.valueOf()
         });
