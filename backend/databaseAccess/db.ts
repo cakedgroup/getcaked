@@ -18,7 +18,7 @@ function createTables() : void {
     })
     db.run(`CREATE TABLE IF NOT EXISTS users(
                 userId TEXT PRIMARY KEY NOT NULL, 
-                username TEXT NOT NULL, 
+                username TEXT NOT NULL UNIQUE, 
                 passwordSalt TEXT NOT NULL,
                 passwordHash TEXT NOT NULL
             );`, (err) => {

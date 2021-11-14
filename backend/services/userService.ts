@@ -4,20 +4,27 @@ import * as crypto from 'crypto';
 import { User } from "../models/User";
 
 export async function registerNewUser(username: string, password: string): Promise<User> {
+    return new Promise(async (resolve, reject) => {
         let hashInfos: any = await hashPassword(password).catch((err) => {
-            throw new Error("Error while hashing password: " + err);
+            reject(new Error("Error while hashing password: " + err));
         });
 
         let u : User = new User(uuidv4(), username, hashInfos.passwordHash);
 
         db.run(`INSERT INTO users(userId, username, passwordSalt, passwordHash) VALUES (?, ?, ?, ?)`,
-                u.userId, u.username, hashInfos.salt, u.passwordHash, (err: any) => {
-            if (err) {
-                throw new Error("Error while inserting new User into the database: " + err);
+            [u.userId, u.username, hashInfos.salt, u.passwordHash], function (err: any) {
+                if (err) {
+                    if (err.toString().match(/^Error: SQLITE_CONSTRAINT: UNIQUE constraint failed.*$/)) { // constraint failed
+                        reject(19);
+                    }
+                    reject(new Error("Error while inserting new User into the database: " + err));
+                }
+                else {
+                    resolve(u);
+                }
             }
-        });
-
-        return (u);
+        );
+    })
 }
 
 function hashPassword(password: string): Promise<any> {

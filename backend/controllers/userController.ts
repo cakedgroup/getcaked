@@ -8,17 +8,28 @@ router.post('/', (req, res) =>{
     let username: string = req.body.username;
     let password: string = req.body.password;
 
-    console.log(username);
-    console.log(password);
-
-    registerNewUser(username, password).then((u: User) => {
-        res.status(201);
-        res.json(u);
-    }).catch((err) => {
-        console.log(err);
-        res.status(500);
+    if (username && password) {
+        registerNewUser(username, password).then((u: User) => {
+            res.status(201);
+            res.json({userId: u.userId});
+        }).catch((err) => {
+            if (err === 19) {
+                res.status(409);
+            }
+            else {
+                res.status(500);
+            }
+            res.send();
+        })
+    }
+    else {
+        res.status(400);
         res.send();
-    })
+    }
+})
+
+router.get('/:userId', (req, res) => {
+
 })
 
 module.exports = router;
