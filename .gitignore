@@ -40,3 +40,4 @@
 
 # Database
 backend/databases/getcaked.sqlite
+backend/databases/getcaked.db

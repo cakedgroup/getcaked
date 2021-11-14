@@ -12,18 +12,30 @@ export async function registerNewUser(username: string, password: string): Promi
         let u : User = new User(uuidv4(), username, hashInfos.passwordHash);
 
         db.run(`INSERT INTO users(userId, username, passwordSalt, passwordHash) VALUES (?, ?, ?, ?)`,
-            [u.userId, u.username, hashInfos.salt, u.passwordHash], function (err: any) {
-                if (err) {
-                    if (err.toString().match(/^Error: SQLITE_CONSTRAINT: UNIQUE constraint failed.*$/)) { // constraint failed
-                        reject(19);
-                    }
-                    reject(new Error("Error while inserting new User into the database: " + err));
+            [u.userId, u.username, hashInfos.salt, u.passwordHash], function (err) {
+            if (err) {
+                if (err.toString().match(/^Error: SQLITE_CONSTRAINT: UNIQUE constraint failed.*$/)) { // constraint failed
+                    reject(409);
                 }
-                else {
-                    resolve(u);
-                }
+                reject(new Error("Error while inserting new User into the database: " + err));
             }
-        );
+            else {
+                resolve(u);
+            }
+        });
+    })
+}
+
+export async function getUserInfo(userId: string): Promise<User> {
+    return new Promise(async (resolve, reject) => {
+        db.get(`SELECT * FROM users WHERE userId = ?`, [userId], function (err, user) {
+            if (user) {
+                resolve(new User(user.userId, user.username, user.passwordHash));
+            }
+            else {
+                reject(404);
+            }
+        });
     })
 }
 
