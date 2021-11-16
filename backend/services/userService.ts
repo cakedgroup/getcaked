@@ -17,7 +17,10 @@ export async function registerNewUser(username: string, password: string): Promi
                 if (err.toString().match(/^Error: SQLITE_CONSTRAINT: UNIQUE constraint failed.*$/)) { // constraint failed
                     reject(409);
                 }
-                reject(new Error("Error while inserting new User into the database: " + err));
+                else {
+                    console.log(err);
+                    reject(new Error("Error while inserting new User into the database: " + err));
+                }
             }
             else {
                 resolve(u);
@@ -35,6 +38,71 @@ export async function getUserInfo(userId: string): Promise<User> {
             else {
                 reject(404);
             }
+        });
+    });
+}
+
+export async function changeUserInfo(userId: string, username: string | null, password: string | null): Promise<User> {
+    return new Promise(async (resolve, reject) => {
+        let sql = `UPDATE users SET`
+        let params = [];
+        if (!username && !password){
+            reject(400);
+        }
+        else {
+            if (username) {
+                sql += ` username = ?`;
+                params.push(username);
+                if (password) sql += `,`;
+            }
+            if (password) {
+                let hashInfos: any = await hashPassword(password).catch((err) => {
+                    reject(new Error("Error while hashing password: " + err));
+                });
+                sql += ` passwordSalt = ?, passwordHash = ?`;
+                params.push(hashInfos.salt);
+                params.push(hashInfos.passwordHash);
+            }
+            sql += `WHERE userId = ?`;
+            params.push(userId);
+            db.run(sql, params, function (err) {
+                if (err) {
+                    if (err.toString().match(/^Error: SQLITE_CONSTRAINT: UNIQUE constraint failed.*$/)) { // constraint failed
+                        reject(409);
+                    }
+                    else {
+                        console.log(err);
+                        reject(new Error("Error while inserting new User into the database: " + err));
+                    }
+                }
+                else if (this.changes === 0) {
+                    reject(404);
+                }
+                else {
+                    getUserInfo(userId).then((user: User) => {
+                        resolve(user);
+                    }).catch((err) => {
+                        reject(err);
+                    })
+                }
+            });
+        }
+    });
+}
+
+export async function deleteUser(userId: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+       db.run(`DELETE FROM users WHERE userId = ?`, [userId], function (err) {
+           if (err) {
+               console.log(err);
+               reject(err);
+           }
+           else if (this.changes === 0) {
+               reject(404);
+           }
+           else {
+               resolve();
+           }
         });
     });
 }

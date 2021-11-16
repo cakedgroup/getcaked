@@ -12,7 +12,7 @@ router.post('/', (req: express.Request, res: express.Response) => {
         login(username, password).then((user: User) => {
             let token = createToken(user);
             res.status(200);
-            res.json({jwt: token});
+            res.json({userId: user.userId, jwt: token});
         }).catch((err) => {
             console.log(err);
             res.status(404);

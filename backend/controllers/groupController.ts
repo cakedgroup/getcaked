@@ -10,7 +10,7 @@ interface GroupExportFormat {
     type: string
 }
 
-router.get('/', (req, res) => {
+router.get('/', (req: express.Request, res: express.Response) => {
     let groups: Group[] = fetchAllGroupsFromDB();
     let strippedGroups: GroupExportFormat[] = []
 
