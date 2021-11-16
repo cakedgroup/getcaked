@@ -1,6 +1,8 @@
 import express from "express";
 import {User} from "../models/User";
 import {getUserInfo, registerNewUser} from "../services/userService";
+import {createToken} from "../services/authService";
+import {getUserAuth} from "../util/authMiddleware";
 
 const router = express.Router();
 
@@ -11,7 +13,7 @@ router.post('/', (req, res) =>{
     if (username && password) {
         registerNewUser(username, password).then((u: User) => {
             res.status(201);
-            res.json({userId: u.userId});
+            res.json({jwt: createToken({userId: u.userId, username: u.username})});
         }).catch((err) => {
             if (err === 409) {
                 res.status(409);
@@ -30,7 +32,7 @@ router.post('/', (req, res) =>{
         res.status(400);
         res.send({missingParameter: missingParams});
     }
-})
+});
 
 router.get('/:userId', (req, res) => {
     let userId = req.params.userId;
@@ -47,6 +49,17 @@ router.get('/:userId', (req, res) => {
             res.send();
         }
     })
-})
+});
+
+router.patch('/:userId', getUserAuth,(req: express.Request, res) => {
+    if (req.decoded && req.decoded.userId === req.params.userId){
+        res.status(200);
+        res.send();
+    }
+    else {
+        res.status(403);
+        res.send();
+    }
+});
 
 module.exports = router;

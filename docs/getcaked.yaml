@@ -329,12 +329,12 @@ paths:
               type: object
               required:
                 - username
-                - password-hash
+                - password
               properties:
                 username:
                   type: string
                   example: 'Amos'
-                password-hash:
+                password:
                   type: string
                   format: password
       responses:
@@ -359,7 +359,7 @@ paths:
                     type: array
                     items:
                       type: string
-                      example: name
+                      example: username
         '409':
           description: Username already exists - didn't create new User
 
@@ -453,8 +453,21 @@ paths:
     get:
       tags:
         - users
-      summary: get auth-toke
+      summary: get auth-token
       description: Get JWT token for new user session when logging in
+      parameters:
+        - in: query
+          name: username
+          required: true
+          description: Name of the Useraccount to login to
+          schema:
+            type: string
+        - in: query
+          name: password
+          required: true
+          description: User's password in plain text
+          schema:
+            type: string
       responses:
         '200':
           description: auth-token for current user session
@@ -467,6 +480,18 @@ paths:
                     type: string
                     format: password
                     example: 'secret-scary-auth-token'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  missing-parameters:
+                    type: array
+                    items:
+                      type: string
+                      example: username
         '403':
           description: User credentials incorrect
 

@@ -9,10 +9,10 @@ export async function registerNewUser(username: string, password: string): Promi
             reject(new Error("Error while hashing password: " + err));
         });
 
-        let u : User = new User(uuidv4(), username, hashInfos.passwordHash);
+        let u : User = {userId: uuidv4(), username: username};
 
         db.run(`INSERT INTO users(userId, username, passwordSalt, passwordHash) VALUES (?, ?, ?, ?)`,
-            [u.userId, u.username, hashInfos.salt, u.passwordHash], function (err) {
+            [u.userId, u.username, hashInfos.salt, hashInfos.passwordHash], function (err) {
             if (err) {
                 if (err.toString().match(/^Error: SQLITE_CONSTRAINT: UNIQUE constraint failed.*$/)) { // constraint failed
                     reject(409);
@@ -23,20 +23,20 @@ export async function registerNewUser(username: string, password: string): Promi
                 resolve(u);
             }
         });
-    })
+    });
 }
 
 export async function getUserInfo(userId: string): Promise<User> {
     return new Promise(async (resolve, reject) => {
-        db.get(`SELECT * FROM users WHERE userId = ?`, [userId], function (err, user) {
+        db.get(`SELECT username FROM users WHERE userId = ?`, [userId], function (err, user) {
             if (user) {
-                resolve(new User(user.userId, user.username, user.passwordHash));
+                resolve({userId: userId, username: user.username});
             }
             else {
                 reject(404);
             }
         });
-    })
+    });
 }
 
 function hashPassword(password: string): Promise<any> {
@@ -53,15 +53,4 @@ function hashPassword(password: string): Promise<any> {
             });
         });
     });
-}
-
-function validatePassword(password: string, passwordHash: string, usedSalt: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-        crypto.scrypt(password, usedSalt, 128, (err, derivedKey) => {
-            if (err) {
-                reject (err);
-            }
-            resolve (passwordHash === derivedKey.toString('hex'));
-        })
-    })
 }
