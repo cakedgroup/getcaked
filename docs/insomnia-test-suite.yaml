@@ -1,0 +1,324 @@
+_type: export
+__export_format: 4
+__export_date: 2021-11-28T12:53:35.390Z
+__export_source: insomnia.desktop.app:v2021.6.0
+resources:
+  - _id: req_35774b484de24f93bcda931e427386cc
+    parentId: fld_7f8737cad4824fbfafb949b4c28fdb5b
+    modified: 1638103933393
+    created: 1638103912213
+    url: "{{ _.host }}"
+    name: BASIC authorized
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - id: pair_f259bb9dd39b470bb35dfd6c3649b957
+        name: Authorization
+        value: "{{ _['testuser-authtoken'] }}"
+        description: ""
+    authentication: {}
+    metaSortKey: -1638103912213
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_7f8737cad4824fbfafb949b4c28fdb5b
+    parentId: wrk_8c7c94ef64f0428b989eb8f29d7bfb23
+    modified: 1638103878342
+    created: 1638103875090
+    name: Templates
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1638103250214
+    _type: request_group
+  - _id: wrk_8c7c94ef64f0428b989eb8f29d7bfb23
+    parentId: null
+    modified: 1638103108032
+    created: 1638103108032
+    name: GetCaked
+    description: ""
+    scope: collection
+    _type: workspace
+  - _id: req_a1edee3af52c4d05a78fc9e178682b65
+    parentId: fld_7f8737cad4824fbfafb949b4c28fdb5b
+    modified: 1638103900529
+    created: 1638103895186
+    url: "{{ _.host }}/"
+    name: BASIC unauthorized
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1638103895186
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_62c67f157cf34be4b2b1672bd37349da
+    parentId: fld_e46b9a0ad0eb416880b4726a7e7718d6
+    modified: 1638103939379
+    created: 1638103276750
+    url: "{{ _.host }}/users"
+    name: create valid user
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"username": "{{ _['testuser-username'] }}",
+        	"password": "{{ _['testuser-password'] }}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_9dd800a4b8e046aabad7b00f454ec2f6
+    authentication: {}
+    metaSortKey: -1638103276750
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_e46b9a0ad0eb416880b4726a7e7718d6
+    parentId: wrk_8c7c94ef64f0428b989eb8f29d7bfb23
+    modified: 1638103255203
+    created: 1638103250164
+    name: UserManagement
+    description: ""
+    environment: {}
+    environmentPropertyOrder: {}
+    metaSortKey: -1638103250164
+    _type: request_group
+  - _id: req_21cbf5dd9b5a4c53b2004fd8e2726e08
+    parentId: fld_e46b9a0ad0eb416880b4726a7e7718d6
+    modified: 1638103599054
+    created: 1638103429297
+    url: "{{ _.host }}/auth"
+    name: login valid user
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"username": "{{ _['testuser-username'] }}",
+        	"password": "{{ _['testuser-password'] }}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_afe577ec658843aebcd3250f659fe8d7
+    authentication: {}
+    metaSortKey: -1638103276700
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_6d47c59868a246ed8d19061312b2729a
+    parentId: fld_e46b9a0ad0eb416880b4726a7e7718d6
+    modified: 1638103855883
+    created: 1638103836092
+    url: "{{ _.host }}/users/{{ _['testuser-id'] }}"
+    name: request info of testuser
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1638103276693.75
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_df7e43d6a35243e88be6804eee7e6ef8
+    parentId: fld_e46b9a0ad0eb416880b4726a7e7718d6
+    modified: 1638103849781
+    created: 1638103622675
+    url: "{{ _.host }}/users/{{ _['testuser-id'] }}"
+    name: change username (valid)
+    description: ""
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"username": "coolothername"
+        }
+    parameters: []
+    headers:
+      - id: pair_3e22b759369f4ee5954c51b94167ec37
+        name: Authorization
+        value: "{{ _['testuser-authtoken'] }}"
+        description: ""
+      - name: Content-Type
+        value: application/json
+        id: pair_3487348a88e5431388b4df9fc5f191a3
+    authentication: {}
+    metaSortKey: -1638103276687.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_25bd601eab4549a399811c573e005d82
+    parentId: fld_e46b9a0ad0eb416880b4726a7e7718d6
+    modified: 1638103844642
+    created: 1638103729121
+    url: "{{ _.host }}/users/{{ _['testuser-id'] }}"
+    name: change password (valid)
+    description: ""
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"password": "lets hope it wont get leaked (again)"
+        }
+    parameters: []
+    headers:
+      - id: pair_3e22b759369f4ee5954c51b94167ec37
+        name: Authorization
+        value: "{{ _['testuser-authtoken'] }}"
+        description: ""
+      - name: Content-Type
+        value: application/json
+        id: pair_3487348a88e5431388b4df9fc5f191a3
+    authentication: {}
+    metaSortKey: -1638103276675
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_b0b411f2e3d34287a4bc53f709d7d990
+    parentId: fld_e46b9a0ad0eb416880b4726a7e7718d6
+    modified: 1638103857165
+    created: 1638103744705
+    url: "{{ _.host }}/users/{{ _['testuser-id'] }}"
+    name: reset testuser
+    description: ""
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"username": "{{ _['testuser-username'] }}",
+        	"password": "{{ _['testuser-password'] }}"
+        }
+    parameters: []
+    headers:
+      - id: pair_3e22b759369f4ee5954c51b94167ec37
+        name: Authorization
+        value: "{{ _['testuser-authtoken'] }}"
+        description: ""
+      - name: Content-Type
+        value: application/json
+        id: pair_3487348a88e5431388b4df9fc5f191a3
+    authentication: {}
+    metaSortKey: -1638103276656.25
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_6bcf9d1c97354baa9f3a54dd2a57ac13
+    parentId: fld_e46b9a0ad0eb416880b4726a7e7718d6
+    modified: 1638103589071
+    created: 1638103563543
+    url: "{{ _.host }}/users/{{ _['testuser-id'] }}"
+    name: delete valid user
+    description: ""
+    method: DELETE
+    body: {}
+    parameters: []
+    headers:
+      - id: pair_0ed2b5ea9ea64605b171c895112a186b
+        name: Authorization
+        value: "{{ _['testuser-authtoken'] }}"
+        description: ""
+    authentication: {}
+    metaSortKey: -1638103276650
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: env_24b3a20081bb5481645fccbd29bcad71f0ca328c
+    parentId: wrk_8c7c94ef64f0428b989eb8f29d7bfb23
+    modified: 1638103512391
+    created: 1638103108036
+    name: Base Environment
+    data:
+      host: http://localhost:3000/api
+      testuser-username: test123
+      testuser-password: verysecretstuff
+      testuser-id: "{% response 'body', 'req_21cbf5dd9b5a4c53b2004fd8e2726e08',
+        'b64::JC51c2VySWQ=::46b', 'no-history', 60 %}"
+      testuser-authtoken: "{% response 'body', 'req_21cbf5dd9b5a4c53b2004fd8e2726e08',
+        'b64::JC5qd3Q=::46b', 'no-history', 60 %}"
+    dataPropertyOrder:
+      "&":
+        - host
+        - testuser-username
+        - testuser-password
+        - testuser-id
+        - testuser-authtoken
+    color: null
+    isPrivate: false
+    metaSortKey: 1638103108036
+    _type: environment
+  - _id: jar_24b3a20081bb5481645fccbd29bcad71f0ca328c
+    parentId: wrk_8c7c94ef64f0428b989eb8f29d7bfb23
+    modified: 1638103108038
+    created: 1638103108038
+    name: Default Jar
+    cookies: []
+    _type: cookie_jar
+  - _id: spc_10f7525d7f1545978433b6bc424a72cc
+    parentId: wrk_8c7c94ef64f0428b989eb8f29d7bfb23
+    modified: 1638103108033
+    created: 1638103108033
+    fileName: GetCaked
+    contents: ""
+    contentType: yaml
+    _type: api_spec
