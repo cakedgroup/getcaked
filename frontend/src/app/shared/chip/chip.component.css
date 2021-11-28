@@ -1,6 +1,6 @@
 .chip-container {
     background-color: var(--secondary-background-color);
-    width: 75vw;
+    width: 75%;
     max-width: var(--content-width);
     margin: 0 auto;
     margin-bottom: 1.5rem;
@@ -10,12 +10,12 @@
     border-radius: 2rem;
 
     font-family: 'Quicksand', sans-serif;
-    font-weight: bolder;
+    font-weight: 600;
     color: var(--secondary-color);
 }
 
 @media only screen and (min-width: 768px) {
     .chip-container {
-        
+        /* placeholder */
     }
 }
