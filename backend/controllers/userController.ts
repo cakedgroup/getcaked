@@ -6,6 +6,9 @@ import {getUserAuth} from '../util/authMiddleware';
 
 const router = express.Router();
 
+/**
+ * Create new User
+ */
 router.post('/', (req: express.Request, res: express.Response) => {
 	const username: string = req.body.username;
 	const password: string = req.body.password;
@@ -34,6 +37,9 @@ router.post('/', (req: express.Request, res: express.Response) => {
 	}
 });
 
+/**
+ * get Info of one specific User
+ */
 router.get('/:userId', (req: express.Request, res: express.Response) => {
 	const userId = req.params.userId;
 	getUserInfo(userId).then((u: User) => {
@@ -51,6 +57,9 @@ router.get('/:userId', (req: express.Request, res: express.Response) => {
 	});
 });
 
+/**
+ * change Info of the given User
+ */
 router.patch('/:userId', getUserAuth, (req: express.Request, res: express.Response) => {
 	if (req.decoded && req.decoded.userId === req.params.userId) {
 		const username = req.body.username;
@@ -88,6 +97,9 @@ router.patch('/:userId', getUserAuth, (req: express.Request, res: express.Respon
 	}
 });
 
+/**
+ * remove the given User from the db
+ */
 router.delete('/:userId', getUserAuth, (req: express.Request, res: express.Response) => {
 	if (req.decoded && req.decoded.userId === req.params.userId) {
 		deleteUser(req.decoded.userId).then(() => {

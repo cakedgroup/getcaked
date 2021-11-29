@@ -1,5 +1,8 @@
 import sqlite from 'sqlite3';
 
+/**
+ * SQLite Database Connection used to interact with the Database
+ */
 export const db = new sqlite.Database('./databases/getcaked.db', (err) => {
 	if (err) {
 		console.log(err);
@@ -10,6 +13,9 @@ export const db = new sqlite.Database('./databases/getcaked.db', (err) => {
 	}
 });
 
+/**
+ * function to create Tables if they don't already exist
+ */
 function createTables(): void {
 	db.run('PRAGMA foreign_keys = ON', (err) => {
 		if (err) {

@@ -4,6 +4,9 @@ import {createToken, login} from '../services/authService';
 
 const router = express.Router();
 
+/**
+ * Handle login-requests (authorize Users)
+ */
 router.post('/', (req: express.Request, res: express.Response) => {
 	const username: string = req.body.username as string;
 	const password: string = req.body.password as string;

@@ -3,11 +3,19 @@ import {v4 as uuidv4} from 'uuid';
 import * as crypto from 'crypto';
 import {User} from '../models/User';
 
+/**
+ * General interface providing a minimal format for hashInfos
+ */
 interface hashInfos {
 	salt: string,
 	passwordHash: string
 }
 
+/**
+ * register a new User with the given Username, authorized by the given Password
+ * @param username User's (nick-)name
+ * @param password User's password
+ */
 export async function registerNewUser(username: string, password: string): Promise<User> {
 	const hashInfos: hashInfos = await hashPassword(password).catch((err) => {
 		throw(new Error('Error while hashing password: ' + err));
@@ -36,6 +44,10 @@ export async function registerNewUser(username: string, password: string): Promi
 	});
 }
 
+/**
+ * Fetch Info a specific User
+ * @param userId userId specifying, which User's info shall be fetched
+ */
 export function getUserInfo(userId: string): Promise<User> {
 	return new Promise((resolve, reject) => {
 		db.get('SELECT username FROM users WHERE userId = ?', [userId], function (err, user) {
@@ -49,6 +61,12 @@ export function getUserInfo(userId: string): Promise<User> {
 	});
 }
 
+/**
+ * Change the User's info
+ * @param userId Id of the User, who's info shall be edited
+ * @param username new Username
+ * @param password new Password
+ */
 export async function changeUserInfo(userId: string, username: string | null, password: string | null): Promise<User> {
 	if (!username && !password) {
 		throw(400);
@@ -99,6 +117,10 @@ export async function changeUserInfo(userId: string, username: string | null, pa
 	}
 }
 
+/**
+ * delete one User
+ * @param userId ID identifying the User to be deleted
+ */
 export async function deleteUser(userId: string): Promise<void> {
 	return new Promise((resolve, reject) => {
 		db.run('DELETE FROM users WHERE userId = ?', [userId], function (err) {
@@ -116,6 +138,10 @@ export async function deleteUser(userId: string): Promise<void> {
 	});
 }
 
+/**
+ * function to hash the password with a random salt (returns both hashed password and the used Salt)
+ * @param password password to be hashed
+ */
 function hashPassword(password: string): Promise<hashInfos> {
 	return new Promise((resolve, reject) => {
 		const salt = crypto.randomBytes(128).toString('base64');
