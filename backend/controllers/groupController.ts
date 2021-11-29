@@ -1,28 +1,25 @@
 import express from 'express';
 import {Group} from '../models/Group';
-import {fetchAllGroupsFromDB} from '../services/groupService';
+import {getAllGroups} from '../services/groupService';
 
 const router = express.Router();
 
-interface GroupExportFormat {
-	groupId: string
-	groupName: string
-	type: string
-}
-
+/**
+ * fetch data of all groups
+ */
 router.get('/', (req: express.Request, res: express.Response) => {
-	const groups: Group[] = fetchAllGroupsFromDB();
-	const strippedGroups: GroupExportFormat[] = [];
-
-	for (const group of groups) {
-		strippedGroups.push({
-			groupId: group.groupId,
-			groupName: group.groupName,
-			type: group.type.valueOf()
-		});
-	}
-
-	res.send(JSON.stringify(strippedGroups));
+	getAllGroups().then((groups: Array<Group>) => {
+		res.status(200);
+		res.json(groups);
+	}).catch((err) => {
+		if (err === 404) {
+			res.status(404);
+		}
+		else {
+			res.status(500);
+		}
+		res.send();
+	});
 });
 
 export {router as groupRouter};
