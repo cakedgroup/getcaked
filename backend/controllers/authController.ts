@@ -8,8 +8,8 @@ const router = express.Router();
  * Handle login-requests (authorize Users)
  */
 router.post('/', (req: express.Request, res: express.Response) => {
-	const username: string = req.body.username as string;
-	const password: string = req.body.password as string;
+	const username: string = req.body.username;
+	const password: string = req.body.password;
 
 	if (username && password) {
 		login(username, password).then((user: User) => {

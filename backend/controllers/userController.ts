@@ -41,7 +41,7 @@ router.post('/', (req: express.Request, res: express.Response) => {
  * get Info of one specific User
  */
 router.get('/:userId', (req: express.Request, res: express.Response) => {
-	const userId = req.params.userId;
+	const userId: string = req.params.userId;
 	getUserInfo(userId).then((u: User) => {
 		res.status(200);
 		res.json({userId: u.userId, username: u.username});
@@ -62,8 +62,8 @@ router.get('/:userId', (req: express.Request, res: express.Response) => {
  */
 router.patch('/:userId', getUserAuth, (req: express.Request, res: express.Response) => {
 	if (req.decoded && req.decoded.userId === req.params.userId) {
-		const username = req.body.username;
-		const password = req.body.password;
+		const username: string = req.body.username;
+		const password: string = req.body.password;
 
 		const neededParameters = ['username', 'password'];
 

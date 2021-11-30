@@ -46,6 +46,9 @@ export async function createNewGroup(groupName: string, type: GroupType, adminId
 					if (err.toString().match(/^Error: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed.*$/)) {
 						reject(404);
 					}
+					else if (err.toString().match(/^Error: SQLITE_CONSTRAINT: UNIQUE constraint failed.*$/)) {
+						reject(409);
+					}
 					else {
 						console.log(new Error('Error while inserting new Group into the database: ' + err));
 						reject(err);
