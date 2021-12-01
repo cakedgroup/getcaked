@@ -13,12 +13,7 @@ router.get('/', (req: express.Request, res: express.Response) => {
 		res.status(200);
 		res.json(groups);
 	}).catch((err) => {
-		if (err === 404) {
-			res.status(404);
-		}
-		else {
-			res.status(500);
-		}
+		res.status(500);
 		res.send();
 	});
 });
