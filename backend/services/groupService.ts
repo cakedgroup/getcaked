@@ -63,10 +63,10 @@ export async function createNewGroup(groupName: string, type: GroupType, adminId
 
 export function deleteGroup(groupId: string): Promise<void> {
 	return new Promise<void>((resolve, reject) => {
-		db.run('DELETE FROM groups where groupid = ?', groupId, (err) => {
+		db.run('DELETE FROM groups WHERE groupId = ?', groupId, (err) => {
 			if (err) {
 				reject(err);
-			} 
+			}
 			else {
 				resolve();
 			}
@@ -76,7 +76,7 @@ export function deleteGroup(groupId: string): Promise<void> {
 
 export function getGroupAdmin(groupId: string): Promise<string> {
 	return new Promise<string>((resolve, reject) => {
-		db.all('SELECT adminId FROM groups where groupId = ?', groupId, (err, rows) => {
+		db.all('SELECT adminId FROM groups WHERE groupId = ?', groupId, (err, rows) => {
 			if (err) {
 				console.log('ERR');
 				reject(500);

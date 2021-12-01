@@ -47,6 +47,10 @@
         "arrow-parens": [
             "error",
             "always"
+        ],
+        "eol-last": [
+            "error",
+            "always"
         ]
     }
 }
