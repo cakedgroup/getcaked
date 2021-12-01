@@ -16,12 +16,7 @@ export async function getAllGroups(): Promise<Array<Group>> {
 				groupArray.push({groupId: row.groupId, groupName: row.groupName, type: row.type, adminId: row.adminId});
 			}
 		});
-		if (groupArray.length > 0) {
 			resolve(groupArray);
-		}
-		else {
-			reject(404);
-		}
 	});
 }
 
