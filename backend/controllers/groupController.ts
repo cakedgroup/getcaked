@@ -1,6 +1,6 @@
 import express from 'express';
 import {Group, GroupType} from '../models/Group';
-import {createNewGroup, getAllGroups} from '../services/groupService';
+import {createNewGroup, deleteGroup, getAllGroups, getGroupAdmin} from '../services/groupService';
 import {getUserAuth} from '../util/authMiddleware';
 
 const router = express.Router();
@@ -65,5 +65,52 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 		res.send();
 	}
 });
+
+/**
+ * remove a group from existance
+ */
+
+router.delete('/:groupId', getUserAuth, async (req: express.Request, res: express.Response) => {
+	const groupId: string = req.params.groupId;
+	
+	// TODO: evaluate if order of checks makes sense from a sec perspective
+	
+	try {
+		let adminId: string = await getGroupAdmin(groupId);
+		if (groupId === '') {
+			res.status(400);
+			res.send({missingParameters: ['groupId']})
+		} 
+		else if (req.decoded && req.decoded.userId && req.decoded.userId === adminId) {
+			deleteGroup(groupId).catch((err) => {
+				if (typeof err === 'number') {
+					res.status(err);
+				}
+				else {
+					console.log(err);
+					res.status(500);
+				}
+				res.send();
+			}).then(() => {
+				res.status(204);
+				res.send();
+			});
+		} 
+		else {
+			res.status(403);
+			console.log(req.decoded?.userId, 'hmmm', adminId);
+			res.send();
+		}
+	} catch (error) {
+		if (error === 400) {
+			res.status(400);
+			res.send({error: 'please check if the column you are accessing exists'});
+		}
+		else {
+			res.status(500);
+			res.send();
+		}
+	}
+})
 
 export {router as groupRouter};
