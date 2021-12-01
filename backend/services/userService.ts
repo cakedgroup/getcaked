@@ -4,9 +4,9 @@ import * as crypto from 'crypto';
 import {User} from '../models/User';
 
 /**
- * General interface providing a minimal format for hashInfos
+ * General interface providing a minimal format for HashInfos
  */
-interface hashInfos {
+interface HashInfos {
 	salt: string,
 	passwordHash: string
 }
@@ -17,13 +17,13 @@ interface hashInfos {
  * @param password User's password
  */
 export async function registerNewUser(username: string, password: string): Promise<User> {
-	const hashInfos: hashInfos = await hashPassword(password).catch((err) => {
+	const hashInfos: HashInfos = await hashPassword(password).catch((err) => {
 		throw(new Error('Error while hashing password: ' + err));
 	});
 
 	const u: User = {userId: uuidv4(), username: username};
 
-	return new Promise((resolve, reject) => {
+	return new Promise<User>((resolve, reject) => {
 		db.run('INSERT INTO users(userId, username, passwordSalt, passwordHash) VALUES (?, ?, ?, ?)',
 			[u.userId, u.username, hashInfos.salt, hashInfos.passwordHash], function (err) {
 				if (err) {
@@ -49,7 +49,7 @@ export async function registerNewUser(username: string, password: string): Promi
  * @param userId userId specifying, which User's info shall be fetched
  */
 export function getUserInfo(userId: string): Promise<User> {
-	return new Promise((resolve, reject) => {
+	return new Promise<User>((resolve, reject) => {
 		db.get('SELECT username FROM users WHERE userId = ?', [userId], function (err, user) {
 			if (user) {
 				resolve({userId: userId, username: user.username});
@@ -80,7 +80,7 @@ export async function changeUserInfo(userId: string, username: string | null, pa
 			if (password) sql += ',';
 		}
 		if (password) {
-			const hashInfos: hashInfos = await hashPassword(password).catch((err) => {
+			const hashInfos: HashInfos = await hashPassword(password).catch((err) => {
 				throw(new Error('Error while hashing password: ' + err));
 			});
 			sql += ' passwordSalt = ?, passwordHash = ?';
@@ -89,7 +89,7 @@ export async function changeUserInfo(userId: string, username: string | null, pa
 		}
 		sql += 'WHERE userId = ?';
 		params.push(userId);
-		return new Promise((resolve, reject) => {
+		return new Promise<User>((resolve, reject) => {
 			db.run(sql, params, function (err) {
 				if (err) {
 					// eslint-disable-next-line max-len
@@ -122,7 +122,7 @@ export async function changeUserInfo(userId: string, username: string | null, pa
  * @param userId ID identifying the User to be deleted
  */
 export async function deleteUser(userId: string): Promise<void> {
-	return new Promise((resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		db.run('DELETE FROM users WHERE userId = ?', [userId], function (err) {
 			if (err) {
 				console.log(err);
@@ -142,8 +142,8 @@ export async function deleteUser(userId: string): Promise<void> {
  * function to hash the password with a random salt (returns both hashed password and the used Salt)
  * @param password password to be hashed
  */
-function hashPassword(password: string): Promise<hashInfos> {
-	return new Promise((resolve, reject) => {
+function hashPassword(password: string): Promise<HashInfos> {
+	return new Promise<HashInfos>((resolve, reject) => {
 		const salt = crypto.randomBytes(128).toString('base64');
 		crypto.scrypt(password, salt, 128, (err, derivedKey) => {
 			if (err) {

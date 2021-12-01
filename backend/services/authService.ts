@@ -17,7 +17,7 @@ export function createToken(user: User): string {
  * @param password Password the login is attempted with
  */
 export function login(username: string, password: string): Promise<User> {
-	return new Promise((resolve, reject) => {
+	return new Promise<User>((resolve, reject) => {
 		db.get('SELECT * FROM users WHERE username = ?', [username], function (err, user) {
 			if (user) {
 				validatePassword(password, user.passwordHash, user.passwordSalt).then((isCorrect: boolean) => {
@@ -45,7 +45,7 @@ export function login(username: string, password: string): Promise<User> {
  * @param usedSalt Salt used when the given passwordHash was created
  */
 function validatePassword(password: string, passwordHash: string, usedSalt: string): Promise<boolean> {
-	return new Promise((resolve, reject) => {
+	return new Promise<boolean>((resolve, reject) => {
 		crypto.scrypt(password, usedSalt, 128, (err, derivedKey) => {
 			if (err) {
 				reject(err);

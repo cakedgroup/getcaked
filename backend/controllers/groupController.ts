@@ -44,7 +44,7 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 			const missingParameters = new Array<string>();
 			if (!groupName) missingParameters.push('groupName');
 			if (!type) missingParameters.push('type');
-			
+
 			const invalidParameters = new Array<string>();
 			if(!Object.values(GroupType).includes(type)) invalidParameters.push('type');
 
@@ -67,22 +67,25 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 });
 
 /**
- * remove a group from existance
+ * delete a group
  */
 
 router.delete('/:groupId', getUserAuth, async (req: express.Request, res: express.Response) => {
 	const groupId: string = req.params.groupId;
-	
+
 	// TODO: evaluate if order of checks makes sense from a sec perspective
-	
-	try {
+	if (groupId === '') {
+		res.status(400);
+		res.send({missingParameters: ['groupId']});
+	}
+	else try {
 		const adminId: string = await getGroupAdmin(groupId);
-		if (groupId === '') {
-			res.status(400);
-			res.send({missingParameters: ['groupId']});
-		} 
-		else if (req.decoded && req.decoded.userId && req.decoded.userId === adminId) {
-			deleteGroup(groupId).catch((err) => {
+
+		if (req.decoded && req.decoded.userId && req.decoded.userId === adminId) {
+			deleteGroup(groupId).then(() => {
+				res.status(204);
+				res.send();
+			}).catch((err) => {
 				if (typeof err === 'number') {
 					res.status(err);
 				}
@@ -91,23 +94,20 @@ router.delete('/:groupId', getUserAuth, async (req: express.Request, res: expres
 					res.status(500);
 				}
 				res.send();
-			}).then(() => {
-				res.status(204);
-				res.send();
 			});
-		} 
+		}
 		else {
 			res.status(403);
-			console.log(req.decoded?.userId, 'hmmm', adminId);
 			res.send();
 		}
-	} 
-	catch (error) {
-		if (error === 400) {
+	}
+	catch (err) {
+		if (err === 400) {
 			res.status(400);
-			res.send({error: 'please check if the column you are accessing exists'});
+			res.json({error: 'please check if the column you are accessing exists'});
 		}
 		else {
+			console.log(err);
 			res.status(500);
 			res.send();
 		}

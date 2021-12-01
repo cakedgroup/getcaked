@@ -6,7 +6,7 @@ import {Group, GroupType} from '../models/Group';
  * function to fetch all Groups and their associated data from the DB
  */
 export async function getAllGroups(): Promise<Array<Group>> {
-	return new Promise((resolve, reject) => {
+	return new Promise<Array<Group>>((resolve, reject) => {
 		const groupArray: Array<Group> = new Array<Group>();
 		db.each('SELECT groupId, groupName, type, adminId FROM groups', [], function (err, row) {
 			if (err) {
@@ -31,7 +31,7 @@ export async function getAllGroups(): Promise<Array<Group>> {
 export async function createNewGroup(groupName: string, type: GroupType, adminId: string): Promise<Group> {
 	const group: Group = {groupId: uuidv4(), groupName: groupName, type: type, adminId: adminId};
 
-	return new Promise((resolve, reject) => {
+	return new Promise<Group>((resolve, reject) => {
 		/*
 		the FOREIGN KEY constraint should (SHOULD) save my ass right here, if not,
 		add 'IF EXISTS (SELECT * FROM users WHERE userId = ?)'
@@ -61,6 +61,10 @@ export async function createNewGroup(groupName: string, type: GroupType, adminId
 	});
 }
 
+/**
+ *
+ * @param groupId
+ */
 export function deleteGroup(groupId: string): Promise<void> {
 	return new Promise<void>((resolve, reject) => {
 		db.run('DELETE FROM groups WHERE groupId = ?', groupId, (err) => {
@@ -78,8 +82,7 @@ export function getGroupAdmin(groupId: string): Promise<string> {
 	return new Promise<string>((resolve, reject) => {
 		db.all('SELECT adminId FROM groups WHERE groupId = ?', groupId, (err, rows) => {
 			if (err) {
-				console.log('ERR');
-				reject(500);
+				reject(err);
 			}
 			else if (!rows[0]) {
 				reject(400);
