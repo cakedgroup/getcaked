@@ -12,7 +12,7 @@ router.get('/', (req: express.Request, res: express.Response) => {
 	getAllGroups().then((groups: Array<Group>) => {
 		res.status(200);
 		res.json(groups);
-	}).catch((err) => {
+	}).catch(() => {
 		res.status(500);
 		res.send();
 	});
@@ -76,10 +76,10 @@ router.delete('/:groupId', getUserAuth, async (req: express.Request, res: expres
 	// TODO: evaluate if order of checks makes sense from a sec perspective
 	
 	try {
-		let adminId: string = await getGroupAdmin(groupId);
+		const adminId: string = await getGroupAdmin(groupId);
 		if (groupId === '') {
 			res.status(400);
-			res.send({missingParameters: ['groupId']})
+			res.send({missingParameters: ['groupId']});
 		} 
 		else if (req.decoded && req.decoded.userId && req.decoded.userId === adminId) {
 			deleteGroup(groupId).catch((err) => {
@@ -101,7 +101,8 @@ router.delete('/:groupId', getUserAuth, async (req: express.Request, res: expres
 			console.log(req.decoded?.userId, 'hmmm', adminId);
 			res.send();
 		}
-	} catch (error) {
+	} 
+	catch (error) {
 		if (error === 400) {
 			res.status(400);
 			res.send({error: 'please check if the column you are accessing exists'});
@@ -111,6 +112,6 @@ router.delete('/:groupId', getUserAuth, async (req: express.Request, res: expres
 			res.send();
 		}
 	}
-})
+});
 
 export {router as groupRouter};

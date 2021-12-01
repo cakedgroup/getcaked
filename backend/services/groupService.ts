@@ -7,7 +7,7 @@ import {Group, GroupType} from '../models/Group';
  */
 export async function getAllGroups(): Promise<Array<Group>> {
 	return new Promise((resolve, reject) => {
-		let groupArray: Array<Group> = new Array<Group>();
+		const groupArray: Array<Group> = new Array<Group>();
 		db.each('SELECT groupId, groupName, type, adminId FROM groups', [], function (err, row) {
 			if (err) {
 				reject(err);
@@ -15,7 +15,7 @@ export async function getAllGroups(): Promise<Array<Group>> {
 			else {
 				groupArray.push({groupId: row.groupId, groupName: row.groupName, type: row.type, adminId: row.adminId});
 			}
-		}, (err, count) => {
+		}, () => {
 			// only call resolve when query ends
 			resolve(groupArray);
 		});
@@ -66,11 +66,12 @@ export function deleteGroup(groupId: string): Promise<void> {
 		db.run('DELETE FROM groups where groupid = ?', groupId, (err) => {
 			if (err) {
 				reject(err);
-			} else {
+			} 
+			else {
 				resolve();
 			}
 		});
-	})
+	});
 }
 
 export function getGroupAdmin(groupId: string): Promise<string> {
@@ -87,5 +88,5 @@ export function getGroupAdmin(groupId: string): Promise<string> {
 				resolve(rows[0]['adminId']);
 			}
 		});
-	})
+	});
 }
