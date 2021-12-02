@@ -1,6 +1,7 @@
 import {db} from '../databaseAccess/db';
 import {v4 as uuidv4} from 'uuid';
 import {Group, GroupType} from '../models/Group';
+import { User } from '../models/User';
 
 /**
  * function to fetch all Groups and their associated data from the DB
@@ -141,6 +142,25 @@ export function getSingleGroup(groupId: string, userId?: string): Promise<Group>
 					adminId: rows[0]['adminId']
 				};
 				resolve(group);
+			}
+		});
+	});
+}
+
+export function getUsersOfGroup(groupId: string): Promise<User[]> {
+	return new Promise<User[]>((resolve, reject) => {
+		db.all(`SELECT DESTINCT user.userId, username
+					FROM user JOIN members ON user.userId = members.userId
+					WHERE groupId = ?;`, groupId, (err, rows) => {
+			if (err) {
+				reject(err);
+			}
+			else {
+				const users: User[] = [];
+				rows.forEach((val) => {
+					users.push({userId: val['userId'], username: val['username']});
+				});
+				resolve(users);
 			}
 		});
 	});

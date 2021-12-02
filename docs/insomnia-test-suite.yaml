@@ -1,6 +1,6 @@
 _type: export
 __export_format: 4
-__export_date: 2021-11-28T12:53:35.390Z
+__export_date: 2021-12-02T19:46:36.987Z
 __export_source: insomnia.desktop.app:v2021.6.0
 resources:
   - _id: req_35774b484de24f93bcda931e427386cc
@@ -69,7 +69,7 @@ resources:
     _type: request
   - _id: req_62c67f157cf34be4b2b1672bd37349da
     parentId: fld_e46b9a0ad0eb416880b4726a7e7718d6
-    modified: 1638103939379
+    modified: 1638470711089
     created: 1638103276750
     url: "{{ _.host }}/users"
     name: create valid user
@@ -107,9 +107,39 @@ resources:
     environmentPropertyOrder: {}
     metaSortKey: -1638103250164
     _type: request_group
+  - _id: req_966b1e1ddfd94b51a07a0b88ae591d70
+    parentId: fld_e46b9a0ad0eb416880b4726a7e7718d6
+    modified: 1638471131378
+    created: 1638470737121
+    url: "{{ _.host }}/users"
+    name: create dummy user
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"username": "dumdum",
+        	"password": "dummy"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_9dd800a4b8e046aabad7b00f454ec2f6
+    authentication: {}
+    metaSortKey: -1638103276725
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: req_21cbf5dd9b5a4c53b2004fd8e2726e08
     parentId: fld_e46b9a0ad0eb416880b4726a7e7718d6
-    modified: 1638103599054
+    modified: 1638468487093
     created: 1638103429297
     url: "{{ _.host }}/auth"
     name: login valid user
@@ -260,7 +290,7 @@ resources:
     _type: request
   - _id: req_6bcf9d1c97354baa9f3a54dd2a57ac13
     parentId: fld_e46b9a0ad0eb416880b4726a7e7718d6
-    modified: 1638103589071
+    modified: 1638379575077
     created: 1638103563543
     url: "{{ _.host }}/users/{{ _['testuser-id'] }}"
     name: delete valid user
@@ -283,9 +313,191 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
+  - _id: req_3296f6561d804365b87bc50fc3e92872
+    parentId: fld_33456d9c266d42bbb53c0fe6089dd2f2
+    modified: 1638471106803
+    created: 1638470701697
+    url: "{{ _.host }}/groups/{{ _['testgroup-id'] }}/users"
+    name: add user to group
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"userId": "{{ _['dummyuser-id'] }}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_7a4de4ebf10a419eaabdffa0054ed315
+      - id: pair_bbc9227dbd4140af9ff7024f3f403cab
+        name: Authorization
+        value: "{{ _['testuser-authtoken'] }}"
+        description: ""
+    authentication: {}
+    metaSortKey: -1638470701697
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_33456d9c266d42bbb53c0fe6089dd2f2
+    parentId: wrk_8c7c94ef64f0428b989eb8f29d7bfb23
+    modified: 1638105091663
+    created: 1638105059461
+    name: Groups
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1638103250114
+    _type: request_group
+  - _id: req_8b0db197b9044124afc3f15bf8a1d2c3
+    parentId: fld_33456d9c266d42bbb53c0fe6089dd2f2
+    modified: 1638469396390
+    created: 1638109647358
+    url: "{{ _.host }}/groups"
+    name: create group
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"groupName": "{{ _['testgroup-name'] }}",
+        	"type": "{{ _['testgroup-type'] }}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_81e0ef20a776475d9b26cba72ecba47f
+      - id: pair_c5979ba3e9aa472b83dde84ccb3bd85f
+        name: Authorization
+        value: "{{ _['testuser-authtoken'] }}"
+        description: ""
+    authentication: {}
+    metaSortKey: -1638109647358
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_578cc7ca8d4a48ea8ffb9b5e14a8309e
+    parentId: fld_33456d9c266d42bbb53c0fe6089dd2f2
+    modified: 1638469445308
+    created: 1638464816202
+    url: "{{ _.host }}/groups"
+    name: create invisible group
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"groupName": "{{ _['testgroup-name'] }}",
+        	"type": "privateInvisible"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_81e0ef20a776475d9b26cba72ecba47f
+      - id: pair_c5979ba3e9aa472b83dde84ccb3bd85f
+        name: Authorization
+        value: "{{ _['testuser-authtoken'] }}"
+        description: ""
+    authentication: {}
+    metaSortKey: -1638107363182.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_7aa29bb1163143b2b373acc78cad535e
+    parentId: fld_33456d9c266d42bbb53c0fe6089dd2f2
+    modified: 1638377869628
+    created: 1638105079007
+    url: "{{ _.host }}/groups"
+    name: retrieve list of all groups
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1638105079007
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_cfc10ef3982d4194b40c11ac70634d15
+    parentId: fld_33456d9c266d42bbb53c0fe6089dd2f2
+    modified: 1638469447594
+    created: 1638381440992
+    url: "{{ _.host }}/groups/{{ _['testgroup-id'] }}"
+    name: delete group
+    description: ""
+    method: DELETE
+    body: {}
+    parameters: []
+    headers:
+      - id: pair_b43388537aca408194806bb838133c8c
+        name: Authorization
+        value: "{{ _['testuser-authtoken'] }}"
+        description: ""
+    authentication: {}
+    metaSortKey: -1638105078957
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_4dbf06553b424ab0be07f74c531f7994
+    parentId: fld_33456d9c266d42bbb53c0fe6089dd2f2
+    modified: 1638470824183
+    created: 1638464655534
+    url: "{{ _.host }}/groups/{{ _['testgroup-id'] }}"
+    name: retrieve single group
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - id: pair_ae8549deca02443ab7b30e152dbd5ca6
+        name: Authorization
+        value: "{{ _['testuser-authtoken'] }}"
+        description: ""
+    authentication: {}
+    metaSortKey: -1638105078907
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: env_24b3a20081bb5481645fccbd29bcad71f0ca328c
     parentId: wrk_8c7c94ef64f0428b989eb8f29d7bfb23
-    modified: 1638103512391
+    modified: 1638470803775
     created: 1638103108036
     name: Base Environment
     data:
@@ -296,6 +508,12 @@ resources:
         'b64::JC51c2VySWQ=::46b', 'no-history', 60 %}"
       testuser-authtoken: "{% response 'body', 'req_21cbf5dd9b5a4c53b2004fd8e2726e08',
         'b64::JC5qd3Q=::46b', 'no-history', 60 %}"
+      testgroup-name: testgroup
+      testgroup-type: public
+      testgroup-id: "{% response 'body', 'req_7aa29bb1163143b2b373acc78cad535e',
+        'b64::JC4wLmdyb3VwSWQ=::46b', 'no-history', 60 %}"
+      dummyuser-id: "{% response 'body', 'req_966b1e1ddfd94b51a07a0b88ae591d70',
+        'b64::JC51c2VySWQ=::46b', 'no-history', 60 %}"
     dataPropertyOrder:
       "&":
         - host
@@ -303,6 +521,10 @@ resources:
         - testuser-password
         - testuser-id
         - testuser-authtoken
+        - testgroup-name
+        - testgroup-type
+        - testgroup-id
+        - dummyuser-id
     color: null
     isPrivate: false
     metaSortKey: 1638103108036

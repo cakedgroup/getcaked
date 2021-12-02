@@ -1,6 +1,7 @@
 import express from 'express';
 import {Group, GroupType} from '../models/Group';
-import {createNewGroup, deleteGroup, getAllGroups, getGroupAdmin, getSingleGroup} from '../services/groupService';
+// eslint-disable-next-line max-len
+import {addUserToGroup, createNewGroup, deleteGroup, getAllGroups, getGroupAdmin, getSingleGroup, getUsersOfGroup} from '../services/groupService';
 import {getUserAuth} from '../util/authMiddleware';
 
 const router = express.Router();
@@ -138,6 +139,56 @@ router.get('/:groupId', getUserAuth, (req: express.Request, res: express.Respons
 				res.status(500);
 				res.send();
 			}
+		});
+});
+
+router.post('/:groupId/users', getUserAuth, (req: express.Request, res: express.Response) => {
+	const groupId: string = req.params.groupId;
+	const userId: string = req.body.userId;
+
+	if (groupId && req.decoded && req.decoded.userId) {
+		getGroupAdmin(groupId)
+			.then((adminId: string) => {
+				if (req.decoded && req.decoded.userId === adminId) {
+					addUserToGroup(userId, groupId)
+						.then(() => {
+							res.status(201);
+							res.send();
+						})
+						.catch(() => {
+							res.status(400);
+							res.send();
+						});
+				} 
+				else {
+					res.status(403);
+					res.send();
+				}
+			})
+			.catch((err) => {
+				if (err === 400) {
+					res.status(400);
+					res.send();
+				}
+				else {
+					res.status(500);
+					res.send();
+				}
+			});
+	}
+});
+
+router.get('/:groupId/users', getUserAuth, (req: express.Request, res: express.Response) => {
+	const groupId: string = req.params.groupId;
+	// TODO: add propper check if group exists..
+	getUsersOfGroup(groupId)
+		.then((users) => {
+			res.status(200);
+			res.send(users);
+		})
+		.catch(() => {
+			res.status(404);
+			res.send();
 		});
 });
 
