@@ -32,7 +32,7 @@ export function login(username: string, password: string): Promise<User> {
 				});
 			}
 			else {
-				reject(404);
+				reject(403);
 			}
 		});
 	});

@@ -37,11 +37,11 @@ export async function createNewGroup(groupName: string, type: GroupType, adminId
 		add 'IF EXISTS (SELECT * FROM users WHERE userId = ?)'
 		(without quotes and with the adminId added to the end of the parameter list (again))
 		*/
-		db.run('INSERT INTO groups(groupId, groupName, type, adminId) VALUES (?, ?, ?, ?)',
+		db.run('INSERT INTO groups(groupId, groupName, type, adminId) VALUES (?, ?, ?, ?);',
 			[group.groupId, group.groupName, group.type, group.adminId], function (err) {
 				if (err) {
 					if (err.toString().match(/^Error: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed.*$/)) {
-						reject(404);
+						reject(400);
 					}
 					else if (err.toString().match(/^Error: SQLITE_CONSTRAINT: UNIQUE constraint failed.*$/)) {
 						reject(409);
@@ -52,12 +52,32 @@ export async function createNewGroup(groupName: string, type: GroupType, adminId
 					}
 				}
 				else if (this.changes === 0) {
-					reject(404);
+					reject(400);
 				}
 				else {
-					resolve(group);
+					addUserToGroup(group.adminId, group.groupId)
+						.then(() => {
+							resolve(group);
+						})
+						.catch((err) => {
+							reject(err);
+						});
 				}
 			});
+			
+	});
+}
+
+export function addUserToGroup(userId: string, groupId: string): Promise<void> {
+	return new Promise<void>((resolve, reject) => {
+		db.run('INSERT INTO members(userId, groupId) VALUES (?, ?);', [userId, groupId], (err) => {
+			if (err) {
+				reject(err);
+			}
+			else {
+				resolve();
+			}
+		});
 	});
 }
 
@@ -67,14 +87,19 @@ export async function createNewGroup(groupName: string, type: GroupType, adminId
  */
 export function deleteGroup(groupId: string): Promise<void> {
 	return new Promise<void>((resolve, reject) => {
-		db.run('DELETE FROM groups WHERE groupId = ?', groupId, (err) => {
-			if (err) {
-				reject(err);
-			}
-			else {
-				resolve();
-			}
-		});
+		db.run('DELETE FROM members WHERE groupId = ?;', 
+			groupId, 
+			(err) => {
+				if (err) 
+					reject(err);
+				else
+					db.run('DELETE FROM groups WHERE groupId = ?', groupId, (err) => {
+						if (err) 
+							reject(err);
+						else
+							resolve();
+					});
+			});
 	});
 }
 
@@ -89,6 +114,33 @@ export function getGroupAdmin(groupId: string): Promise<string> {
 			}
 			else {
 				resolve(rows[0]['adminId']);
+			}
+		});
+	});
+}
+
+export function getSingleGroup(groupId: string, userId?: string): Promise<Group> {
+	return new Promise<Group>((resolve, reject) => {
+		db.all(`SELECT groupName, type, adminId 
+					FROM groups
+					LEFT JOIN members ON groups.groupId = members.groupId
+					WHERE groups.groupId = ? AND (type IN ('public', 'private') OR userId = ?);`, 
+		[groupId, userId], (err, rows) => {
+
+			if (err) {
+				reject(err);
+			}
+			else if (!rows[0]) {
+				reject(404);
+			}
+			else {
+				const group: Group = {
+					groupId: groupId,
+					groupName: rows[0]['groupName'],
+					type: rows[0]['type'],
+					adminId: rows[0]['adminId']
+				};
+				resolve(group);
 			}
 		});
 	});

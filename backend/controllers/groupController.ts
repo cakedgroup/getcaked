@@ -1,6 +1,6 @@
 import express from 'express';
 import {Group, GroupType} from '../models/Group';
-import {createNewGroup, deleteGroup, getAllGroups, getGroupAdmin} from '../services/groupService';
+import {createNewGroup, deleteGroup, getAllGroups, getGroupAdmin, getSingleGroup} from '../services/groupService';
 import {getUserAuth} from '../util/authMiddleware';
 
 const router = express.Router();
@@ -112,6 +112,33 @@ router.delete('/:groupId', getUserAuth, async (req: express.Request, res: expres
 			res.send();
 		}
 	}
+});
+
+router.get('/:groupId', getUserAuth, (req: express.Request, res: express.Response) => {
+	const groupId: string = req.params.groupId;
+	let groupPromise: Promise<Group>;
+
+	if (req.decoded && req.decoded.userId)
+		groupPromise = getSingleGroup(groupId, req.decoded.userId);
+	else
+		groupPromise = getSingleGroup(groupId);
+
+	groupPromise
+		.then((group) => {
+			res.status(200);
+			res.send(group);
+		})
+		.catch((err) => {
+			if (err === 404) {
+				res.status(404);
+				res.send();
+			}
+			else {
+				console.log(err);
+				res.status(500);
+				res.send();
+			}
+		});
 });
 
 export {router as groupRouter};

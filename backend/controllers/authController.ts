@@ -16,9 +16,8 @@ router.post('/', (req: express.Request, res: express.Response) => {
 			const token = createToken(user);
 			res.status(200);
 			res.json({userId: user.userId, jwt: token});
-		}).catch((err) => {
-			console.log(err);
-			res.status(404);
+		}).catch(() => {
+			res.status(403);
 			res.send();
 		});
 	}
