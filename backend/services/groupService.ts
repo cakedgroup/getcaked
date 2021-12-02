@@ -72,6 +72,22 @@ export async function createNewGroup(groupName: string, type: GroupType, adminId
 export function addUserToGroup(userId: string, groupId: string): Promise<void> {
 	return new Promise<void>((resolve, reject) => {
 		db.run('INSERT INTO members(userId, groupId) VALUES (?, ?);', [userId, groupId], (err) => {
+			if (err?.toString().match(/^Error: SQLITE_CONSTRAINT: UNIQUE constraint failed.*$/)) {
+				reject(409);
+			}
+			else if (err) {
+				reject(err);
+			}
+			else {
+				resolve();
+			}
+		});
+	});
+}
+
+export function removeUserFromGroup(userId: string, groupId: string): Promise<void> {
+	return new Promise<void>((resolve, reject) => {
+		db.run('DELETE FROM members WHERE userId = ? AND groupId = ?;', [userId, groupId], (err) => {
 			if (err) {
 				reject(err);
 			}

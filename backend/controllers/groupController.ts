@@ -1,7 +1,7 @@
 import express from 'express';
 import {Group, GroupType} from '../models/Group';
 // eslint-disable-next-line max-len
-import {addUserToGroup, createNewGroup, deleteGroup, getAllGroups, getGroupAdmin, getSingleGroup, getUsersOfGroup} from '../services/groupService';
+import {addUserToGroup, createNewGroup, deleteGroup, getAllGroups, getGroupAdmin, getSingleGroup, getUsersOfGroup, removeUserFromGroup} from '../services/groupService';
 import {getUserAuth} from '../util/authMiddleware';
 
 const router = express.Router();
@@ -155,6 +155,49 @@ router.post('/:groupId/users', getUserAuth, (req: express.Request, res: express.
 							res.status(201);
 							res.send();
 						})
+						.catch((err) => {
+							if (err === 409)
+								res.status(409);
+							else
+								res.status(400);
+							res.send();
+						});
+				} 
+				else {
+					res.status(403);
+					res.send();
+				}
+			})
+			.catch((err) => {
+				if (err === 400) {
+					res.status(400);
+					res.send();
+				}
+				else {
+					res.status(500);
+					res.send();
+				}
+			});
+	}
+	else {
+		res.status(400);
+		res.send();
+	}
+});
+
+router.delete('/:groupId/users/:userId', getUserAuth, (req: express.Request, res: express.Response) => {
+	const groupId: string = req.params.groupId;
+	const userId: string = req.params.userId;
+
+	if (groupId && userId && req.decoded && req.decoded.userId) {
+		getGroupAdmin(groupId)
+			.then((adminId: string) => {
+				if (req.decoded && req.decoded.userId === adminId && userId != adminId) {
+					removeUserFromGroup(userId, groupId)
+						.then(() => {
+							res.status(204);
+							res.send();
+						})
 						.catch(() => {
 							res.status(400);
 							res.send();
@@ -175,6 +218,21 @@ router.post('/:groupId/users', getUserAuth, (req: express.Request, res: express.
 					res.send();
 				}
 			});
+	}
+	else {
+
+		const missingParameters = new Array<string>();
+		if (!groupId) missingParameters.push('groupName');
+		if (!userId) missingParameters.push('type');
+
+		if (missingParameters.length === 0) {
+			res.status(403);
+			res.send();
+		}
+		else {
+			res.status(400);
+			res.send({missingParameters: missingParameters});
+		}
 	}
 });
 
