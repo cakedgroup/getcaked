@@ -9,6 +9,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
   },
   {
+    path: 'group',
+    loadChildren: () => import('./pages/groups/groups.module').then(m => m.GroupsModule)
+  },
+  {
     path: 'legal',
     component: LegalComponent
   },
@@ -21,6 +25,7 @@ const routes: Routes = [
     redirectTo: '404'
   }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

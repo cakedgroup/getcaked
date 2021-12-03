@@ -1,0 +1,37 @@
+.cake-overview-notification {
+    color: var(--primary-color);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 2.8rem;
+    text-align: center;
+}
+
+.cake-overview-notification-highlight {
+    color: var(--highlight-color);
+    display: inline;
+}
+
+.cake-overview-header {
+    margin: 0 auto;
+    margin-top: 2rem;
+    max-width: 80vw;
+}
+
+.cakeing-button {
+    background-color: var(--secondary-background-color);
+    width: fit-content;
+    margin: 0 auto;
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+}
+
+.cakeing-button-content {
+    color: var(--secondary-color);
+
+    font-weight: bold;
+    font-family: 'Quicksand', sans-serif;
+    text-align: center;
+
+    padding: 0;
+    margin: 0;
+    font-size: 2em;
+}
