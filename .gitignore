@@ -38,3 +38,6 @@
 */.DS_Store
 */Thumbs.db
 
+# Database
+backend/databases/getcaked.sqlite
+backend/databases/getcaked.db
