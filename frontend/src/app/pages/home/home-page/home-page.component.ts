@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { GroupServiceService as GroupService } from 'src/app/core/services/group-service.service';
+import { Group } from 'src/app/models/group.model';
 
 @Component({
   selector: 'app-home-page',
@@ -7,9 +9,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomePageComponent implements OnInit {
 
-  constructor() { }
+  groups: Group[] = [];
+  displayGroups: Group[] = [];
+
+  constructor(private groupService: GroupService) { }
 
   ngOnInit(): void {
+    this.groupService.listGroups().subscribe((groups: Group[]) => {
+      this.displayGroups = groups;
+      this.groups = this.displayGroups;
+    })
   }
 
+  search(searchQuery: string) {
+    console.log(searchQuery);
+    this.displayGroups = this.groups.filter((group: Group) => {
+      return group.groupName.includes(searchQuery);
+    })
+  }
 }

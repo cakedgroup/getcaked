@@ -15,6 +15,7 @@ html, body {
 :root {
   --primary-color: #512D1A;
   --secondary-color: #896037;
+  --tertiary-color: #a89e94;
   --highlight-color: #F2B7D3;
 
   --primary-background-color: #FFFAF3;

@@ -1,7 +1,7 @@
 <app-chip>
-    <div class="groupchip-container" routerLink="/group/test123/overview">
+    <div class="groupchip-container" routerLink="/group/{{group.groupId}}/overview">
         <p class="groupchip-text"><img src="assets/img/double-check-marks.svg" class="groupchip-icon">
-            Big Group Thang...
+            {{group.groupName}}
         </p>
     </div>
 </app-chip>
