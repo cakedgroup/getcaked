@@ -16,12 +16,6 @@
     margin-bottom: 5rem;
 }
 
-.login-error-message {
-    font-size: 1rem;
-    margin-left: 0.5rem;
-    color: var(--error-color);
-}
-
 @media only screen and (min-width: 768px) {
 
     .login-container {

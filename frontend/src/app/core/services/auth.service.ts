@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -45,14 +45,7 @@ export class AuthService {
       })
     )
   }
-
-  getUser(): User | null {
-    if (this.user === undefined)
-      return null;
-    else
-      return this.user;
-  }
-
+  
   logoutUser() {
     localStorage.removeItem('user');
     localStorage.removeItem('authtoken');
@@ -60,6 +53,24 @@ export class AuthService {
     this.user = undefined;
     this.authToken = undefined;
   }
+  
+  getAuthToken(): string | null {
+    return this.authToken;
+  }
+
+  getAuthHeader(): HttpHeaders {
+    return new HttpHeaders({
+      Authorization: this.authToken
+    });
+  }
+  
+  getUser(): User | null {
+    if (this.user === undefined)
+      return null;
+    else
+      return this.user;
+  }
+
 }
 
 interface AuthInfo {

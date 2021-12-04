@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { GroupsRoutingModule } from './groups-routing.module';
 import { OverviewComponent } from './overview/overview.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { CreateComponent } from './create/create.component';
 
 
 @NgModule({
   declarations: [
-    OverviewComponent
+    OverviewComponent,
+    CreateComponent
   ],
   imports: [
     CommonModule,

@@ -6,6 +6,10 @@ html, body {
   color: var(--primary-color);
 }
 
+/* ---------------------------------- */
+/*              COLORS                */
+/* ---------------------------------- */
+
 /* Sizes */
 :root {
   --content-width: 47rem;
@@ -40,4 +44,15 @@ html, body {
     --title-center-color: #361F13;
     --title-border-color: #FFFAF3;
   }
+}
+
+/* ---------------------------------- */
+/*         GLOBAL CLASSES             */
+/* ---------------------------------- */
+
+
+.error-message {
+  font-size: 1rem;
+  margin-left: 0.5rem;
+  color: var(--error-color);
 }

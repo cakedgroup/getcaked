@@ -6,6 +6,7 @@ import { TitlePaneComponent } from './title-pane/title-pane.component';
 import { BodyBlockComponent } from './body-block/body-block.component';
 import { InputFieldComponent } from './input-field/input-field.component';
 import { ActionButtonComponent } from './action-button/action-button.component';
+import { SelectionInputComponent } from './selection-input/selection-input.component';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { ActionButtonComponent } from './action-button/action-button.component';
     BodyBlockComponent,
     InputFieldComponent,
     ActionButtonComponent,
+    SelectionInputComponent,
   ],
   imports: [
     CommonModule,
@@ -27,7 +29,8 @@ import { ActionButtonComponent } from './action-button/action-button.component';
     TitlePaneComponent,
     BodyBlockComponent,
     InputFieldComponent,
-    ActionButtonComponent
+    ActionButtonComponent,
+    SelectionInputComponent
   ]
 })
 export class SharedModule {
