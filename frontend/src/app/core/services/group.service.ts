@@ -31,4 +31,11 @@ export class GroupService {
       }
     );
   }
+
+  getGroup(groupId: string): Observable<Group> {
+    if (this.authService.getUser() !== null)
+      return this.http.get<Group>(`${this.basePath}/groups/${groupId}`, {headers: this.authService.getAuthHeader()});
+    else 
+      return this.http.get<Group>(`${this.basePath}/groups/${groupId}`);
+  }
 }

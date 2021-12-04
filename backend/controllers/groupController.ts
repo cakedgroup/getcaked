@@ -1,7 +1,7 @@
 import express from 'express';
 import {Group, GroupType} from '../models/Group';
 // eslint-disable-next-line max-len
-import {addUserToGroup, createNewGroup, deleteGroup, getAllGroups, getGroupAdmin, getSingleGroup, getUsersOfGroup, removeUserFromGroup} from '../services/groupService';
+import {addUserToGroup, createNewGroup, deleteGroup, generateInviteToken, getAllGroups, getGroupAdmin, getSingleGroup, getUsersOfGroup, inviteTokenIsValid, removeUserFromGroup} from '../services/groupService';
 import {getUserAuth} from '../util/authMiddleware';
 
 const router = express.Router();
@@ -145,11 +145,13 @@ router.get('/:groupId', getUserAuth, (req: express.Request, res: express.Respons
 router.post('/:groupId/users', getUserAuth, (req: express.Request, res: express.Response) => {
 	const groupId: string = req.params.groupId;
 	const userId: string = req.body.userId;
+	const invitetoken: string = req.body.invitetoken;
 
 	if (groupId && req.decoded && req.decoded.userId) {
 		getGroupAdmin(groupId)
 			.then((adminId: string) => {
-				if (req.decoded && req.decoded.userId === adminId) {
+				if (req.decoded?.userId === adminId 
+					|| (req.decoded?.userId === userId && inviteTokenIsValid(invitetoken, groupId))) {
 					addUserToGroup(userId, groupId)
 						.then(() => {
 							res.status(201);
@@ -192,7 +194,7 @@ router.delete('/:groupId/users/:userId', getUserAuth, (req: express.Request, res
 	if (groupId && userId && req.decoded && req.decoded.userId) {
 		getGroupAdmin(groupId)
 			.then((adminId: string) => {
-				if (req.decoded && req.decoded.userId === adminId && userId != adminId) {
+				if ((req.decoded?.userId === adminId && userId != adminId) || (req.decoded?.userId === userId)) {
 					removeUserFromGroup(userId, groupId)
 						.then(() => {
 							res.status(204);
@@ -248,6 +250,38 @@ router.get('/:groupId/users', getUserAuth, (req: express.Request, res: express.R
 			res.status(404);
 			res.send();
 		});
+});
+
+router.get('/:groupId/invitetoken', getUserAuth, (req: express.Request, res: express.Response) => {
+	const groupId: string = req.params.groupId;
+
+	if (groupId && req.decoded && req.decoded.userId) {
+		getGroupAdmin(groupId)
+			.then((adminId: string) => {
+				if (req.decoded && req.decoded.userId === adminId) {
+					res.status(200);
+					res.send({invitetoken: generateInviteToken(groupId)});
+				} 
+				else {
+					res.status(403);
+					res.send();
+				}
+			})
+			.catch((err) => {
+				if (err === 404) {
+					res.status(404);
+					res.send();
+				}
+				else {
+					res.status(500);
+					res.send();
+				}
+			});
+	}
+	else {
+		res.status(400);
+		res.send();
+	}
 });
 
 export {router as groupRouter};

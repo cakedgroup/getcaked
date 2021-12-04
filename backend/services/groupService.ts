@@ -2,6 +2,7 @@ import {db} from '../databaseAccess/db';
 import {v4 as uuidv4} from 'uuid';
 import {Group, GroupType} from '../models/Group';
 import { User } from '../models/User';
+import jwt from 'jsonwebtoken';
 
 /**
  * function to fetch all Groups and their associated data from the DB
@@ -127,7 +128,7 @@ export function getGroupAdmin(groupId: string): Promise<string> {
 				reject(err);
 			}
 			else if (!rows[0]) {
-				reject(400);
+				reject(404);
 			}
 			else {
 				resolve(rows[0]['adminId']);
@@ -180,4 +181,13 @@ export function getUsersOfGroup(groupId: string): Promise<User[]> {
 			}
 		});
 	});
+}
+
+export function generateInviteToken(groupId: string): string {
+	return jwt.sign({groupId: groupId}, process.env.JWT_SECRET as string, {expiresIn: '30d'});
+}
+
+export function inviteTokenIsValid(inviteToken: string, groupId: string): boolean {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	return (jwt.verify(inviteToken, process.env.JWT_SECRET as string) as any).groupId === groupId;
 }
