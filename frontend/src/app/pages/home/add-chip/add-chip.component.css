@@ -1,0 +1,12 @@
+.addchip-icon {
+    height: 1rem;
+    vertical-align: middle;
+    margin-right: 1rem;
+    transform: translateY(-2px);
+}
+
+.addchip-text {
+    margin: 0;
+    display: inline;
+    color: var(--tertiary-color);
+}
