@@ -1,0 +1,13 @@
+<app-title-pane title="Register"></app-title-pane>
+<app-body-block>
+    <div class="register-container">
+        <p>Welcome to GetCaked!</p>
+        <p>We're happy to welcome you into a wonderfull comunity of cakers, all hoping to score a free cake. If free cakes sound like something you'd like, sign up here:</p>
+        <br/>
+        
+        <app-input-field descriptor="username" placeholder="Username" (userInputChange)="usernameInput = $event"></app-input-field>
+        <app-input-field descriptor="password" placeholder="********" [hideInput]="true" (userInputChange)="passwordInput = $event"></app-input-field>
+        <p class="register-error-message" *ngIf="errorMessage !== ''">{{errorMessage}}</p>
+        <app-action-button content="Register" [onClick]="register"></app-action-button>
+    </div>
+</app-body-block>

@@ -1,0 +1,4 @@
+<div class="inputfield-container">
+    <input [(ngModel)]="userInput" (ngModelChange)="onChange($event)" class="inputfield-input" [ngClass]="hideInput? 'inputfield-password': ''" [placeholder]="placeholder" type="{{ hideInput ? 'password' : 'text' }}"/>
+    <p class="inputfield-descriptor">{{descriptor}}</p>
+</div>

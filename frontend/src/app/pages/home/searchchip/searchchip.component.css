@@ -16,6 +16,7 @@
     color: var(--tertiary-color);
     font-size: 1.2rem;
     min-width: 50%;
+    width: 90%;
 }
 
 .searchchip-input:focus {

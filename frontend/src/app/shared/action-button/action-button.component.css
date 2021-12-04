@@ -1,0 +1,14 @@
+.actionbutton {
+    color: var(--primary-color);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+
+    background-color: var(--primary-background-color);
+
+    border-style: solid;
+    border-radius: 1rem;
+    border-color: var(--primary-background-color);
+
+    padding: 0.2rem 0.6rem;
+}

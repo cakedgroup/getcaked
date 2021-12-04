@@ -17,6 +17,7 @@ html, body {
   --secondary-color: #896037;
   --tertiary-color: #a89e94;
   --highlight-color: #F2B7D3;
+  --error-color: #e60602;
 
   --primary-background-color: #FFFAF3;
   --secondary-background-color: #FFEFD6;
@@ -29,7 +30,9 @@ html, body {
   :root {
     --primary-color: #A87C4F;
     --secondary-color: #FFFAF3;
+    --tertiary-color: #a89e94;
     --highlight-color: #F2B7D3;
+    --error-color: #ff231f;
 
     --primary-background-color: #361F13;
     --secondary-background-color: #512D1A;

@@ -7,13 +7,15 @@ import { GroupchipComponent } from './groupchip/groupchip.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { SearchchipComponent } from './searchchip/searchchip.component';
 import { FormsModule } from '@angular/forms';
+import { AddChipComponent } from './add-chip/add-chip.component';
 
 
 @NgModule({
   declarations: [
     HomePageComponent,
     GroupchipComponent,
-    SearchchipComponent
+    SearchchipComponent,
+    AddChipComponent
   ],
   imports: [
     CommonModule,

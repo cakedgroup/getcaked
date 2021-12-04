@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GroupServiceService as GroupService } from 'src/app/core/services/group-service.service';
+import { GroupServiceService as GroupService } from 'src/app/core/services/group.service';
 import { Group } from 'src/app/models/group.model';
 
 @Component({
@@ -22,7 +22,6 @@ export class HomePageComponent implements OnInit {
   }
 
   search(searchQuery: string) {
-    console.log(searchQuery);
     this.displayGroups = this.groups.filter((group: Group) => {
       return group.groupName.includes(searchQuery);
     })

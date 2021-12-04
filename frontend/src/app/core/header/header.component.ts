@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { AppRoutingModule } from 'src/app/app-routing.module';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -9,9 +10,10 @@ import { AppRoutingModule } from 'src/app/app-routing.module';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private authService: AuthService) {
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
   }
 
@@ -19,4 +21,11 @@ export class HeaderComponent implements OnInit {
     return this.router.url === '/';
   }
 
+  routeIsGrouppage(): boolean {
+    return this.router.url.startsWith('/groups');
+  }
+
+  isLoggedIn(): boolean {
+    return this.authService.getUser() !== null;
+  }
 }
