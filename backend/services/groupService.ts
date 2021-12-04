@@ -166,8 +166,8 @@ export function getSingleGroup(groupId: string, userId?: string): Promise<Group>
 
 export function getUsersOfGroup(groupId: string): Promise<User[]> {
 	return new Promise<User[]>((resolve, reject) => {
-		db.all(`SELECT DESTINCT user.userId, username
-					FROM user JOIN members ON user.userId = members.userId
+		db.all(`SELECT users.userId, username
+					FROM users JOIN members ON users.userId = members.userId
 					WHERE groupId = ?;`, groupId, (err, rows) => {
 			if (err) {
 				reject(err);

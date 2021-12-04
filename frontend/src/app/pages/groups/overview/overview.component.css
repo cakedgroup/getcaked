@@ -3,6 +3,8 @@
     font-family: 'Quicksand', sans-serif;
     font-size: 2.8rem;
     text-align: center;
+    margin: 0;
+    margin-bottom: 1rem;
 }
 
 .cake-overview-notification-highlight {
@@ -12,26 +14,41 @@
 
 .cake-overview-header {
     margin: 0 auto;
-    margin-top: 2rem;
+    /* margin-top: 2rem; */
     max-width: 80vw;
 }
 
 .cakeing-button {
-    background-color: var(--secondary-background-color);
-    width: fit-content;
+    background-color: var(--primary-background-color);
     margin: 0 auto;
     padding: 0.5rem 1.5rem;
     border-radius: 2rem;
-}
-
-.cakeing-button-content {
+    border-style: none;
+    
     color: var(--secondary-color);
-
+    
     font-weight: bold;
     font-family: 'Quicksand', sans-serif;
     text-align: center;
-
-    padding: 0;
-    margin: 0;
+    
     font-size: 2em;
+}
+
+.cakeing-button:focus {
+    outline-width: 3px;
+    outline-style: dashed;
+    outline-color: var(--highlight-color);
+}
+
+.cakeing-button-container {
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.group-overview-admin-link {
+    font-size: 0.8rem;
+    text-align: right;
+    text-decoration: underline;
+    transform: translateY(1.2rem);
+    margin-right: 1rem;
 }

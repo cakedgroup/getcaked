@@ -246,7 +246,8 @@ router.get('/:groupId/users', getUserAuth, (req: express.Request, res: express.R
 			res.status(200);
 			res.send(users);
 		})
-		.catch(() => {
+		.catch((err) => {
+			console.log(err);
 			res.status(404);
 			res.send();
 		});

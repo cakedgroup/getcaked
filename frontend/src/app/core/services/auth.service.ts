@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AuthService {
 
-  private readonly basePath = 'http://' + environment.url + '/api';
+  private readonly basePath = environment.backend_url + '/api';
   private user: User;
   private authToken: string;
 

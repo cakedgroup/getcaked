@@ -13,8 +13,14 @@
     padding: 0.2rem 0.6rem;
 }
 
+.actionbutton:hover {
+    border-color: var(--primary-color);
+}
+
 .actionbutton:focus {
     outline-width: 3px;
     outline-style: dashed;
     outline-color: var(--highlight-color);
+    border-color: var(--primary-background-color);
+
 }

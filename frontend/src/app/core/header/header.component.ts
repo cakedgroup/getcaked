@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit {
     return this.router.url === '/';
   }
 
-  routeIsGrouppage(): boolean {
+  routeIsGroupPage(): boolean {
     return this.router.url.startsWith('/groups');
   }
 

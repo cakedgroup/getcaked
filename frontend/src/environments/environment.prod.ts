@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  url: 'getcaked.eu'
+  backend_url: 'https://getcaked.eu',
+  frontend_url: 'https://getcaked.eu',
 };

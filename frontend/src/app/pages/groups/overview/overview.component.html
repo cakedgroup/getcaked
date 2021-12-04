@@ -1,15 +1,19 @@
-<div class="cake-overview-header">
-    <h2 class="cake-overview-notification">
-        <div class="cake-overview-notification-highlight">
-            {{ mostRecentCake }}
-        </div> 
-        got caked!!!
-    </h2>
-    <div class="cakeing-button">
-        <p class="cakeing-button-content">
-            Cake me
-        </p>
-    </div>
-</div>
+<app-title-pane [title]="'Group: ' + group.groupName"></app-title-pane>
+<app-body-block>
 
-<p>All the events from: {{ groupId }}</p>
+    <div class="cake-overview-header">
+        <h2 class="cake-overview-notification">
+            <div class="cake-overview-notification-highlight">
+                {{ mostRecentCake }}
+            </div> 
+            got caked!!!
+        </h2>
+        <div class="cakeing-button-container">
+
+            <button class="cakeing-button">
+                Cake me
+            </button>
+        </div>
+    </div>
+    <p *ngIf="isAdmin()" class="group-overview-admin-link" routerLink="/group/{{group.groupId}}/admin">admin console</p>
+</app-body-block>

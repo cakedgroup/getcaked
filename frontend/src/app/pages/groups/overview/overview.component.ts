@@ -1,6 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { GroupService } from 'src/app/core/services/group.service';
+import { Group, GroupType } from 'src/app/models/group.model';
 
 @Component({
   selector: 'app-overview',
@@ -9,23 +13,27 @@ import { Router } from '@angular/router';
 })
 export class OverviewComponent implements OnInit {
 
-  groupId: string;
-  mostRecentCake: string;
+  group: Group = {groupId: '', groupName: '', type: GroupType.PUBLIC_GROUP, adminId: ''};
+  mostRecentCake: string = 'Jannik';
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(
+    private route: ActivatedRoute, 
+    private router: Router, 
+    private groupService: GroupService,
+    private authService: AuthService) {
   }
 
   ngOnInit(): void {
-    this.groupId = this.route.snapshot.params['groupId'];
+    let groupId = this.route.snapshot.params['groupId'];
 
-    // TODO: replace condition with dynamic check involving backend somehow
-    if (this.groupId === 'error') {
-      this.router.navigate(['/404']);
-    }
-
-    // TODO: replace with actual logic fetching data from backend
-    this.mostRecentCake = 'Jannik';
-
+    this.groupService.getGroup(groupId)
+      .subscribe(
+        (group: Group) => {
+          this.group = group;
+        },
+        (err: HttpErrorResponse) => {
+          this.router.navigate(['/404']);
+        })
 
     // Scroll to top when navigating to overview
     this.router.events.subscribe((event: any) => {
@@ -34,5 +42,11 @@ export class OverviewComponent implements OnInit {
       }
     });
   }
-
+  
+  isAdmin(): boolean {
+    if (!this.authService.getUser())
+      return false;
+    else 
+      return this.authService.getUser().userId === this.group.adminId;
+  }
 }
