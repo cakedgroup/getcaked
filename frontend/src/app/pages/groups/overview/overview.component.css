@@ -18,28 +18,6 @@
     max-width: 80vw;
 }
 
-.cakeing-button {
-    background-color: var(--primary-background-color);
-    margin: 0 auto;
-    padding: 0.5rem 1.5rem;
-    border-radius: 2rem;
-    border-style: none;
-    
-    color: var(--secondary-color);
-    
-    font-weight: bold;
-    font-family: 'Quicksand', sans-serif;
-    text-align: center;
-    
-    font-size: 2em;
-}
-
-.cakeing-button:focus {
-    outline-width: 3px;
-    outline-style: dashed;
-    outline-color: var(--highlight-color);
-}
-
 .cakeing-button-container {
     width: fit-content;
     margin: 0 auto;

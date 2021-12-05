@@ -1,0 +1,16 @@
+<app-title-pane title="Caking {{userProvidedUsername}}..."></app-title-pane>
+<app-body-block>
+    <!-- For no logged in users to be caked -->
+    <div *ngIf="isEnteringUsername">
+        <p>Looks like no one is logged in here.</p>
+        <p>But that won't stop you from caking them! Who would you like to cake?</p>
+        <app-input-field descriptor="name" placeholder="person with free cake" (userInputChange)="userProvidedUsername = $event" [onEnter]="initiateCakeSequence"></app-input-field>
+        <app-error-message [errorMessage]="errorMessage"></app-error-message>
+        <app-action-button content="cake em!" [onClick]="initiateCakeSequence"></app-action-button>
+    </div>    
+    <!-- caking counter -->
+    <div *ngIf="!isEnteringUsername" class="caking-counter-container">
+        <p class="cakeing-counter">{{cakeingCounter}}s</p>
+        <app-big-button [onClick]="cancelCakeSequence" content="CANCEL"></app-big-button>
+    </div>
+</app-body-block>

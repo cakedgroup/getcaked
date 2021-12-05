@@ -5,6 +5,6 @@
 
     <app-input-field placeholder="Group name" descriptor="name" (userInputChange)="groupNameInput = $event"></app-input-field>
     <app-selection-input descriptor="type" [options]="groupTypeOptions" [defaultOption]="groupTypeOptions[1]" (selectedOptionChanges)="groupTypeInput = $event"></app-selection-input>
-    <p class="error-message" *ngIf="errorMessage !== ''">{{errorMessage}}</p>
+    <app-error-message [errorMessage]="errorMessage"></app-error-message>
     <app-action-button content="Create" [onClick]="creatGroup"></app-action-button>
 </app-body-block>

@@ -3,7 +3,7 @@
     <div class="login-container">
         <app-input-field descriptor="username" placeholder="Username" (userInputChange)="usernameInput = $event"></app-input-field>
         <app-input-field descriptor="password" placeholder="********" [hideInput]="true" (userInputChange)="passwordInput = $event"></app-input-field>
-        <p class="error-message" *ngIf="errorMessage !== ''">{{errorMessage}}</p>
+        <app-error-message [errorMessage]="errorMessage"></app-error-message>
         <div class="login-button-container">
             <p class="login-register-link" routerLink="/login/register">register</p>
             <app-action-button content="Login" [onClick]="login"></app-action-button>

@@ -12,6 +12,7 @@ export class InputFieldComponent implements OnInit {
   @Input() descriptor: string;
   @Input() placeholder: string;
   @Input() hideInput: boolean = false;
+  @Input() onEnter: Function;
 
   userInput: string;
 

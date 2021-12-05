@@ -7,6 +7,8 @@ import { BodyBlockComponent } from './body-block/body-block.component';
 import { InputFieldComponent } from './input-field/input-field.component';
 import { ActionButtonComponent } from './action-button/action-button.component';
 import { SelectionInputComponent } from './selection-input/selection-input.component';
+import { ErrorMessageComponent } from './error-message/error-message.component';
+import { BigButtonComponent } from './big-button/big-button.component';
 
 
 @NgModule({
@@ -17,6 +19,8 @@ import { SelectionInputComponent } from './selection-input/selection-input.compo
     InputFieldComponent,
     ActionButtonComponent,
     SelectionInputComponent,
+    ErrorMessageComponent,
+    BigButtonComponent,
   ],
   imports: [
     CommonModule,
@@ -30,7 +34,9 @@ import { SelectionInputComponent } from './selection-input/selection-input.compo
     BodyBlockComponent,
     InputFieldComponent,
     ActionButtonComponent,
-    SelectionInputComponent
+    SelectionInputComponent,
+    ErrorMessageComponent,
+    BigButtonComponent
   ]
 })
 export class SharedModule {
