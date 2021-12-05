@@ -4,14 +4,15 @@ import {Group, GroupType} from '../models/Group';
 // eslint-disable-next-line max-len
 import {addUserToGroup, checkIfUserHasAccessToGroup, createNewGroup, deleteGroup, generateInviteToken, getAllGroups, getCakeEventsOfGroup, getGroupAdmin, getSingleGroup, getUsersOfGroup, inviteTokenIsValid, removeUserFromGroup} from '../services/groupService';
 import {getUserAuth} from '../util/authMiddleware';
+import { getMissingOrInvalidParameters } from '../util/general';
 
 const router = express.Router();
 
 /**
  * fetch data of all groups
  */
-router.get('/', (req: express.Request, res: express.Response) => {
-	getAllGroups().then((groups: Array<Group>) => {
+router.get('/', getUserAuth, (req: express.Request, res: express.Response) => {
+	getAllGroups(req.decoded?.userId).then((groups: Array<Group>) => {
 		res.status(200);
 		res.json(groups);
 	}).catch(() => {
@@ -27,6 +28,7 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 	if (req.decoded && req.decoded.userId) {
 		const groupName: string = req.body.groupName;
 		const type: GroupType = req.body.type;
+
 		if (groupName && type && Object.values(GroupType).includes(type)) {
 			createNewGroup(groupName, type, req.decoded.userId).then((group: Group) => {
 				res.status(201);
@@ -43,23 +45,17 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 			});
 		}
 		else {
-			const missingParameters = new Array<string>();
-			if (!groupName) missingParameters.push('groupName');
-			if (!type) missingParameters.push('type');
-
 			const invalidParameters = new Array<string>();
 			if(!Object.values(GroupType).includes(type)) invalidParameters.push('type');
 
-			/*
-			this following object initialization is really nice:
-			it basically says initialize an empty object which will take
-			an arbitrary number (array brackets) of string-type keys with string-arrays as their values
-			*/
-			const json: {[key: string]: Array<string>} = {};
-			if (missingParameters) json.missingParameters = missingParameters;
-			if (invalidParameters) json.invalidParameters = invalidParameters;
 			res.status(400);
-			res.json(json);
+			res.json(getMissingOrInvalidParameters(
+				[
+					{val: groupName, paramName: 'groupname'},
+					{val: type, paramName: 'type'}
+				],
+				invalidParameters
+			));
 		}
 	}
 	else {
@@ -92,7 +88,6 @@ router.delete('/:groupId', getUserAuth, async (req: express.Request, res: expres
 					res.status(err);
 				}
 				else {
-					console.log(err);
 					res.status(500);
 				}
 				res.send();
@@ -104,8 +99,8 @@ router.delete('/:groupId', getUserAuth, async (req: express.Request, res: expres
 		}
 	}
 	catch (err) {
-		if (err === 400) {
-			res.status(400);
+		if (err === 404) {
+			res.status(err);
 			res.json({error: 'please check if the column you are accessing exists'});
 		}
 		else {
@@ -118,14 +113,8 @@ router.delete('/:groupId', getUserAuth, async (req: express.Request, res: expres
 
 router.get('/:groupId', getUserAuth, (req: express.Request, res: express.Response) => {
 	const groupId: string = req.params.groupId;
-	let groupPromise: Promise<Group>;
 
-	if (req.decoded && req.decoded.userId)
-		groupPromise = getSingleGroup(groupId, req.decoded.userId);
-	else
-		groupPromise = getSingleGroup(groupId);
-
-	groupPromise
+	getSingleGroup(groupId, req.decoded?.userId)
 		.then((group) => {
 			res.status(200);
 			res.send(group);
@@ -143,6 +132,10 @@ router.get('/:groupId', getUserAuth, (req: express.Request, res: express.Respons
 		});
 });
 
+/**
+ * add a user to a group (covers both invite tokens and adding by admins)
+ */
+
 router.post('/:groupId/users', getUserAuth, (req: express.Request, res: express.Response) => {
 	const groupId: string = req.params.groupId;
 	const userId: string = req.body.userId;
@@ -151,8 +144,10 @@ router.post('/:groupId/users', getUserAuth, (req: express.Request, res: express.
 	if (groupId && req.decoded && req.decoded.userId) {
 		getGroupAdmin(groupId)
 			.then((adminId: string) => {
-				if (req.decoded?.userId === adminId 
-					|| (req.decoded?.userId === userId && inviteTokenIsValid(invitetoken, groupId))) {
+				if (req.decoded?.userId === adminId // case 1: user is admin
+				|| (req.decoded?.userId === userId  // case 2: user has invite token
+					&& inviteTokenIsValid(invitetoken, groupId)) 
+				) {
 					addUserToGroup(userId, groupId)
 						.then(() => {
 							res.status(201);
@@ -161,8 +156,9 @@ router.post('/:groupId/users', getUserAuth, (req: express.Request, res: express.
 						.catch((err) => {
 							if (err === 409)
 								res.status(409);
+							// should not be reachable
 							else
-								res.status(400);
+								res.status(500);
 							res.send();
 						});
 				} 
@@ -172,13 +168,9 @@ router.post('/:groupId/users', getUserAuth, (req: express.Request, res: express.
 				}
 			})
 			.catch((err) => {
-				if (err === 400) {
-					res.status(400);
+				if (err === 400 || err === 404) {
+					res.status(err);
 					res.send();
-				}
-				else if (err === 404) {
-					res.status(404);
-					res.send(404);
 				}
 				else {
 					console.log(err);
@@ -188,16 +180,26 @@ router.post('/:groupId/users', getUserAuth, (req: express.Request, res: express.
 			});
 	}
 	else {
-		res.status(400);
+		// user needs to be logged in in both cases
+		res.status(403);
 		res.send();
 	}
 });
+
+/**
+ * Remove user from a group (both by the user themselve or an admin)
+ */
 
 router.delete('/:groupId/users/:userId', getUserAuth, (req: express.Request, res: express.Response) => {
 	const groupId: string = req.params.groupId;
 	const userId: string = req.params.userId;
 
-	if (groupId && userId && req.decoded && req.decoded.userId) {
+	if (!req.decoded || !req.decoded.userId) {
+		res.status(403);
+		res.send();
+		return;
+	}
+	if (groupId && userId) {
 		getGroupAdmin(groupId)
 			.then((adminId: string) => {
 				if ((req.decoded?.userId === adminId && userId != adminId) || (req.decoded?.userId === userId)) {
@@ -228,36 +230,52 @@ router.delete('/:groupId/users/:userId', getUserAuth, (req: express.Request, res
 			});
 	}
 	else {
-
-		const missingParameters = new Array<string>();
-		if (!groupId) missingParameters.push('groupName');
-		if (!userId) missingParameters.push('type');
-
-		if (missingParameters.length === 0) {
-			res.status(403);
-			res.send();
-		}
-		else {
-			res.status(400);
-			res.send({missingParameters: missingParameters});
-		}
+		res.status(400);
+		res.send(getMissingOrInvalidParameters(
+			[
+				{val: groupId, paramName: 'groupId'},
+				{val: userId, paramName: 'userId'}
+			]
+		));
 	}
 });
 
+/**
+ * get the members of a group
+ */
+
 router.get('/:groupId/users', getUserAuth, (req: express.Request, res: express.Response) => {
 	const groupId: string = req.params.groupId;
-	// TODO: add propper check if group exists..
-	getUsersOfGroup(groupId)
-		.then((users) => {
-			res.status(200);
-			res.send(users);
+	checkIfUserHasAccessToGroup(groupId, req.decoded?.userId)
+		.then((hasAccess) => {
+			if (hasAccess) {
+				getUsersOfGroup(groupId)
+					.then((users) => {
+						res.status(200);
+						res.send(users);
+					})
+					.catch(() => {
+						// validation should have caught everything
+						res.status(500);
+						res.send();
+					});
+			}
+			else {
+				// a user not having access and it not existing have to be handled in the same way
+				res.status(404);
+				res.send();
+			}
 		})
-		.catch((err) => {
-			console.log(err);
-			res.status(404);
+		.catch(() => {
+			res.status(500);
 			res.send();
 		});
+	
 });
+
+/**
+ * Generate an invite token
+ */
 
 router.get('/:groupId/invitetoken', getUserAuth, (req: express.Request, res: express.Response) => {
 	const groupId: string = req.params.groupId;

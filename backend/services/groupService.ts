@@ -8,20 +8,29 @@ import { CakeEvent } from '../models/Cake';
 /**
  * function to fetch all Groups and their associated data from the DB
  */
-export async function getAllGroups(): Promise<Array<Group>> {
+export async function getAllGroups(userId?: string): Promise<Array<Group>> {
 	return new Promise<Array<Group>>((resolve, reject) => {
-		const groupArray: Array<Group> = new Array<Group>();
-		db.each('SELECT groupId, groupName, type, adminId FROM groups', [], function (err, row) {
-			if (err) {
-				reject(err);
+		db.all(
+			`SELECT groups.groupId, groupName, type, adminId 
+				FROM groups JOIN members ON groups.groupId = members.groupId 
+				WHERE userId = ? OR type IN ('public', 'private')`, 
+			userId, 
+			function (err, rows) {
+				if (err) {
+					console.log(err);
+					reject(err);
+				}
+				else {
+					const groupArray: Array<Group> = new Array<Group>();
+					for (const row of rows) {
+						groupArray.push(
+							{groupId: row.groupId, groupName: row.groupName, type: row.type, adminId: row.adminId}
+						);
+					}
+					resolve(groupArray);
+				}
 			}
-			else {
-				groupArray.push({groupId: row.groupId, groupName: row.groupName, type: row.type, adminId: row.adminId});
-			}
-		}, () => {
-			// only call resolve when query ends
-			resolve(groupArray);
-		});
+		);
 	});
 }
 
@@ -236,8 +245,8 @@ export function checkIfUserHasAccessToGroup(groupId: string, userId: string | un
 					JOIN members ON groups.groupId = members.groupId 
 					WHERE groups.groupId = ? AND (members.userId = ? OR groups.type IN ('public', 'private'))`,
 			[
-				userId,
-				groupId
+				groupId,
+				userId
 			],
 			(err, rows) => {
 				if (err) {
@@ -246,7 +255,7 @@ export function checkIfUserHasAccessToGroup(groupId: string, userId: string | un
 				else if (rows.length === 0) {
 					resolve(false);
 				}
-				else if (rows.length > 1) {
+				else if (rows.length > 0) {
 					resolve(true);
 				}
 				else {
