@@ -3,6 +3,7 @@ import {v4 as uuidv4} from 'uuid';
 import {Group, GroupType} from '../models/Group';
 import { User } from '../models/User';
 import jwt from 'jsonwebtoken';
+import { CakeEvent } from '../models/Cake';
 
 /**
  * function to fetch all Groups and their associated data from the DB
@@ -183,6 +184,42 @@ export function getUsersOfGroup(groupId: string): Promise<User[]> {
 	});
 }
 
+export function getCakeEventsOfGroup(groupId: string): Promise<CakeEvent[]> {
+	return new Promise<CakeEvent[]>((resolve, reject) => {
+		db.all(
+			'SELECT * from cakeEvents WHERE groupId = ?',
+			groupId,
+			(err, rows) => {
+				if (err) {
+					reject(err);
+				}
+				else if (rows.length === 0) {
+					reject(404);
+				}
+				else if (rows.length > 0) {
+					const cakeEvents: CakeEvent[] = [];
+					for (const row of rows) {
+						cakeEvents.push({
+							cakeId: row['cakeId'] as string,
+							timeStamp: row['timestamp'] as Date,
+							cakeVictimId: row['userId'] as string | undefined,
+							username: row['username'] as string | undefined,
+							cakeDelivered: row['cakeDelivered'] as boolean,
+							groupId: row['groupId'] as string,
+							gameId: row['gameId'] as string
+						});
+					}
+					resolve(cakeEvents);
+				}
+				else {
+					// should not be a valid branch
+					reject(500);
+				}
+			}
+		);
+	});
+}
+
 export function generateInviteToken(groupId: string): string {
 	return jwt.sign({groupId: groupId}, process.env.JWT_SECRET as string, {expiresIn: '30d'});
 }
@@ -190,4 +227,33 @@ export function generateInviteToken(groupId: string): string {
 export function inviteTokenIsValid(inviteToken: string, groupId: string): boolean {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	return (jwt.verify(inviteToken, process.env.JWT_SECRET as string) as any).groupId === groupId;
+}
+
+export function checkIfUserHasAccessToGroup(groupId: string, userId: string | undefined): Promise<boolean> {
+	return new Promise<boolean>((resolve, reject) => {
+		db.all(
+			`SELECT * FROM groups 
+					JOIN members ON groups.groupId = members.groupId 
+					WHERE groups.groupId = ? AND (members.userId = ? OR groups.type IN ('public', 'private'))`,
+			[
+				userId,
+				groupId
+			],
+			(err, rows) => {
+				if (err) {
+					reject(err);
+				}
+				else if (rows.length === 0) {
+					resolve(false);
+				}
+				else if (rows.length > 1) {
+					resolve(true);
+				}
+				else {
+					// should never occur
+					reject(500);
+				}
+			}
+		);
+	});
 }

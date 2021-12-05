@@ -1,7 +1,8 @@
 import express from 'express';
+import { CakeEvent } from '../models/Cake';
 import {Group, GroupType} from '../models/Group';
 // eslint-disable-next-line max-len
-import {addUserToGroup, createNewGroup, deleteGroup, generateInviteToken, getAllGroups, getGroupAdmin, getSingleGroup, getUsersOfGroup, inviteTokenIsValid, removeUserFromGroup} from '../services/groupService';
+import {addUserToGroup, checkIfUserHasAccessToGroup, createNewGroup, deleteGroup, generateInviteToken, getAllGroups, getCakeEventsOfGroup, getGroupAdmin, getSingleGroup, getUsersOfGroup, inviteTokenIsValid, removeUserFromGroup} from '../services/groupService';
 import {getUserAuth} from '../util/authMiddleware';
 
 const router = express.Router();
@@ -175,7 +176,12 @@ router.post('/:groupId/users', getUserAuth, (req: express.Request, res: express.
 					res.status(400);
 					res.send();
 				}
+				else if (err === 404) {
+					res.status(404);
+					res.send(404);
+				}
 				else {
+					console.log(err);
 					res.status(500);
 					res.send();
 				}
@@ -281,6 +287,38 @@ router.get('/:groupId/invitetoken', getUserAuth, (req: express.Request, res: exp
 	}
 	else {
 		res.status(400);
+		res.send();
+	}
+});
+
+/**
+ * check for cakeEvents
+ */
+
+router.get('/:groupId/cakeEvents', getUserAuth, async (req: express.Request, res: express.Response) => {
+	const groupId: string = req.params.groupId;
+	
+	try {
+		if (! await checkIfUserHasAccessToGroup(groupId, req.decoded?.userId)) {
+			getCakeEventsOfGroup(groupId)
+				.then((cakeEvents: CakeEvent[]) => {
+					res.status(200);
+					res.send(cakeEvents);
+				})
+				.catch(() => {
+					// all errors should have been caught to this point
+					res.status(500);
+					res.send();
+				});
+		}
+		else {
+			// 404 because no access to a group and not found are handled the same
+			res.status(404);
+			res.send();
+		}
+	} 
+	catch (error) {
+		res.status(500);
 		res.send();
 	}
 });
