@@ -1,5 +1,3 @@
-/* eslint-disable indent */
-/* eslint-disable no-empty */
 import express from 'express';
 import { getUserAuth } from '../util/authMiddleware';
 import { Game } from '../models/Game';
@@ -8,35 +6,38 @@ import { generateGameToken } from '../services/gameService';
 
 const router = express.Router();
 
+/**
+ * generate a new game
+ */
 router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 	const cakeVictitimName = req.body.cakeVictimName;
 	const groupId = req.body.groupId;
 	const cakeVictimId = req.decoded?.userId;
 
-    if (!cakeVictimId && !cakeVictitimName || !groupId) {
-        const missingParameters: string[] = [];
+	if (!cakeVictimId && !cakeVictitimName || !groupId) {
+		const missingParameters: string[] = [];
 
-        if(!cakeVictitimName) missingParameters.push('cakeVictimName');
-        if(!groupId) missingParameters.push('groupId');
+		if(!cakeVictitimName) missingParameters.push('cakeVictimName');
+		if(!groupId) missingParameters.push('groupId');
 
-        res.status(400);
-        res.send({missingParameters: missingParameters});
-        return;
-    }
+		res.status(400);
+		res.send({missingParameters: missingParameters});
+		return;
+	}
 
-    const game: Game = {
-        gameId: uuidv4(),
-        startTime: Date.now(),
-        username: cakeVictitimName,
-        userId: cakeVictimId,
-        groupId: groupId,
-        moves: [],
-    };
+	const game: Game = {
+		gameId: uuidv4(),
+		startTime: Date.now(),
+		username: cakeVictitimName,
+		userId: cakeVictimId,
+		groupId: groupId,
+		moves: [],
+	};
 
-    res.status(201);
-    res.send({game: game, gameToken: generateGameToken(game)});
+	res.status(201);
+	res.send({game: game, gameToken: generateGameToken(game)});
 
-    console.log(game.userId);
+	console.log(game.userId);
 });
 
 export {router as gameRouter};

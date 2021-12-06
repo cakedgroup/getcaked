@@ -8,6 +8,9 @@ import { createCakeEvent } from '../services/cakeEventService';
 
 const router = express.Router();
 
+/**
+ * creates a cake-event
+ */
 router.post('/', getUserAuth, async (req: express.Request, res: express.Response) => {
 	const gameToken = req.body.gameToken;
 	const game: Game = decodeGameToken(gameToken);
@@ -26,16 +29,14 @@ router.post('/', getUserAuth, async (req: express.Request, res: express.Response
 						groupId: game.groupId,
 						gameId: game.gameId
 					};
-					createCakeEvent(cakeEvent)
-						.then(() => {
-							res.status(201);
-							res.send();
-						})
-						.catch(() => {
-							// validation should have caught everything up to this poin
-							res.status(500);
-							res.send();
-						});
+					createCakeEvent(cakeEvent).then(() => {
+						res.status(201);
+						res.send();
+					}).catch(() => {
+						// validation should have caught everything up to this point
+						res.status(500);
+						res.send();
+					});
 				}
 				else {
 					res.status(409);
