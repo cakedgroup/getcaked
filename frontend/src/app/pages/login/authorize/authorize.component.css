@@ -1,0 +1,24 @@
+.login-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.login-register-link {
+    font-size: 1rem;
+    text-decoration: underline;
+    padding: 0;
+    margin: 0;
+    margin-left: 0.5rem;
+}
+
+.login-container {
+    margin-bottom: 5rem;
+}
+
+@media only screen and (min-width: 768px) {
+
+    .login-container {
+        margin-top: 1rem;
+    }
+}

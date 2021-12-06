@@ -5,6 +5,8 @@ import cors from 'cors';
 import {groupRouter} from './controllers/groupController';
 import {userRouter} from './controllers/userController';
 import {authRouter} from './controllers/authController';
+import {gameRouter} from './controllers/gameController';
+import { cakeEventRouter } from './controllers/cakeEventController';
 
 const router = express.Router();
 
@@ -19,6 +21,8 @@ router.use(logger.logToConsole);
  * Routes handled by their respective controllers
  */
 router.use('/groups', groupRouter);
+router.use('/games', gameRouter);
+router.use('/cakeEvents', cakeEventRouter);
 router.use('/users', userRouter);
 router.use('/auth', authRouter);
 

@@ -1,0 +1,9 @@
+.caking-counter-container {
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.cakeing-counter {
+    text-align: center;
+    font-size: 5rem;
+}

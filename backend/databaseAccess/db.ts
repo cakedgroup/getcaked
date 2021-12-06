@@ -46,10 +46,11 @@ function createTables(): void {
 	db.run(`CREATE TABLE IF NOT EXISTS cakeEvents(
                 cakeId TEXT PRIMARY KEY NOT NULL, 
                 timestamp DATE NOT NULL, 
-                username TEXT NOT NULL, 
+                username TEXT, 
                 cakeDelivered INTEGER NOT NULL, 
                 userId TEXT, 
                 groupId TEXT NOT NULL, 
+				gameId TEXT NOT NULL, 
                 FOREIGN KEY (userId) REFERENCES users(userId),
                 FOREIGN KEY (groupId) REFERENCES groups(groupId)
             );`, (err) => {

@@ -1,0 +1,32 @@
+.inputfield-input {
+    width: 100%;
+    box-sizing: border-box; 
+    border-style: hidden;
+    background: var(--primary-background-color);
+    color: var(--secondary-color);
+    padding: 0.6rem;
+    font-size: 1.1rem;
+    border-radius: 0.8rem;
+}
+
+.inputfield-password {
+    font-size: 0.8rem;
+}
+
+.inputfield-descriptor {
+    font-size: 1rem;
+    margin-top: 0.2rem;
+    margin-left: 0.5rem;
+}
+
+.inputfield-input:focus {
+    outline-width: 3px;
+    outline-style: dashed;
+    outline-color: var(--highlight-color);
+}
+
+.inputfield-input:selected {
+    outline-width: 3px;
+    outline-style: dashed;
+    outline-color: var(--highlight-color);
+}

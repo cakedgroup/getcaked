@@ -1,6 +1,7 @@
 <h1 class="homepage-subtitle-text">Who are you gonna cake?</h1>
-<app-groupchip></app-groupchip>
-<app-groupchip></app-groupchip>
-<app-groupchip></app-groupchip>
-<app-groupchip></app-groupchip>
-<app-groupchip></app-groupchip>
+
+<app-searchchip (searchQueryChange)="search($event)"></app-searchchip>
+<div *ngFor="let group of displayGroups">
+    <app-groupchip [group]="group"></app-groupchip>
+</div>
+<app-add-chip></app-add-chip>

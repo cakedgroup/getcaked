@@ -1,0 +1,22 @@
+.selectinput-input {
+    background: var(--primary-background-color);
+    color: var(--secondary-color);
+    border-style: hidden;
+    box-sizing: border-box; 
+    padding: 0.6rem;
+    font-size: 1.1rem;
+    border-radius: 0.8rem;
+}
+
+.selectinput-descriptor {
+    font-size: 1rem;
+    margin-top: 0.2rem;
+    margin-left: 0.5rem;
+    appearance: none;
+}
+
+.selectinput-input:focus {
+    outline-width: 3px;
+    outline-style: dashed;
+    outline-color: var(--highlight-color);
+}
