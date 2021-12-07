@@ -17,6 +17,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule)
   },
   {
+    path: 'join',
+    loadChildren: () => import('./pages/invite/invite.module').then(m => m.InviteModule)
+  },
+  {
     path: 'legal',
     component: LegalComponent
   },
@@ -24,6 +28,7 @@ const routes: Routes = [
     path: '404',
     component: PageNotFoundComponent
   },
+  { path: 'join', loadChildren: () => import('./pages/invite/invite.module').then(m => m.InviteModule) },
   {
     path: '**',
     redirectTo: '404'
