@@ -6,6 +6,10 @@ html, body {
   color: var(--primary-color);
 }
 
+.clickable:hover{
+  cursor: pointer;
+}
+
 /* ---------------------------------- */
 /*              COLORS                */
 /* ---------------------------------- */
