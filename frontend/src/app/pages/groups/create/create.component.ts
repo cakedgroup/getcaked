@@ -28,7 +28,6 @@ export class CreateComponent implements OnInit {
   }
 
   creatGroup = () => {
-    console.log(this.groupTypeInput);
     if (!this.groupNameInput) {
       this.errorMessage = 'Please provide a group name'
     }

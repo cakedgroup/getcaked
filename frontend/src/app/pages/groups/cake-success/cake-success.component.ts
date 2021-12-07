@@ -14,7 +14,6 @@ export class CakeSuccessComponent implements OnInit {
 
   ngOnInit(): void {
     this.groupId = this.route.snapshot.params['groupId'];
-    console.log(this.groupId)
   }
 
 }
