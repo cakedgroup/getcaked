@@ -1,6 +1,6 @@
 {
   "name": "getcaked-backend",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Cake all of your security vulnerabilities",
   "main": "app.ts",
   "scripts": {
