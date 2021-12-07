@@ -53,3 +53,7 @@ html, body {
 .linked-text {
   text-decoration: underline;
 }
+
+.clickable:hover{
+  cursor: pointer;
+}
