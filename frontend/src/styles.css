@@ -49,3 +49,7 @@ html, body {
 /* ---------------------------------- */
 /*         GLOBAL CLASSES             */
 /* ---------------------------------- */
+
+.linked-text {
+  text-decoration: underline;
+}
