@@ -6,10 +6,6 @@ html, body {
   color: var(--primary-color);
 }
 
-.clickable:hover{
-  cursor: pointer;
-}
-
 /* ---------------------------------- */
 /*              COLORS                */
 /* ---------------------------------- */
@@ -53,3 +49,7 @@ html, body {
 /* ---------------------------------- */
 /*         GLOBAL CLASSES             */
 /* ---------------------------------- */
+
+.clickable:hover{
+  cursor: pointer;
+}
