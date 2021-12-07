@@ -55,6 +55,17 @@ export class GroupService {
       )
   }
 
+  joinGroup(inviteToken: string, groupId: string): Observable<void> {
+    return this.http.post<void>(
+      `${this.basePath}/groups/${groupId}/users`,
+      {
+        userId: this.authService.getUser().userId,
+        invitetoken: inviteToken,
+      },
+      {headers: this.authService.getAuthHeader()},
+    );
+  }
+
   getUsersOfGroup(groupId:string): Observable<User[]> {
     if (this.authService.getUser() !== null)
       return this.http.get<User[]>(`${this.basePath}/groups/${groupId}/users`, {headers: this.authService.getAuthHeader()});
