@@ -12,6 +12,7 @@ export class CakeFailureComponent implements OnInit {
 
   constructor(private route: ActivatedRoute) { }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
     this.groupId = this.route.snapshot.params['groupId'];
   }
