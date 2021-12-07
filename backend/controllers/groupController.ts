@@ -297,7 +297,7 @@ router.get('/:groupId/cakeEvents', getUserAuth, async (req: express.Request, res
 	const groupId: string = req.params.groupId;
 	
 	try {
-		if (! await checkIfUserHasAccessToGroup(groupId, req.decoded?.userId)) {
+		if (await checkIfUserHasAccessToGroup(groupId, req.decoded?.userId)) {
 			getCakeEventsOfGroup(groupId).then((cakeEvents: CakeEvent[]) => {
 				res.status(200);
 				res.send(cakeEvents);

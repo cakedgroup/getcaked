@@ -211,12 +211,12 @@ export function getUsersOfGroup(groupId: string): Promise<User[]> {
 }
 
 /**
- * get list of cake-events of a group
+ * get list of cake-events of a group with the most recent cakeEvent occupying the index 0
  * @param groupId id of the group
  */
 export function getCakeEventsOfGroup(groupId: string): Promise<CakeEvent[]> {
 	return new Promise<CakeEvent[]>((resolve, reject) => {
-		db.all('SELECT * from cakeEvents WHERE groupId = ?', groupId,(err, rows) => {
+		db.all('SELECT * from cakeEvents WHERE groupId = ? ORDER BY timestamp DESC', groupId,(err, rows) => {
 			if (err) {
 				reject(err);
 			}

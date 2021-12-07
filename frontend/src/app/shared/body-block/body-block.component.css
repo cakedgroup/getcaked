@@ -1,7 +1,7 @@
 .body-block-container {
     width: 80vw;
     max-width: var(--content-width);
-    margin: 0 auto;
+    margin: 0 auto 1em;
 
     background-color: var(--secondary-background-color);
     color: var(--secondary-color);

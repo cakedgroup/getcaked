@@ -1,9 +1,12 @@
 import { db } from '../databaseAccess/db';
 import { CakeEvent } from '../models/Cake';
 
-export function createCakeEvent(cakeEvent: CakeEvent) {
+export async function createCakeEvent(cakeEvent: CakeEvent) {
 	return new Promise<void>((resolve, reject) => {
-		db.run(`INSERT INTO cakeEvents (cakeId, timestamp, username, cakeDelivered, userId, groupId, gameId) 
+		if (cakeEvent.username === null) {
+			reject(new Error('no Username given'));
+		}
+		else db.run(`INSERT INTO cakeEvents (cakeId, timestamp, username, cakeDelivered, userId, groupId, gameId) 
 				VALUES (?, ?, ?, ?, ?, ?, ?)`,
 		[
 			cakeEvent.cakeId, 
