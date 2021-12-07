@@ -1,5 +1,5 @@
 <div class="selectinput-container">
-    <select [(ngModel)]="selectedOption" (ngModelChange)="onChange(selectedOption)" [value]="defaultOption" class="selectinput-input">
+    <select [(ngModel)]="selectedOption" (ngModelChange)="onChange(selectedOption)" [value]="defaultOption" class="selectinput-input clickable">
         <option *ngFor="let option of options" [value]="option">{{option}}</option>
     </select>
     <p class="selectinput-descriptor">{{descriptor}}</p>
