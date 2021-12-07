@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-cake-failure',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CakeFailureComponent implements OnInit {
 
-  constructor() { }
+  groupId: string;
+
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.groupId = this.route.snapshot.params['groupId'];
   }
 
 }
