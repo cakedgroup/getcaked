@@ -1,7 +1,7 @@
 <app-chip>
   <div class="cakechip-container">
     <p class="cakechip-text">
-      <span>in: {{groupName}}</span>
+      <span>{{groupName}}</span>
       <span *ngIf="cakeEvent.cakeDelivered" class="cakeDelivered">closed</span>
       <span *ngIf="!cakeEvent.cakeDelivered" class="cakePending">open</span>
     </p>
