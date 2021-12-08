@@ -2,6 +2,10 @@
     color: var(--secondary-color);
 }
 
+.success-message {
+    color: green;
+}
+
 .save-container {
     display: flex;
     align-items: flex-end;

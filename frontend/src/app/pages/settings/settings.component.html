@@ -1,13 +1,17 @@
 <app-title-pane title="Settings"></app-title-pane>
 <app-body-block>
+    <app-sub-header content="Current User info "></app-sub-header>
+    <p>Username: "{{currentUsername}}"</p>
+
     <app-sub-header content="Change Authentification settings"></app-sub-header>
-    <!-- <p>Change your username:</p> -->
-    <app-input-field descriptor="username" placeholder="new username"></app-input-field>
-    <!-- <p>Change your password:</p> -->
-    <app-input-field descriptor="password" placeholder="********" [hideInput]="true" ></app-input-field>
+    <app-input-field descriptor="username" placeholder="new username" (userInputChange)="newUsername = $event"></app-input-field>
+    <app-input-field descriptor="password" placeholder="********" [hideInput]="true" (userInputChange)="newPassword = $event"></app-input-field>
+    <app-error-message [errorMessage]="errorMessage"></app-error-message>
+    
     <app-sub-header content="File a bug report"></app-sub-header>
     <p>If you find a bug, please file it in our <a class="clickable linked-text discolored" href="https://github.com/cakedgroup/getcaked/issues">Github issues</a></p>
+    <p class="success-message" *ngIf="updated">Saved sucessfully!</p>
     <div class="save-container">
-        <app-action-button content="save"></app-action-button>
+        <app-action-button content="save" [onClick]="saveUserSettings"></app-action-button>
     </div>
 </app-body-block>
