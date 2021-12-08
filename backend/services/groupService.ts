@@ -10,7 +10,7 @@ import { CakeEvent } from '../models/Cake';
  */
 export async function getAllGroups(userId?: string): Promise<Array<Group>> {
 	return new Promise<Array<Group>>((resolve, reject) => {
-		db.all(`SELECT groups.groupId, groupName, type, adminId 
+		db.all(`SELECT DISTINCT groups.groupId, groupName, type, adminId 
 				FROM groups JOIN members ON groups.groupId = members.groupId 
 				WHERE userId = ? OR type IN ('public', 'private')`,
 		userId, function (err, rows) {
