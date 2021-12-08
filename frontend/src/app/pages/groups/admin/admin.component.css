@@ -1,7 +1,4 @@
-.subtitle-header {
-    font-weight: bold;
-    color: var(--primary-color);
-}
+
 .invite-link {
     word-break: break-all;
     background-color: var(--primary-background-color);
