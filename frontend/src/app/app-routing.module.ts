@@ -33,6 +33,7 @@ const routes: Routes = [
     component: PageNotFoundComponent
   },
   { path: 'join', loadChildren: () => import('./pages/invite/invite.module').then(m => m.InviteModule) },
+  { path: 'settings', loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule) },
   {
     path: '**',
     redirectTo: '404'

@@ -1,12 +1,12 @@
 <app-title-pane [title]="'Admin: ' + group.groupName"></app-title-pane>
 <app-body-block>
-    <p class="subtitle-header">Invite Token:</p>
+    <app-sub-header content="Invite Token:"></app-sub-header>
     <p class="invite-link">{{inviteLink}}</p>
 
-    <p class="subtitle-header">Delete Group:</p>
+    <app-sub-header content="Delete Group:"></app-sub-header>
     <app-action-button content="DELETE" [onClick]="deleteGroup"></app-action-button>
 
-    <p class="subtitle-header">Members:</p>
+    <app-sub-header content="Members:"></app-sub-header>
     <table class="member-view">
         <tr class="member-view-header">
             <th>User ID</th>

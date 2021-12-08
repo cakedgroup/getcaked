@@ -13,14 +13,18 @@ export class AuthService {
   private readonly basePath = environment.backend_url + '/api';
   private user: User;
   private authToken: string;
+  private password: string;
 
 
   constructor(private http: HttpClient) { 
     this.user = JSON.parse(localStorage.getItem('user'));
     this.authToken = localStorage.getItem('authtoken');
+    this.password = localStorage.getItem('password');
   }
 
   authorizeUser(username: string, password: string): Observable<void> {
+    this.password = password;
+
     return this.http.post<AuthInfo>(`${this.basePath}/auth`, {username: username, password: password})  
     .pipe<void>(
       map((authInfo: AuthInfo): void => {
@@ -29,11 +33,17 @@ export class AuthService {
 
         localStorage.setItem('user', JSON.stringify(this.user));
         localStorage.setItem('authtoken', this.authToken);
+        localStorage.setItem('password', this.password);
       })
     );
   }
 
+  reauthorizeUser(): Observable<void> {
+    return this.authorizeUser(this.user.username, this.password);
+  }
+
   registerUser(username: string, password: string): Observable<void> {
+    this.password = password;
     return this.http.post<AuthInfo>(`${this.basePath}/users`, {username: username, password: password})
     .pipe<void>(
       map((authInfo: AuthInfo): void => {
@@ -42,6 +52,7 @@ export class AuthService {
 
         localStorage.setItem('user', JSON.stringify(this.user));
         localStorage.setItem('authtoken', this.authToken);
+        localStorage.setItem('password', this.password);
       })
     )
   }
@@ -69,6 +80,10 @@ export class AuthService {
       return null;
     else
       return this.user;
+  }
+
+  setUser(user: User): void {
+    this.user = user;
   }
 
 }

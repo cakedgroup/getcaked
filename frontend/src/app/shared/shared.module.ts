@@ -9,6 +9,7 @@ import { ActionButtonComponent } from './action-button/action-button.component';
 import { SelectionInputComponent } from './selection-input/selection-input.component';
 import { ErrorMessageComponent } from './error-message/error-message.component';
 import { BigButtonComponent } from './big-button/big-button.component';
+import { SubHeaderComponent } from './sub-header/sub-header.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { BigButtonComponent } from './big-button/big-button.component';
     SelectionInputComponent,
     ErrorMessageComponent,
     BigButtonComponent,
+    SubHeaderComponent,
   ],
   imports: [
     CommonModule,
@@ -36,7 +38,8 @@ import { BigButtonComponent } from './big-button/big-button.component';
     ActionButtonComponent,
     SelectionInputComponent,
     ErrorMessageComponent,
-    BigButtonComponent
+    BigButtonComponent,
+    SubHeaderComponent
   ]
 })
 export class SharedModule {

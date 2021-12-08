@@ -81,8 +81,13 @@ router.patch('/:userId', getUserAuth, (req: express.Request, res: express.Respon
 					res.status(404);
 					res.send();
 				}
+				else if (err === 409) {
+					res.status(409);
+					res.send();
+				}
 				else {
-					res.status(404);
+					console.log(err);
+					res.status(500);
 					res.send();
 				}
 			});
