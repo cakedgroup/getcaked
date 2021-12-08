@@ -2,6 +2,7 @@ import {db} from '../databaseAccess/db';
 import {v4 as uuidv4} from 'uuid';
 import * as crypto from 'crypto';
 import {User} from '../models/User';
+import {CakeEvent} from '../models/Cake';
 
 /**
  * General interface providing a minimal format for HashInfos
@@ -133,6 +134,35 @@ export async function deleteUser(userId: string): Promise<void> {
 			}
 			else {
 				resolve();
+			}
+		});
+	});
+}
+
+/**
+ * get list of cake-events of a user ordered by newest first
+ * @param userId id of the user
+ */
+export async function getCakeEventsOfUser(userId: string): Promise<CakeEvent[]> {
+	return new Promise<CakeEvent[]>((resolve, reject) => {
+		db.all('SELECT * from cakeEvents WHERE userId = ? ORDER BY timestamp DESC', userId, (err, rows) => {
+			if (err) {
+				reject(err);
+			}
+			else {
+				const cakeEvents: CakeEvent[] = [];
+				for (const row of rows) {
+					cakeEvents.push({
+						cakeId: row['cakeId'] as string,
+						timeStamp: row['timestamp'] as Date,
+						cakeVictimId: row['userId'] as string | undefined,
+						username: row['username'] as string | undefined,
+						cakeDelivered: row['cakeDelivered'] as boolean,
+						groupId: row['groupId'] as string,
+						gameId: row['gameId'] as string
+					});
+				}
+				resolve(cakeEvents);
 			}
 		});
 	});

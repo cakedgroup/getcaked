@@ -1,7 +1,7 @@
 <div [ngClass]="routeIsHomepage()?'header-big-title-container':'header-regular-title-container'" class="header-title-container">
   <h1 [ngClass]="routeIsHomepage()?'header-big-title-text':'header-regular-title-text'" class="header-title-text header-title-text-with-stroke clickable" routerLink="/">Get Caked!</h1>
   <h1 [ngClass]="routeIsHomepage()?'header-big-title-text':'header-regular-title-text header-regular-title-text-with-stroke'" class="header-title-text clickable" routerLink="/">Get Caked!</h1>
-  <h2 [ngClass]="routeIsHomepage()?'header-big-subtitle-text':'header-regular-subtitle-text'" class="header-subtitle-text" *ngIf="isLoggedIn()"><span routerLink="/login/logout" class="clickable">logout</span> - <span routerLink="/my-groups" class="clickable">groups</span> - <span routerLink="/open-cakes" class="clickable">cakes</span></h2>
+  <h2 [ngClass]="routeIsHomepage()?'header-big-subtitle-text':'header-regular-subtitle-text'" class="header-subtitle-text" *ngIf="isLoggedIn()"><span routerLink="/login/logout" class="clickable">logout</span> - <span routerLink="/my-groups" class="clickable">groups</span> - <span routerLink="/cakes" class="clickable">cakes</span></h2>
   <h2 [ngClass]="routeIsHomepage()?'header-big-subtitle-text':'header-regular-subtitle-text'" class="header-subtitle-text" *ngIf="!isLoggedIn()"><span routerLink="/login" class="clickable">login</span> - <span routerLink="/login/register" class="clickable">register</span></h2>
   <img *ngIf="routeIsHomepage()" class="header-logo" src="assets/img/cake.png">
 </div>

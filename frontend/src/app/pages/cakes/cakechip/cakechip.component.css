@@ -1,0 +1,17 @@
+.cakechip-text {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cakePending, .cakeDelivered {
+}
+
+.cakeDelivered {
+  color: #e60602;
+  text-decoration: line-through;
+}
+
+.cakePending {
+  color: limegreen;
+}
