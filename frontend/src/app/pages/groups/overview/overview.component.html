@@ -14,3 +14,7 @@
     </div>
     <p *ngIf="isAdmin()" class="group-overview-admin-link clickable" routerLink="/group/{{group.groupId}}/admin">admin console</p>
 </app-body-block>
+
+<div *ngFor="let cakeEvent of cakeEvents">
+    <app-cakechip [cakeEvent]="cakeEvent"></app-cakechip>
+</div>

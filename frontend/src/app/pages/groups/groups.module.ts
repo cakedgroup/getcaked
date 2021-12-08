@@ -9,6 +9,7 @@ import { AdminComponent } from './admin/admin.component';
 import { CakeInProgressComponent } from './cake-in-progress/cake-in-progress.component';
 import { CakeSuccessComponent } from './cake-success/cake-success.component';
 import { CakeFailureComponent } from './cake-failure/cake-failure.component';
+import { CakechipComponent } from './cakechip/cakechip.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { CakeFailureComponent } from './cake-failure/cake-failure.component';
     AdminComponent,
     CakeInProgressComponent,
     CakeSuccessComponent,
-    CakeFailureComponent
+    CakeFailureComponent,
+    CakechipComponent
   ],
   imports: [
     CommonModule,

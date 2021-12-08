@@ -6,6 +6,7 @@ import { Group, GroupType } from 'src/app/models/group.model';
 import { User } from 'src/app/models/user.model';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
+import {CakeEvent} from '../../models/cake.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +23,11 @@ export class GroupService {
 
   createGroup(groupName: string, type: GroupType): Observable<Group> {
     return this.http.post<Group>(
-      `${this.basePath}/groups`, 
+      `${this.basePath}/groups`,
       {
-        groupName: groupName, 
+        groupName: groupName,
         type: type
-      }, 
+      },
       {
         headers: this.authService.getAuthHeader()
       }
@@ -40,13 +41,13 @@ export class GroupService {
   getGroup(groupId: string): Observable<Group> {
     if (this.authService.getUser() !== null)
       return this.http.get<Group>(`${this.basePath}/groups/${groupId}`, {headers: this.authService.getAuthHeader()});
-    else 
+    else
       return this.http.get<Group>(`${this.basePath}/groups/${groupId}`);
   }
 
   getInviteToken(groupId: string): Observable<string> {
     return this.http.get<TokenWrapper>(
-      `${this.basePath}/groups/${groupId}/invitetoken`, 
+      `${this.basePath}/groups/${groupId}/invitetoken`,
       {headers: this.authService.getAuthHeader()})
       .pipe<string>(
         map((wrapper: TokenWrapper) => {
@@ -71,6 +72,13 @@ export class GroupService {
       return this.http.get<User[]>(`${this.basePath}/groups/${groupId}/users`, {headers: this.authService.getAuthHeader()});
     else
       return this.http.get<User[]>(`${this.basePath}/groups/${groupId}/users`);
+  }
+
+  getCakeEvents(groupId:string): Observable<CakeEvent[]> {
+    if (this.authService.getUser() !== null)
+      return this.http.get<CakeEvent[]>(`${this.basePath}/groups/${groupId}/cakeEvents`, {headers: this.authService.getAuthHeader()});
+    else
+      return this.http.get<CakeEvent[]>(`${this.basePath}/groups/${groupId}/cakeEvents`);
   }
 }
 

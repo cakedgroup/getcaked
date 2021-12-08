@@ -5,6 +5,7 @@ import { checkIfGameIdIsFree, decodeGameToken } from '../services/gameService';
 import { getUserAuth } from '../util/authMiddleware';
 import {v4 as uuidv4} from 'uuid';
 import { createCakeEvent } from '../services/cakeEventService';
+import {getUserInfo} from '../services/userService';
 
 const router = express.Router();
 
@@ -15,7 +16,10 @@ router.post('/', getUserAuth, async (req: express.Request, res: express.Response
 	const gameToken = req.body.gameToken;
 	const game: Game = decodeGameToken(gameToken);
 
-	if ((game.userId && req.decoded && req.decoded.userId) || game.username) {
+	if (game.userId && req.decoded && req.decoded.userId && game.username === undefined) {
+		game.username = (await getUserInfo(game.userId)).username;
+	}
+	if (game.username) {
 		console.log(Date.now() - game.startTime, Date.now(), game.startTime);
 		if (Date.now() - game.startTime >= 30000) {
 			try {
