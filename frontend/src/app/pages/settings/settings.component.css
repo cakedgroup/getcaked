@@ -1,0 +1,9 @@
+.discolored {
+    color: var(--secondary-color);
+}
+
+.save-container {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+}
