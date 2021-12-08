@@ -11,7 +11,12 @@ import {User} from '../models/User';
 export function getUserAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
 	const token: string | undefined = req.header('Authorization');
 	if (token) {
-		req.decoded = jwt.verify(token, process.env.JWT_SECRET as string) as User;
+		try {
+			req.decoded = jwt.verify(token, process.env.JWT_SECRET as string) as User;
+		}
+		catch (err) {
+			req.decoded = undefined; // jwt couldn't be decoded -> handle, as if none was given
+		}
 	}
 	next();
 }
