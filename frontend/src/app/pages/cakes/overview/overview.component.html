@@ -1,0 +1,5 @@
+<app-title-pane [title]="'Cakes of User: ' + user.username"></app-title-pane>
+
+<div *ngFor="let cakeEvent of cakeEvents">
+    <app-cakechip-user [cakeEvent]="cakeEvent"></app-cakechip-user>
+</div>

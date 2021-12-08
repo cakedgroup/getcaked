@@ -1,10 +1,12 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import {environment} from '../../../environments/environment';
+import {HttpClient} from '@angular/common/http';
+import {AuthService} from './auth.service';
+import {Observable} from 'rxjs';
+import {CakeEvent} from '../../models/cake.model';
 import { User } from 'src/app/models/user.model';
-import { environment } from 'src/environments/environment';
-import { AuthService } from './auth.service';
+import { map } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +15,17 @@ export class UserService {
 
   private readonly basePath = environment.backend_url + '/api';
 
-  constructor(private http: HttpClient, private authService: AuthService) { 
-  }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
+  getCakeEvents(userId:string): Observable<CakeEvent[]> {
+    if (this.authService.getUser() !== null)
+      return this.http.get<CakeEvent[]>(`${this.basePath}/users/${userId}/cakeEvents`, {headers: this.authService.getAuthHeader()});
+    else
+      return new Observable<CakeEvent[]>((observer) => {
+        observer.next([]);
+        observer.complete();
+      });
+  }
   changeUserInfo(username: string, password: string): Observable<void> {
     let userUpdateObj: any = {};
 

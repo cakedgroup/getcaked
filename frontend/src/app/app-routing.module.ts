@@ -21,6 +21,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/invite/invite.module').then(m => m.InviteModule)
   },
   {
+    path: 'cakes',
+    loadChildren: () => import('./pages/cakes/cakes.module').then(m => m.CakesModule)
+  },
+  {
     path: 'legal',
     component: LegalComponent
   },

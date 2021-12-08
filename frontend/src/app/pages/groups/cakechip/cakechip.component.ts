@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {CakeEvent} from '../../../models/cake.model';
 
 @Component({
-  selector: 'app-cakechip',
+  selector: 'app-cakechip-group',
   templateUrl: './cakechip.component.html',
   styleUrls: ['./cakechip.component.css']
 })

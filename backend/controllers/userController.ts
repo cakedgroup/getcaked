@@ -1,8 +1,9 @@
 import express from 'express';
 import {User} from '../models/User';
-import {changeUserInfo, deleteUser, getUserInfo, registerNewUser} from '../services/userService';
+import {changeUserInfo, deleteUser, getCakeEventsOfUser, getUserInfo, registerNewUser} from '../services/userService';
 import {createToken} from '../services/authService';
 import {getUserAuth} from '../util/authMiddleware';
+import {CakeEvent} from '../models/Cake';
 
 const router = express.Router();
 
@@ -119,6 +120,26 @@ router.delete('/:userId', getUserAuth, (req: express.Request, res: express.Respo
 				res.status(409);
 				res.send();
 			}
+		});
+	}
+	else {
+		res.status(403);
+		res.send();
+	}
+});
+
+
+router.get('/:userId/cakeEvents', getUserAuth, (req: express.Request, res: express.Response) => {
+	const userId = req.params.userId;
+
+	if (req.decoded && req.decoded.userId === userId) {
+		getCakeEventsOfUser(userId).then((cakeEvents: CakeEvent[]) => {
+			res.status(200);
+			res.json(cakeEvents);
+		}).catch((err) => {
+			console.log(err);
+			res.status(500);
+			res.send();
 		});
 	}
 	else {
