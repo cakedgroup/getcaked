@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { Group, GroupType } from 'src/app/models/group.model';
 import {CakeEvent} from '../../../models/cake.model';
+import {User} from '../../../models/user.model';
 
 @Component({
   selector: 'app-overview',
@@ -15,6 +16,7 @@ import {CakeEvent} from '../../../models/cake.model';
 export class OverviewComponent implements OnInit {
 
   group: Group = {groupId: '', groupName: '', type: GroupType.PUBLIC_GROUP, adminId: ''};
+  private members: User[];
   cakeEvents: CakeEvent[];
   mostRecentCake: string;
 
@@ -53,6 +55,16 @@ export class OverviewComponent implements OnInit {
           console.log(err);
         })
 
+    this.groupService.getUsersOfGroup(groupId)
+      .subscribe(
+        (users: User[]) => {
+          this.members = users;
+        },
+        (err) => {
+          console.log(err);
+        }
+      )
+
     // Scroll to top when navigating to overview
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
@@ -66,5 +78,31 @@ export class OverviewComponent implements OnInit {
       return false;
     else
       return this.authService.getUser().userId === this.group.adminId;
+  }
+
+  isMember(): boolean {
+    if (!this.authService.getUser())
+      return false;
+    else {
+      const userId = this.authService.getUser().userId;
+      for (let member of this.members) {
+        if (member.userId === userId) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+
+  leave = () => {
+    this.groupService.removeUser(this.group.groupId, this.authService.getUser().userId)
+      .subscribe(
+        () => {
+          this.router.navigate(['/']);
+        },
+        () => {
+
+        }
+      )
   }
 }

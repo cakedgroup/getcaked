@@ -18,9 +18,17 @@ export class AdminComponent implements OnInit {
   inviteLink: string;
   members: User[];
 
+  groupTypeOptions: string[] = ['unchanged', 'Private', 'Public', 'Private and Invisible'];
+
+  errorMessage: string = '';
+  groupNameInput: string;
+  groupTypeInput: string;
+
+  userIdInput: string;
+
   constructor(
-    private route: ActivatedRoute, 
-    private router: Router, 
+    private route: ActivatedRoute,
+    private router: Router,
     private groupService: GroupService,
     private authService: AuthService) {
   }
@@ -37,7 +45,7 @@ export class AdminComponent implements OnInit {
           this.router.navigate(['/404']);
         }
       );
-    
+
     this.groupService.getInviteToken(groupId)
         .subscribe(
           (token: string) => {
@@ -47,7 +55,7 @@ export class AdminComponent implements OnInit {
             console.log(err);
           }
         );
-        
+
     this.groupService.getUsersOfGroup(groupId)
         .subscribe(
           (users: User[]) => {
@@ -62,8 +70,20 @@ export class AdminComponent implements OnInit {
   isAdmin(): boolean {
     if (!this.authService.getUser())
       return false;
-    else 
+    else
       return this.authService.getUser().userId === this.group.adminId;
+  }
+
+  addUser = () => {
+    this.groupService.addUser(this.group.groupId, this.userIdInput)
+      .subscribe(
+        () => {
+          window.location.reload();
+        },
+        () => {
+
+        }
+      );
   }
 
   deleteGroup = () => {
@@ -72,6 +92,62 @@ export class AdminComponent implements OnInit {
         .subscribe(
           () => {
             this.router.navigate(['/']);
+          }
+        );
+    }
+  }
+
+  confirmChanges = () => {
+    if (!this.groupNameInput && this.groupTypeInput === this.groupTypeOptions[0]) {
+      this.errorMessage = 'no changes entered'
+    }
+    else {
+      if (this.groupTypeInput === this.groupTypeOptions[0]) {
+        this.groupService.changeInfos(this.group.groupId, this.groupNameInput, null)
+          .subscribe(
+            () => {
+              this.router.navigate([`/group/${this.group.groupId}/overview`])
+            },
+            () => {
+              this.errorMessage = 'something went wrong - nothing changed';
+            }
+          );
+      }
+      else {
+        let type = this.group.type
+        if (this.groupTypeInput === this.groupTypeOptions[1]) {
+          type = GroupType.PRIVATE_GROUP
+        }
+        else if (this.groupTypeInput === this.groupTypeOptions[2]) {
+          type = GroupType.PUBLIC_GROUP
+        }
+        else if (this.groupTypeInput === this.groupTypeOptions[3]) {
+          type = GroupType.PRIVATE_INVISIBLE_GROUP
+        }
+        this.groupService.changeInfos(this.group.groupId, this.groupNameInput, type)
+          .subscribe(
+            () => {
+              this.router.navigate([`/group/${this.group.groupId}/overview`])
+            },
+            () => {
+              this.errorMessage = 'something went wrong - nothing changed';
+            }
+          );
+      }
+    }
+  }
+
+  removeMember = (userId: string, username: string) => {
+    if (userId === this.group.adminId) {
+      alert("Admin can't be removed");
+    }
+    else if (window.confirm(`Are you sure you want to remove ${username} from this group?`)) {
+      this.groupService.removeUser(this.group.groupId, userId)
+        .subscribe( () => {
+            window.location.reload();
+          },
+          () => {
+
           }
         );
     }

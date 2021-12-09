@@ -3,6 +3,16 @@
     <app-sub-header content="Invite Token:"></app-sub-header>
     <p class="invite-link">{{inviteLink}}</p>
 
+    <app-sub-header content="Add User by Id:"></app-sub-header>
+    <app-input-field placeholder="Id of a user" descriptor="userId" (userInputChange)="userIdInput = $event"></app-input-field>
+    <app-action-button content="Add" [onClick]="addUser"></app-action-button>
+
+    <app-sub-header content="Change Group Information:"></app-sub-header>
+    <app-input-field placeholder="unchanged" descriptor="name" (userInputChange)="groupNameInput = $event"></app-input-field>
+    <app-selection-input descriptor="type: currently {{group.type}}" [options]="groupTypeOptions" [defaultOption]="groupTypeOptions[0]" (selectedOptionChanges)="groupTypeInput = $event"></app-selection-input>
+    <app-error-message [errorMessage]="errorMessage"></app-error-message>
+    <app-action-button content="Confirm" [onClick]="confirmChanges"></app-action-button>
+
     <app-sub-header content="Delete Group:"></app-sub-header>
     <app-action-button content="DELETE" [onClick]="deleteGroup"></app-action-button>
 
@@ -11,10 +21,12 @@
         <tr class="member-view-header">
             <th>User ID</th>
             <th>Username</th>
+            <th></th>
         </tr>
         <tr *ngFor="let member of members">
             <td>{{member.userId}}</td>
             <td>{{member.username}}</td>
+            <td><app-action-button content="DELETE" (click)="removeMember(member.userId, member.username)"></app-action-button></td>
         </tr>
     </table>
     <p class="linked-text clickable" routerLink="/group/{{group.groupId}}/overview">Go back to group overview</p>

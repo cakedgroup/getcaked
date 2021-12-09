@@ -75,6 +75,50 @@ export async function createNewGroup(groupName: string, type: GroupType, adminId
 	});
 }
 
+export async function changeGroupInfo(groupId: string, groupName: string | undefined,
+	type: GroupType | undefined): Promise<void> {
+
+	if (!groupName && !type){
+		throw(400);
+	}
+	else {
+		let sql = 'UPDATE groups SET';
+		const params: Array<string> = [];
+		if (groupName) {
+			sql += ' groupName = ?';
+			params.push(groupName);
+			if (type) sql += ',';
+		}
+		if (type) {
+			sql += ' type = ?';
+			params.push(type);
+		}
+		sql += ' WHERE groupId = ?';
+		params.push(groupId);
+
+		return new Promise<void>((resolve, reject) => {
+			db.run(sql, params, function (err) {
+				if (err) {
+					// eslint-disable-next-line max-len
+					if (err.toString().match(/^Error: SQLITE_CONSTRAINT: UNIQUE constraint failed.*$/)) { // constraint failed
+						reject(409);
+					}
+					else {
+						console.log(err);
+						reject(new Error('Error while updating user infos: ' + err));
+					}
+				}
+				else if (this.changes === 0) {
+					reject(404);
+				}
+				else {
+					resolve();
+				}
+			});
+		});
+	}
+}
+
 /**
  * add a new User to a group
  * @param userId id of the user
