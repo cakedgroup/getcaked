@@ -282,6 +282,39 @@ export function checkIfUserHasAccessToGroup(groupId: string, userId: string | un
 				resolve(false);
 			}
 			else if (rows.length > 0) {
+				console.log(rows);
+				resolve(true);
+			}
+			else {
+				// should never occur
+				reject(500);
+			}
+		}
+		);
+	});
+}
+
+
+/**
+ * Check if user is member of a group
+ * @param groupId id of the group
+ * @param userId id of the user
+ */
+ 
+export function checkIfUserIsMemberOfGroup(groupId: string, userId: string | undefined): Promise<boolean> {
+	return new Promise<boolean>((resolve, reject) => {
+		db.all(`SELECT * FROM groups 
+					JOIN members ON groups.groupId = members.groupId 
+					WHERE groups.groupId = ? AND (members.userId = ?)`,
+		[ groupId, userId ],(err, rows) => {
+			if (err) {
+				reject(err);
+			}
+			else if (rows.length === 0) {
+				resolve(false);
+			}
+			else if (rows.length > 0) {
+				console.log(rows);
 				resolve(true);
 			}
 			else {

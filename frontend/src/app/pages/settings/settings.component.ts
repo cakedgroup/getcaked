@@ -22,7 +22,6 @@ export class SettingsComponent implements OnInit {
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
-    console.log(this.authService.getUser());
     this.currentUsername = this.authService.getUser().username;
   }
 
