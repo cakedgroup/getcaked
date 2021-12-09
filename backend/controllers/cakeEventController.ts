@@ -14,12 +14,12 @@ const router = express.Router();
  */
 router.post('/', getUserAuth, async (req: express.Request, res: express.Response) => {
 	const gameToken = req.body.gameToken;
-	const game: Game = decodeGameToken(gameToken);
+	const game: Game | null = decodeGameToken(gameToken);
 
-	if (game.userId && req.decoded && req.decoded.userId && game.username === undefined) {
+	if (game && game.userId && req.decoded && req.decoded.userId && game.username === undefined) {
 		game.username = (await getUserInfo(game.userId)).username;
 	}
-	if (game.username) {
+	if (game && game.username) {
 		console.log(Date.now() - game.startTime, Date.now(), game.startTime);
 		if (Date.now() - game.startTime >= 30000) {
 			try {
