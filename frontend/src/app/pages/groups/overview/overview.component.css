@@ -30,3 +30,7 @@
     transform: translateY(1.2rem);
     margin-right: 1rem;
 }
+
+.centered {
+    text-align: center;
+}

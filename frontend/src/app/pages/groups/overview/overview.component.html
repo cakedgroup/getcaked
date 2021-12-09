@@ -8,9 +8,10 @@
             </div>
             got caked!!!
         </h2>
-        <div class="cakeing-button-container">
+        <div class="cakeing-button-container" *ngIf="userCanCake">
             <app-big-button content="Cake me" routerLink="/group/{{group.groupId}}/cake-in-progress"></app-big-button>
         </div>
+        <p class="centered" *ngIf="!userCanCake"><i><u>Hint:</u> only members can cake</i></p>
     </div>
     <p *ngIf="isAdmin()" class="group-overview-admin-link clickable" routerLink="/group/{{group.groupId}}/admin">admin console</p>
 </app-body-block>
