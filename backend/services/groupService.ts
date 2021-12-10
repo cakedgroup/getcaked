@@ -8,12 +8,32 @@ import { CakeEvent } from '../models/Cake';
 /**
  * function to fetch all Groups and their associated data from the DB
  */
-export async function getAllGroups(userId?: string): Promise<Array<Group>> {
+export async function getAllGroups(userId?: string, searchQuery?: string): Promise<Array<Group>> {
+	console.log(searchQuery);
+	searchQuery = '%' + searchQuery + '%';
+	let query: string;
+	let params: string[];
+	if (searchQuery) {
+		query = `SELECT DISTINCT groups.groupId, groupName, type, adminId 
+					FROM groups JOIN members ON groups.groupId = members.groupId 
+					WHERE (userId = ? OR type IN ('public', 'private'))
+					AND groups.groupName LIKE ?;`;
+		if (userId)
+			params = [userId, searchQuery];
+		else 
+			params = ['', searchQuery];
+	}
+	else {
+		query = `SELECT DISTINCT groups.groupId, groupName, type, adminId 
+					FROM groups JOIN members ON groups.groupId = members.groupId 
+					WHERE userId = ? OR type IN ('public', 'private');`;
+		if (userId)
+			params = [userId];
+		else 
+			params = [''];
+	}
 	return new Promise<Array<Group>>((resolve, reject) => {
-		db.all(`SELECT DISTINCT groups.groupId, groupName, type, adminId 
-				FROM groups JOIN members ON groups.groupId = members.groupId 
-				WHERE userId = ? OR type IN ('public', 'private')`,
-		userId, function (err, rows) {
+		db.all(query, params, function (err, rows) {
 			if (err) {
 				console.log(err);
 				reject(err);
