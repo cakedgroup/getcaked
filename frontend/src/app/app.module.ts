@@ -11,6 +11,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
 import { LegalComponent } from './pages/legal/legal.component';
 import { SharedModule } from './shared/shared.module';
+import { AuthService } from './core/services/auth.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,9 @@ import { SharedModule } from './shared/shared.module';
     FormsModule,
     SharedModule
   ],
-  providers: [],
+  providers: [
+    AuthService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

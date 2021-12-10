@@ -1,5 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+import { LoginGuard } from './core/guards/login.guard';
 import { LegalComponent } from './pages/legal/legal.component';
 import {PageNotFoundComponent} from "./pages/page-not-found/page-not-found.component";
 
@@ -18,7 +19,8 @@ const routes: Routes = [
   },
   {
     path: 'join',
-    loadChildren: () => import('./pages/invite/invite.module').then(m => m.InviteModule)
+    canActivate: [LoginGuard],
+    loadChildren: () => import('./pages/invite/invite.module').then(m => m.InviteModule),
   },
   {
     path: 'cakes',
@@ -32,8 +34,11 @@ const routes: Routes = [
     path: '404',
     component: PageNotFoundComponent
   },
-  { path: 'join', loadChildren: () => import('./pages/invite/invite.module').then(m => m.InviteModule) },
-  { path: 'settings', loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule) },
+  { 
+    path: 'settings', 
+    canActivate: [LoginGuard],
+    loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule) 
+  },
   {
     path: '**',
     redirectTo: '404'
