@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { Group, GroupType } from 'src/app/models/group.model';
+import { User } from 'src/app/models/user.model';
 import {CakeEvent} from '../../../models/cake.model';
-import {User} from '../../../models/user.model';
 
 @Component({
   selector: 'app-overview',
@@ -19,6 +19,7 @@ export class OverviewComponent implements OnInit {
   private members: User[];
   cakeEvents: CakeEvent[];
   mostRecentCake: string;
+  userCanCake: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,6 +35,7 @@ export class OverviewComponent implements OnInit {
       .subscribe(
         (group: Group) => {
           this.group = group;
+          this.checkIfUserCanCake()
         },
         (err: HttpErrorResponse) => {
           this.router.navigate(['/404']);
@@ -104,5 +106,29 @@ export class OverviewComponent implements OnInit {
 
         }
       )
+  }
+
+  checkIfUserCanCake() {
+    if (this.group.type === GroupType.PUBLIC_GROUP) {
+      console.log(this.group)
+      this.userCanCake = true;
+      return;
+    }
+    else
+      this.groupService.getUsersOfGroup(this.group.groupId).subscribe(
+        (users: User[]) => {
+          if (!this.authService.getUser()) {
+            this.userCanCake = false;
+          }
+          else {
+            // check if user is in the group
+            this.userCanCake = users.filter(user => user.userId === this.authService.getUser().userId).length > 0;
+            console.log(users.filter(user => user.userId === this.authService.getUser().userId));
+          }
+        },
+        () => {
+          this.userCanCake = false;
+        }
+      );
   }
 }
