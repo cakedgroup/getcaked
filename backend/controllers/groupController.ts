@@ -2,7 +2,21 @@ import express from 'express';
 import { CakeEvent } from '../models/Cake';
 import {Group, GroupType} from '../models/Group';
 // eslint-disable-next-line max-len
-import {addUserToGroup, checkIfUserHasAccessToGroup, createNewGroup, deleteGroup, generateInviteToken, getAllGroups, getCakeEventsOfGroup, getGroupAdmin, getSingleGroup, getUsersOfGroup, inviteTokenIsValid, removeUserFromGroup} from '../services/groupService';
+import {
+	addUserToGroup,
+	changeGroupInfo,
+	checkIfUserHasAccessToGroup,
+	createNewGroup,
+	deleteGroup,
+	generateInviteToken,
+	getAllGroups,
+	getCakeEventsOfGroup,
+	getGroupAdmin,
+	getSingleGroup,
+	getUsersOfGroup,
+	inviteTokenIsValid,
+	removeUserFromGroup
+} from '../services/groupService';
 import {getUserAuth} from '../util/authMiddleware';
 import { getMissingOrInvalidParameters } from '../util/general';
 
@@ -28,6 +42,7 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 	if (req.decoded && req.decoded.userId) {
 		const groupName: string = req.body.groupName;
 		const type: GroupType = req.body.type;
+		console.log(type);
 
 		if (groupName && type && Object.values(GroupType).includes(type)) {
 			createNewGroup(groupName, type, req.decoded.userId).then((group: Group) => {
@@ -61,6 +76,54 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 	else {
 		res.status(403);
 		res.send();
+	}
+});
+
+/**
+ * change Infos of a group
+ */
+router.patch('/:groupId', getUserAuth, (req: express.Request, res: express.Response) => {
+	const groupName = req.body.groupName;
+	const type = req.body.type;
+	console.log(type);
+	const groupId = req.params.groupId;
+
+	if (!groupName && !type && !Object.values(GroupType).includes(type)) {
+		res.status(400);
+		res.send();
+	}
+	else if (groupId) {
+		getGroupAdmin(groupId).then((adminId: string) => {
+			if (req.decoded && req.decoded.userId && req.decoded.userId === adminId) {
+				changeGroupInfo(groupId, groupName, type).then( () => {
+					res.status(204);
+					res.send();
+				}).catch( (err) => {
+					if (typeof err === 'number') {
+						res.status(err);
+					}
+					else {
+						console.log(err);
+						res.status(500);
+					}
+					res.send();
+				});
+			}
+			else {
+				res.status(403);
+				res.send();
+			}
+		}).catch((err) => {
+			if (err === 400 || err === 404) {
+				res.status(err);
+				res.send();
+			}
+			else {
+				console.log(err);
+				res.status(500);
+				res.send();
+			}
+		});
 	}
 });
 

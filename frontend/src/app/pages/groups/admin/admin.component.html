@@ -1,21 +1,36 @@
 <app-title-pane [title]="'Admin: ' + group.groupName"></app-title-pane>
 <app-body-block>
-    <app-sub-header content="Invite Token:"></app-sub-header>
+    <app-sub-header content="Invite Token:" isFirst="true"></app-sub-header>
     <p class="invite-link">{{inviteLink}}</p>
 
-    <app-sub-header content="Delete Group:"></app-sub-header>
-    <app-action-button content="DELETE" [onClick]="deleteGroup"></app-action-button>
+    <app-sub-header content="Change Group Information:"></app-sub-header>
+    <p>If you messed up your settings while creating the group, change theme here:</p>
+    <app-input-field placeholder="unchanged" descriptor="name" (userInputChange)="groupNameInput = $event"></app-input-field>
+    <app-selection-input descriptor="type: currently {{group.type}}" [options]="groupTypeOptions" [defaultOption]="groupTypeOptions[0]" (selectedOptionChanges)="groupTypeInput = $event"></app-selection-input>
+    <app-error-message [errorMessage]="errorMessage"></app-error-message>
+    <app-action-button content="Confirm" [onClick]="confirmChanges"></app-action-button>
+    <app-sub-header content="Add User by Id:"></app-sub-header>
+    <p>If you know the user id of one of your friends, but don't feel like handing them the invite link, add them here.</p>
+    <app-input-field placeholder="Id of a user" descriptor="userId" (userInputChange)="userIdInput = $event"></app-input-field>
+    <app-action-button content="Add" [onClick]="addUser"></app-action-button>
 
     <app-sub-header content="Members:"></app-sub-header>
     <table class="member-view">
         <tr class="member-view-header">
             <th>User ID</th>
             <th>Username</th>
+            <th></th>
         </tr>
         <tr *ngFor="let member of members">
             <td>{{member.userId}}</td>
             <td>{{member.username}}</td>
+            <td><app-action-button content="DELETE" (click)="removeMember(member.userId, member.username)"></app-action-button></td>
         </tr>
     </table>
+
+    <app-sub-header content="Delete Group:"></app-sub-header>
+    <p>WARNING: this will permanently delete your group. Only click this if you don't want any of your friends to have a fun time anymore</p>
+    <app-action-button content="DELETE" [onClick]="deleteGroup"></app-action-button>
+
     <p class="linked-text clickable" routerLink="/group/{{group.groupId}}/overview">Go back to group overview</p>
 </app-body-block>

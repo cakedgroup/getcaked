@@ -1,4 +1,9 @@
 .sub-header {
+    margin-top: 4rem;
     font-weight: bold;
     color: var(--primary-color);
+}
+
+.first {
+    margin-top: 1rem;
 }

@@ -16,6 +16,7 @@ import {CakeEvent} from '../../../models/cake.model';
 export class OverviewComponent implements OnInit {
 
   group: Group = {groupId: '', groupName: '', type: GroupType.PUBLIC_GROUP, adminId: ''};
+  private members: User[];
   cakeEvents: CakeEvent[];
   mostRecentCake: string;
   userCanCake: boolean = false;
@@ -56,6 +57,16 @@ export class OverviewComponent implements OnInit {
           console.log(err);
         })
 
+    this.groupService.getUsersOfGroup(groupId)
+      .subscribe(
+        (users: User[]) => {
+          this.members = users;
+        },
+        (err) => {
+          console.log(err);
+        }
+      )
+
     // Scroll to top when navigating to overview
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
@@ -71,13 +82,39 @@ export class OverviewComponent implements OnInit {
       return this.authService.getUser().userId === this.group.adminId;
   }
 
+  isMember(): boolean {
+    if (!this.authService.getUser())
+      return false;
+    else {
+      const userId = this.authService.getUser().userId;
+      for (let member of this.members) {
+        if (member.userId === userId) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+
+  leave = () => {
+    this.groupService.removeUser(this.group.groupId, this.authService.getUser().userId)
+      .subscribe(
+        () => {
+          this.router.navigate(['/']);
+        },
+        () => {
+
+        }
+      )
+  }
+
   checkIfUserCanCake() {
     if (this.group.type === GroupType.PUBLIC_GROUP) {
       console.log(this.group)
       this.userCanCake = true;
       return;
     }
-    else 
+    else
       this.groupService.getUsersOfGroup(this.group.groupId).subscribe(
         (users: User[]) => {
           if (!this.authService.getUser()) {

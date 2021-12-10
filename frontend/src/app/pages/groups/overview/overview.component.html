@@ -1,4 +1,7 @@
 <app-title-pane [title]="'Group: ' + group.groupName"></app-title-pane>
+<div class="leave-button-container" *ngIf="isMember() && !isAdmin()">
+    <app-action-button content="leave" [onClick]="leave"></app-action-button>
+</div>
 <app-body-block>
 
     <div class="cake-overview-header">

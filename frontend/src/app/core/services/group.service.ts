@@ -34,6 +34,23 @@ export class GroupService {
     );
   }
 
+  changeInfos(groupId: string, groupName: string, type: GroupType | null): Observable<void> {
+    let body : {[keys: string]: any} = {};
+    if (groupName) {
+      body.groupName = groupName;
+    }
+    if (type) {
+      body.type = type;
+    }
+
+    return this.http.patch<void>(
+      `${this.basePath}/groups/${groupId}`,
+      body, {
+      headers: this.authService.getAuthHeader()
+      }
+    );
+  }
+
   deleteGroup(groupId: string): Observable<void> {
     return this.http.delete<void>(`${this.basePath}/groups/${groupId}`, {headers: this.authService.getAuthHeader()});
   }
@@ -56,6 +73,16 @@ export class GroupService {
       )
   }
 
+  addUser(groupId: string, userId: string): Observable<void> {
+    return this.http.post<void>(
+      `${this.basePath}/groups/${groupId}/users`,
+      {
+        userId: userId,
+      },
+      {headers: this.authService.getAuthHeader()},
+    );
+  }
+
   joinGroup(inviteToken: string, groupId: string): Observable<void> {
     return this.http.post<void>(
       `${this.basePath}/groups/${groupId}/users`,
@@ -64,6 +91,13 @@ export class GroupService {
         invitetoken: inviteToken,
       },
       {headers: this.authService.getAuthHeader()},
+    );
+  }
+
+  removeUser(groupId: string, userId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.basePath}/groups/${groupId}/users/${userId}`,
+      {headers: this.authService.getAuthHeader()}
     );
   }
 
