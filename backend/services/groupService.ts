@@ -76,14 +76,22 @@ export async function createNewGroup(groupName: string, type: GroupType, adminId
 }
 
 export async function changeGroupInfo(groupId: string, groupName: string | undefined,
-	type: GroupType | undefined): Promise<void> {
+	type: GroupType | undefined, newAdminId: string): Promise<void> {
 
-	if (!groupName && !type){
+	if (!groupName && !type && !newAdminId){
 		throw(400);
 	}
 	else {
 		let sql = 'UPDATE groups SET';
 		const params: Array<string> = [];
+		if (newAdminId) {
+			if (!(await checkIfUserIsMemberOfGroup(groupId, newAdminId))) {
+				throw(418);
+			}
+			sql += ' adminId = ?';
+			params.push(newAdminId);
+			if (groupName || type) sql += ',';
+		}
 		if (groupName) {
 			sql += ' groupName = ?';
 			params.push(groupName);
