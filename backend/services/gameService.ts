@@ -14,8 +14,13 @@ export function generateGameToken(game: Game) {
  * decode a game-token
  * @param gameToken game-token to decode
  */
-export function decodeGameToken(gameToken: string): Game {
-	return jwt.verify(gameToken, process.env.JWT_SECRET as string) as Game; 
+export function decodeGameToken(gameToken: string): Game | null {
+	if (gameToken) {
+		return jwt.verify(gameToken, process.env.JWT_SECRET as string) as Game;
+	}
+	else {
+		return null;
+	}
 }
 
 /**
