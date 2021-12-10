@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { debounceTime } from 'rxjs/operators';
 import { GroupService as GroupService } from 'src/app/core/services/group.service';
 import { Group } from 'src/app/models/group.model';
 
@@ -21,9 +22,12 @@ export class HomePageComponent implements OnInit {
     })
   }
 
-  search(searchQuery: string) {
-    this.displayGroups = this.groups.filter((group: Group) => {
-      return group.groupName.includes(searchQuery);
+  search = (searchQuery: string) => {
+    this.groupService.listGroups(searchQuery)
+    
+    .subscribe((groups: Group[]) => {
+      this.displayGroups = groups;
+      this.groups = this.displayGroups;
     })
   }
 }

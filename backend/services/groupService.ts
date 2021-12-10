@@ -9,11 +9,12 @@ import { CakeEvent } from '../models/Cake';
  * function to fetch all Groups and their associated data from the DB
  */
 export async function getAllGroups(userId?: string, searchQuery?: string): Promise<Array<Group>> {
-	console.log(searchQuery);
-	searchQuery = '%' + searchQuery + '%';
+	const hasSearch: boolean = searchQuery !== undefined;
 	let query: string;
 	let params: string[];
-	if (searchQuery) {
+
+	searchQuery = '%' + searchQuery + '%';
+	if (hasSearch) {
 		query = `SELECT DISTINCT groups.groupId, groupName, type, adminId 
 					FROM groups JOIN members ON groups.groupId = members.groupId 
 					WHERE (userId = ? OR type IN ('public', 'private'))

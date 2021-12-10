@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { debounceTime, map } from 'rxjs/operators';
 import { Group, GroupType } from 'src/app/models/group.model';
 import { User } from 'src/app/models/user.model';
 import { environment } from 'src/environments/environment';
@@ -17,8 +17,22 @@ export class GroupService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  listGroups(): Observable<Group[]> {
-      return this.http.get<Group[]>(`${this.basePath}/groups`);
+  listGroups(searchQuery?: string): Observable<Group[]> {
+    let params: HttpParams = new HttpParams();
+    let headers: HttpHeaders;
+
+    if (searchQuery) params = params.append('search', searchQuery);
+
+    if (this.authService.getUser() === null) headers = new HttpHeaders();
+    else headers = this.authService.getAuthHeader();
+
+    return this.http.get<Group[]>(
+      `${this.basePath}/groups`,
+      {
+        headers: headers,
+        params: params
+      }
+    );
   }
 
   createGroup(groupName: string, type: GroupType): Observable<Group> {

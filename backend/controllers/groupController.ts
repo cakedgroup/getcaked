@@ -43,7 +43,6 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 	if (req.decoded && req.decoded.userId) {
 		const groupName: string = req.body.groupName;
 		const type: GroupType = req.body.type;
-		console.log(type);
 
 		if (groupName && type && Object.values(GroupType).includes(type)) {
 			createNewGroup(groupName, type, req.decoded.userId).then((group: Group) => {
