@@ -42,7 +42,6 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 	if (req.decoded && req.decoded.userId) {
 		const groupName: string = req.body.groupName;
 		const type: GroupType = req.body.type;
-		console.log(type);
 
 		if (groupName && type && Object.values(GroupType).includes(type)) {
 			createNewGroup(groupName, type, req.decoded.userId).then((group: Group) => {
@@ -53,7 +52,6 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 					res.status(err);
 				}
 				else {
-					console.log(err);
 					res.status(500);
 				}
 				res.send();
@@ -85,7 +83,6 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 router.patch('/:groupId', getUserAuth, (req: express.Request, res: express.Response) => {
 	const groupName = req.body.groupName;
 	const type = req.body.type;
-	console.log(type);
 	const groupId = req.params.groupId;
 
 	if (!groupName && !type && !Object.values(GroupType).includes(type)) {

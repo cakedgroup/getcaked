@@ -63,6 +63,14 @@ export class CakeService {
         {headers: this.authService.getAuthHeader()}
       );
   }
+
+  updateCakeStatus(cakeId:string, cakeDelivered: boolean) {
+    return this.http.patch(
+      `${this.basePath}/cakeEvents/${cakeId}`,
+      {cakeDelivered: cakeDelivered},
+      {headers: this.authService.getAuthHeader()}
+    )
+  }
 }
 
 interface GameResponse {

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CakeEvent} from '../../../models/cake.model';
 
 @Component({
@@ -9,10 +9,18 @@ import {CakeEvent} from '../../../models/cake.model';
 export class CakechipComponent implements OnInit {
 
   @Input() cakeEvent: CakeEvent;
+  @Input() isEditable: boolean;
+  @Output() isClosedChanges = new EventEmitter<boolean>()
+
+  selectedOption: string = '';
 
   constructor() { }
 
   ngOnInit(): void {
+    this.selectedOption = this.cakeEvent.cakeDelivered? 'closed':'open';
   }
 
+  onChange() {
+    this.isClosedChanges.emit(this.selectedOption === 'closed');
+  }
 }
