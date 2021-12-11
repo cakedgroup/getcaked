@@ -63,6 +63,7 @@ export class CakeInProgressComponent implements OnInit {
           }
           else {
             // signal end to backend
+            if (this.router.url.endsWith(this.groupId + '/cake-in-progress'))
             this.cakeService.createCakeEvent(this.gameToken)
               .subscribe(
                 () => {
