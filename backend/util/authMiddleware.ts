@@ -13,10 +13,9 @@ export function getUserAuth(req: express.Request, res: express.Response, next: e
 	const token: string | undefined = req.header('Authorization');
 	if (token) {
 		try {
-			req.decoded = jwt.verify(token, process.env.JWT_SECRET as string) as User;
+			req.decoded = jwt.verify(token, process.env.JWT_SECRET as string, {algorithms: ['HS256']}) as User;
 			// check if user actually exists
-			getUserInfo(req.decoded.userId).then((user: User) => {
-				console.log(user);
+			getUserInfo(req.decoded.userId).then(() => {
 				next();
 			}).catch(() => {
 				res.status(401);
@@ -27,5 +26,8 @@ export function getUserAuth(req: express.Request, res: express.Response, next: e
 			req.decoded = undefined; // jwt couldn't be decoded -> handle, as if none was given
 			next();
 		}
+	} 
+	else {
+		next();
 	}
 }
