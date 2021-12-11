@@ -1,7 +1,11 @@
 import jwt from 'jsonwebtoken';
 import { db } from '../databaseAccess/db';
 import { Game, GameMove } from '../models/Game';
-import { randomIntFromInterval } from '../util/general';
+
+const EMPTY = 0;
+const COMPUTER = 1;
+const PLAYER = 2;
+
 
 /**
  * generate a JWT-game-token
@@ -54,32 +58,96 @@ export function checkIfGameIdIsFree(gameId: string): Promise<boolean> {
 	});
 }
 
+let someConst = 0;
+
 /**
  * generate next game move
  */
 export function playNextMove(game: Game): Game {
 
-	let nextMove: GameMove;
-	let attemptCounter = 0;
-	do {
-		nextMove = {
-			row: randomIntFromInterval(0, 2),
-			column: randomIntFromInterval(0, 2)
-		};
-		attemptCounter += 1;
-	} while (fieldIsOccupied(game, nextMove) && attemptCounter < 80);
+	const board = getBoardFromGame(game);
+	// const board = [
+	// 	[COMPUTER, PLAYER, EMPTY],
+	// 	[EMPTY, PLAYER, EMPTY],
+	// 	[PLAYER, COMPUTER, EMPTY]
+	// ];
+	someConst = 0;
+	
+	const tmp = getBestNextMove(board, false);
+	console.log(tmp);
+	console.log(someConst);
 
-	if (attemptCounter < 80)
-		game.moves.push(nextMove);
-
+	game.moves.push(tmp.move);
+	
 	return game;
 }
 
-export function getWinner(game: Game): boolean | null {
-	const EMPTY = 0;
-	const COMPUTER = 1;
-	const PLAYER = 2;
+function getBestNextMove(board: number[][], playersMove: boolean): EvaluatedGameMove {
+	someConst += 1;
+	let bestMove: GameMove | null = null;
+	let bestEvalNum: number| null = null;
 
+	for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
+		for (let colIndex = 0; colIndex < 3; colIndex++) {
+			if (board[rowIndex][colIndex] === EMPTY) {
+				const currentMove: GameMove = {row: rowIndex, column: colIndex};
+				let currentEvaluation: number;
+				const boardCopy = JSON.parse(JSON.stringify(board)) as number[][];
+
+				boardCopy[rowIndex][colIndex] = playersMove? PLAYER:COMPUTER;
+
+				if (checkIfBoardHasWinner(boardCopy) !== null) {
+					currentEvaluation = playersMove? -1 : 1;
+				}
+				else {
+					currentEvaluation = getBestNextMove(boardCopy, !playersMove).eval;
+				}
+
+				if (bestEvalNum === null) {
+					bestMove = currentMove;
+					bestEvalNum = currentEvaluation;
+				}
+				else if (playersMove && currentEvaluation < bestEvalNum) {
+					bestMove = currentMove;
+					bestEvalNum = currentEvaluation;
+				}
+				else if (!playersMove && currentEvaluation > bestEvalNum) {
+					bestMove = currentMove;
+					bestEvalNum = currentEvaluation;
+				}
+			}
+			else {
+				continue;
+			}
+		}
+	}
+	// console.log('---------------');
+	// for (const row of board) {
+	// 	console.log(row);
+	// }
+	// console.log(playersMove);
+	// console.log('best', bestMove, bestEvalNum, '\n\n\n');
+	// console.log('---------------');
+	if (bestEvalNum === null || bestMove === null) {
+		return {
+			move: {row: -1, column: -1},
+			eval: 0
+		};
+	}
+	else {
+		return {
+			move: bestMove,
+			eval: bestEvalNum
+		};
+	}
+}
+
+interface EvaluatedGameMove {
+	move: GameMove,
+	eval: number
+}
+
+function getBoardFromGame(game: Game): number[][] {
 	// initialize empty board
 	const board: number[][] = [];
 	for (let i = 0; i < 3; i++) {
@@ -97,7 +165,10 @@ export function getWinner(game: Game): boolean | null {
 		else if (turn === COMPUTER)
 			turn = PLAYER;
 	}
+	return board;
+}
 
+function checkIfBoardHasWinner(board: number[][]): boolean | null {
 	// check rows
 	for (const row of board) {
 		if (row.every((item) => item === row[0])){
@@ -109,7 +180,6 @@ export function getWinner(game: Game): boolean | null {
 			}
 		}
 	}
-
 	// check cols
 	for (const colIndex in board) {
 		let isEqual = true;
@@ -148,6 +218,10 @@ export function getWinner(game: Game): boolean | null {
 	}
 
 	return null;
+}
+
+export function getWinner(game: Game): boolean | null {
+	return checkIfBoardHasWinner(getBoardFromGame(game));	
 }
 
 

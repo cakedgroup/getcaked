@@ -1,7 +1,7 @@
 <app-sub-header content="Let's play tic tac toe" isFirst="true"></app-sub-header>
 <p>Since whomever you're caking is logged in, it looks like you get to play tic tac toe.</p>
 <p>To start, click on a field of your choice</p>
-<p class="lost-message" *ngIf="hasLost">YOU LOST!</p>
+<p class="lost-message" *ngIf="hasLost">YOU DIDN'T WIN!</p>
 <div class="ttt-container" [ngClass]="hasLost? 'ttt-container-lost':''">
     <div class="ttt-row" *ngFor="let row of board; let rowIndex = index">
         <button *ngFor="let item of row; let colIndex = index" [ngClass]="hasLost? 'ttt-item-lost':''" class="ttt-item" (click)="playMove(rowIndex, colIndex)">{{board[rowIndex][colIndex]}}</button>
