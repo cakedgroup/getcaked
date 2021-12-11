@@ -14,6 +14,7 @@ export class CakeInProgressComponent implements OnInit {
   groupId: string;
 
   isEnteringUsername: boolean = false;
+  hasCompletedGame: boolean = false;
   userProvidedUsername: string;
   errorMessage: string = '';
 
@@ -39,6 +40,11 @@ export class CakeInProgressComponent implements OnInit {
       this.initiateCakeSequence();
     }
   }
+  
+  finishEntering = () => {
+    this.initiateCakeSequence();
+    this.hasCompletedGame = true;
+  }
 
   initiateCakeSequence = () => {
     if (this.userProvidedUsername) {
@@ -58,6 +64,9 @@ export class CakeInProgressComponent implements OnInit {
 
       this.intervalObj = setInterval(
         () => {
+          if (!this.hasCompletedGame) {
+            return;
+          }
           if (this.cakeingCounter > 1) {
             this.cakeingCounter -= 1;
           }

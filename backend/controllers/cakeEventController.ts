@@ -1,7 +1,7 @@
 import express from 'express';
 import { CakeEvent } from '../models/Cake';
 import { Game } from '../models/Game';
-import { checkIfGameIdIsFree, decodeGameToken } from '../services/gameService';
+import { checkIfGameIdIsFree, decodeGameToken, getWinner } from '../services/gameService';
 import { getUserAuth } from '../util/authMiddleware';
 import {v4 as uuidv4} from 'uuid';
 import { changeStatusOfCakeEvent, createCakeEvent, getCakeEvent } from '../services/cakeEventService';
@@ -22,6 +22,11 @@ router.post('/', getUserAuth, async (req: express.Request, res: express.Response
 	}
 	if (game && game.username) {
 		if (Date.now() - game.startTime >= 30000) {
+			if (game.userId && !getWinner(game)) {
+				res.status(400);
+				res.send({error: 'game has not been completed'});
+				return;
+			}
 			try {
 				if (await checkIfGameIdIsFree(game.gameId)) {
 					const cakeEvent: CakeEvent = {
