@@ -4,6 +4,7 @@ Website project used for caking your ignorant coworkers/friends/classmates
 - [Development](#Development)
 - [Non-obvious functionality](#non-obvious-functionality)
 - [General Features and Functionality](#general-features-and-functionality)
+- [OpenAPI spec](#openapi-spec)
 - [Deployment](#Deployment)
 
 ## Development
@@ -63,6 +64,10 @@ Cake events are visible for everyone inside a certain group in the overview page
 Furtherly, every user can view an updated list of their own cakeEvents across all groups in a cake overview page.
 
 As soon as a user has actually baked a cake and thus deliverd on "their" promise, an admin of a group can close the cakes.
+
+## OpenAPI spec
+This project (or rather its backend) is also documented in OpenAPI.
+If you wish to view the spec, you can do so in `./docs/getcaked.yaml`.
 
 ## Deployment
 
