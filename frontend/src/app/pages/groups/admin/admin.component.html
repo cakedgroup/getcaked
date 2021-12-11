@@ -8,11 +8,14 @@
     <app-input-field placeholder="unchanged" descriptor="name" (userInputChange)="groupNameInput = $event"></app-input-field>
     <app-input-field placeholder="unchanged" descriptor="userId of new Admin" (userInputChange)="adminIdInput = $event"></app-input-field>
     <app-selection-input descriptor="type: currently {{group.type}}" [options]="groupTypeOptions" [defaultOption]="groupTypeOptions[0]" (selectedOptionChanges)="groupTypeInput = $event"></app-selection-input>
-    <app-error-message [errorMessage]="errorMessage"></app-error-message>
+    <app-error-message [errorMessage]="groupErrorMessage"></app-error-message>
     <app-action-button content="Confirm" [onClick]="confirmChanges"></app-action-button>
+    
     <app-sub-header content="Add User by Id:"></app-sub-header>
     <p>If you know the user id of one of your friends, but don't feel like handing them the invite link, add them here.</p>
     <app-input-field placeholder="Id of a user" descriptor="userId" (userInputChange)="userIdInput = $event"></app-input-field>
+    <app-error-message [errorMessage]="userErrorMessage"></app-error-message>
+    <app-success-badge *ngIf="userAddedSuccessfully">User successfully added</app-success-badge>
     <app-action-button content="Add" [onClick]="addUser"></app-action-button>
 
     <app-sub-header content="Members:"></app-sub-header>

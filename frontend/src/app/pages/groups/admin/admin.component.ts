@@ -20,13 +20,16 @@ export class AdminComponent implements OnInit {
 
   groupTypeOptions: string[] = ['unchanged', 'Private', 'Public', 'Private and Invisible'];
 
-  errorMessage: string = '';
+  groupErrorMessage: string = '';
+  userErrorMessage: string = '';
   groupNameInput: string;
   groupTypeInput: string;
 
+  groupId: string;
   adminIdInput: string;
-
   userIdInput: string;
+
+  userAddedSuccessfully: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -36,9 +39,9 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let groupId = this.route.snapshot.params['groupId'];
+    this.groupId = this.route.snapshot.params['groupId'];
 
-    this.groupService.getGroup(groupId)
+    this.groupService.getGroup(this.groupId)
       .subscribe(
         (group: Group) => {
           this.group = group;
@@ -48,7 +51,7 @@ export class AdminComponent implements OnInit {
         }
       );
 
-    this.groupService.getInviteToken(groupId)
+    this.groupService.getInviteToken(this.groupId)
         .subscribe(
           (token: string) => {
             this.inviteLink = `${environment.frontend_url}/join/${token}`;
@@ -58,15 +61,19 @@ export class AdminComponent implements OnInit {
           }
         );
 
-    this.groupService.getUsersOfGroup(groupId)
-        .subscribe(
-          (users: User[]) => {
-            this.members = users;
-          },
-          (err) => {
-            console.log(err);
-          }
-        )
+    this.loadUsersOfgroup();
+  }
+
+  loadUsersOfgroup() {
+    this.groupService.getUsersOfGroup(this.groupId)
+    .subscribe(
+      (users: User[]) => {
+        this.members = users;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
   isAdmin(): boolean {
@@ -80,10 +87,16 @@ export class AdminComponent implements OnInit {
     this.groupService.addUser(this.group.groupId, this.userIdInput)
       .subscribe(
         () => {
-          window.location.reload();
+          this.loadUsersOfgroup();
+          this.userAddedSuccessfully = true;
+          this.userErrorMessage = '';
         },
-        () => {
-
+        (err: HttpErrorResponse) => {
+          if (err.status === 409)
+            this.userErrorMessage = 'User already added';
+          else
+            this.userErrorMessage = 'User could not be added' 
+          this.userAddedSuccessfully = false;
         }
       );
   }
@@ -101,7 +114,7 @@ export class AdminComponent implements OnInit {
 
   confirmChanges = () => {
     if (!this.groupNameInput && this.groupTypeInput === this.groupTypeOptions[0] && !this.adminIdInput) {
-      this.errorMessage = 'no changes entered'
+      this.groupErrorMessage = 'no changes entered'
     }
     else {
       let type = null;
@@ -124,17 +137,17 @@ export class AdminComponent implements OnInit {
           (err: HttpErrorResponse) => {
             switch (err.status) {
               case 400:
-                this.errorMessage = 'no Parameters given';
+                this.groupErrorMessage = 'no Parameters given';
                 break;
               case 403:
-                this.errorMessage = 'you are not allowed to change the group\'s info';
+                this.groupErrorMessage = 'you are not allowed to change the group\'s info';
                 break;
               case 418:
-                this.errorMessage = 'new Admin is not yet part of the group and thus can\'t be the new Admin';
+                this.groupErrorMessage = 'new Admin is not yet part of the group and thus can\'t be the new Admin';
                 break;
               default:
                 console.log(err.status);
-                this.errorMessage = 'something went wrong - nothing changed';
+                this.groupErrorMessage = 'something went wrong - nothing changed';
                 break;
             }
           }

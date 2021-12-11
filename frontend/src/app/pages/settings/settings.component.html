@@ -10,7 +10,7 @@
     
     <app-sub-header content="File a bug report"></app-sub-header>
     <p>If you find a bug, please file it in our <a class="clickable linked-text discolored" href="https://github.com/cakedgroup/getcaked/issues">Github issues</a></p>
-    <p class="success-message" *ngIf="updated">Saved sucessfully!</p>
+    <app-success-badge *ngIf="updated">Saved sucessfully!</app-success-badge>
     <div class="save-container">
         <app-action-button content="save" [onClick]="saveUserSettings"></app-action-button>
     </div>
