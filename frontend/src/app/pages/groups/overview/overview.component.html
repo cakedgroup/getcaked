@@ -2,7 +2,7 @@
 <app-body-block>
 
     <div class="cake-overview-header">
-        <h2 class="cake-overview-notification">
+        <h2 class="cake-overview-notification" *ngIf="mostRecentCake">
             <div class="cake-overview-notification-highlight">
                 {{ mostRecentCake }}
             </div>
@@ -16,6 +16,8 @@
     <p *ngIf="isAdmin()" class="group-overview-admin-link clickable" routerLink="/group/{{group.groupId}}/admin">admin console</p>
     <p *ngIf="isMember() && !isAdmin()" class="group-overview-admin-link clickable" (click)="leave()">leave grooup</p>
 </app-body-block>
+
+<app-chip *ngIf="!mostRecentCake">No successfull cakes so far</app-chip>
 
 <div *ngFor="let cakeEvent of cakeEvents">
     <app-cakechip-group [cakeEvent]="cakeEvent"></app-cakechip-group>

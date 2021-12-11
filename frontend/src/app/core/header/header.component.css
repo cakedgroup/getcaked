@@ -63,6 +63,7 @@
   font-size: 1.2rem;
   margin-top: 1rem;
   text-align: center;
+  width: max-content;
 }
 
 @media only screen and (min-width: 768px) {

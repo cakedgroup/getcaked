@@ -272,10 +272,7 @@ export function getCakeEventsOfGroup(groupId: string): Promise<CakeEvent[]> {
 			if (err) {
 				reject(err);
 			}
-			else if (rows.length === 0) {
-				reject(404);
-			}
-			else if (rows.length > 0) {
+			else if (rows.length >= 0) {
 				const cakeEvents: CakeEvent[] = [];
 				for (const row of rows) {
 					cakeEvents.push({

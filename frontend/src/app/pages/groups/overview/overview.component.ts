@@ -42,11 +42,13 @@ export class OverviewComponent implements OnInit {
             (cakeEvents: CakeEvent[]) => {
               this.cakeEvents = cakeEvents;
               const user = this.authService.getUser();
-              if (user && this.cakeEvents[0].username === user.username) {
-                this.mostRecentCake = "You"
-              }
-              else {
-                this.mostRecentCake = this.cakeEvents[0].username;
+              if (this.cakeEvents[0]){
+                if (user && this.cakeEvents[0] && this.cakeEvents[0].username === user.username) {
+                  this.mostRecentCake = "You"
+                }
+                else {
+                  this.mostRecentCake = this.cakeEvents[0].username;
+                }
               }
             },
             (err: HttpErrorResponse) => {
@@ -100,7 +102,6 @@ export class OverviewComponent implements OnInit {
   }
 
   leave = () => {
-    console.log('helllooo');
     this.groupService.removeUser(this.group.groupId, this.authService.getUser().userId)
       .subscribe(
         () => {
@@ -114,7 +115,6 @@ export class OverviewComponent implements OnInit {
 
   checkIfUserCanCake() {
     if (this.group.type === GroupType.PUBLIC_GROUP) {
-      console.log(this.group)
       this.userCanCake = true;
       return;
     }
