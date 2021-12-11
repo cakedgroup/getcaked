@@ -22,3 +22,5 @@
 <div *ngFor="let cakeEvent of cakeEvents">
     <app-cakechip-group [cakeEvent]="cakeEvent" [isEditable]="isAdmin()" (isClosedChanges)="changeCakeStatus(cakeEvent.cakeId, $event)"></app-cakechip-group>
 </div>
+
+<app-comment-board></app-comment-board>

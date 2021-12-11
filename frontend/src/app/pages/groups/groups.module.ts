@@ -10,6 +10,8 @@ import { CakeInProgressComponent } from './cake-in-progress/cake-in-progress.com
 import { CakeSuccessComponent } from './cake-success/cake-success.component';
 import { CakeFailureComponent } from './cake-failure/cake-failure.component';
 import { CakechipComponent } from './cakechip/cakechip.component';
+import { CommentBoardComponent } from './comment-board/comment-board.component';
+import { CommentThreadComponent } from './comment-thread/comment-thread.component';
 
 
 @NgModule({
@@ -20,7 +22,9 @@ import { CakechipComponent } from './cakechip/cakechip.component';
     CakeInProgressComponent,
     CakeSuccessComponent,
     CakeFailureComponent,
-    CakechipComponent
+    CakechipComponent,
+    CommentBoardComponent,
+    CommentThreadComponent
   ],
   imports: [
     CommonModule,

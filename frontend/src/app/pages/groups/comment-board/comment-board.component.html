@@ -1,0 +1,10 @@
+<app-body-block>
+  <h2>Comments</h2>
+  <div class="comment-input">
+    <app-input-field></app-input-field>
+  </div>
+  <div class="comment-display">
+    <app-comment-thread *ngFor="let comment of comments" [comment]="comment" [layer]="0"></app-comment-thread>
+  </div>
+</app-body-block>
+
