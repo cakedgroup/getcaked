@@ -1,11 +1,8 @@
 <app-title-pane [title]="'Group: ' + group.groupName"></app-title-pane>
-<div class="leave-button-container" *ngIf="isMember() && !isAdmin()">
-    <app-action-button content="leave" [onClick]="leave"></app-action-button>
-</div>
 <app-body-block>
 
     <div class="cake-overview-header">
-        <h2 class="cake-overview-notification">
+        <h2 class="cake-overview-notification" *ngIf="mostRecentCake">
             <div class="cake-overview-notification-highlight">
                 {{ mostRecentCake }}
             </div>
@@ -17,7 +14,10 @@
         <p class="centered" *ngIf="!userCanCake"><i><u>Hint:</u> only members can cake</i></p>
     </div>
     <p *ngIf="isAdmin()" class="group-overview-admin-link clickable" routerLink="/group/{{group.groupId}}/admin">admin console</p>
+    <p *ngIf="isMember() && !isAdmin()" class="group-overview-admin-link clickable" (click)="leave()">leave grooup</p>
 </app-body-block>
+
+<app-chip *ngIf="!mostRecentCake">No successfull cakes so far</app-chip>
 
 <div *ngFor="let cakeEvent of cakeEvents">
     <app-cakechip-group [cakeEvent]="cakeEvent"></app-cakechip-group>

@@ -6,6 +6,7 @@
     <app-sub-header content="Change Group Information:"></app-sub-header>
     <p>If you messed up your settings while creating the group, change theme here:</p>
     <app-input-field placeholder="unchanged" descriptor="name" (userInputChange)="groupNameInput = $event"></app-input-field>
+    <app-input-field placeholder="unchanged" descriptor="userId of new Admin" (userInputChange)="adminIdInput = $event"></app-input-field>
     <app-selection-input descriptor="type: currently {{group.type}}" [options]="groupTypeOptions" [defaultOption]="groupTypeOptions[0]" (selectedOptionChanges)="groupTypeInput = $event"></app-selection-input>
     <app-error-message [errorMessage]="errorMessage"></app-error-message>
     <app-action-button content="Confirm" [onClick]="confirmChanges"></app-action-button>

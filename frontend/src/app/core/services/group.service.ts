@@ -34,13 +34,16 @@ export class GroupService {
     );
   }
 
-  changeInfos(groupId: string, groupName: string, type: GroupType | null): Observable<void> {
+  changeInfos(groupId: string, groupName: string, type: GroupType | null, newAdminId: string): Observable<void> {
     let body : {[keys: string]: any} = {};
     if (groupName) {
       body.groupName = groupName;
     }
     if (type) {
       body.type = type;
+    }
+    if (newAdminId) {
+      body.newAdminId = newAdminId;
     }
 
     return this.http.patch<void>(
