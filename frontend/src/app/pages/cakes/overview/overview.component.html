@@ -1,5 +1,9 @@
-<app-title-pane [title]="'Cakes of User: ' + user.username"></app-title-pane>
+<app-title-pane title="Your Cakes"></app-title-pane>
 
+<app-body-block *ngIf="cakeEvents.length === 0">
+    <p>As of right now, you haven't been caked in any of your groups.</p>
+    <p>Guess you've gotten lucky so far...</p>
+</app-body-block>
 <div *ngFor="let cakeEvent of cakeEvents">
-    <app-cakechip-user [cakeEvent]="cakeEvent"></app-cakechip-user>
+    <app-cakechip-user [cakeEvent]="cakeEvent" routerLink="/group/{{cakeEvent.groupId}}/overview"></app-cakechip-user>
 </div>
