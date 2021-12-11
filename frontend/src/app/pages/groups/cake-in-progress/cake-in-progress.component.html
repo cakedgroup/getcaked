@@ -6,11 +6,13 @@
         <p>But that won't stop you from caking them! Who would you like to cake?</p>
         <app-input-field descriptor="name" placeholder="person with free cake" (userInputChange)="userProvidedUsername = $event" [onEnter]="initiateCakeSequence"></app-input-field>
         <app-error-message [errorMessage]="errorMessage"></app-error-message>
-        <app-action-button content="cake em!" [onClick]="initiateCakeSequence"></app-action-button>
+        <app-action-button content="cake em!" [onClick]="finishEntering"></app-action-button>
     </div>    
     <!-- caking counter -->
-    <div *ngIf="!isEnteringUsername" class="caking-counter-container">
+    <div *ngIf="!isEnteringUsername && hasCompletedGame" class="caking-counter-container">
         <p class="cakeing-counter">{{cakeingCounter}}s</p>
         <app-big-button [onClick]="cancelCakeSequence" content="CANCEL"></app-big-button>
     </div>
+    <!-- cake game -->
+    <app-cake-game (gameStatusChanges)="hasCompletedGame = $event" *ngIf="!hasCompletedGame && !isEnteringUsername" [gameToken]="gameToken" (gameTokenChanges)="gameToken = $event"></app-cake-game>
 </app-body-block>

@@ -4,6 +4,7 @@ import { AdminGuard } from 'src/app/core/guards/admin.guard';
 import { LoginGuard } from 'src/app/core/guards/login.guard';
 import { AdminComponent } from './admin/admin.component';
 import { CakeFailureComponent } from './cake-failure/cake-failure.component';
+import { CakeGameComponent } from './cake-game/cake-game.component';
 import { CakeInProgressComponent } from './cake-in-progress/cake-in-progress.component';
 import { CakeSuccessComponent } from './cake-success/cake-success.component';
 import { CreateComponent } from './create/create.component';
@@ -34,6 +35,10 @@ const routes: Routes = [
   {
     path: ':groupId/cake-failure',
     component: CakeFailureComponent
+  },
+  {
+    path: ':groupId/cake-game',
+    component: CakeGameComponent
   }
 ];
 

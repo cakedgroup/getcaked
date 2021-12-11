@@ -12,6 +12,7 @@ import { CakeFailureComponent } from './cake-failure/cake-failure.component';
 import { CakechipComponent } from './cakechip/cakechip.component';
 import { CommentBoardComponent } from './comment-board/comment-board.component';
 import { CommentThreadComponent } from './comment-thread/comment-thread.component';
+import { CakeGameComponent } from './cake-game/cake-game.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { CommentThreadComponent } from './comment-thread/comment-thread.componen
     CakeFailureComponent,
     CakechipComponent,
     CommentBoardComponent,
-    CommentThreadComponent
+    CommentThreadComponent,
+    CakeGameComponent
   ],
   imports: [
     CommonModule,
