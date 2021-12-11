@@ -10,6 +10,7 @@ import { SelectionInputComponent } from './selection-input/selection-input.compo
 import { ErrorMessageComponent } from './error-message/error-message.component';
 import { BigButtonComponent } from './big-button/big-button.component';
 import { SubHeaderComponent } from './sub-header/sub-header.component';
+import { SuccessBadgeComponent } from './success-badge/success-badge.component';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import { SubHeaderComponent } from './sub-header/sub-header.component';
     ErrorMessageComponent,
     BigButtonComponent,
     SubHeaderComponent,
+    SuccessBadgeComponent,
   ],
   imports: [
     CommonModule,
@@ -39,7 +41,8 @@ import { SubHeaderComponent } from './sub-header/sub-header.component';
     SelectionInputComponent,
     ErrorMessageComponent,
     BigButtonComponent,
-    SubHeaderComponent
+    SubHeaderComponent,
+    SuccessBadgeComponent
   ]
 })
 export class SharedModule {
