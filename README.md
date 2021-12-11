@@ -1,9 +1,9 @@
 # getcaked
 Website project used for caking your ignorant coworkers/friends/classmates
 
+- [Development](#Development)
 - [Non-obvious functionality](#non-obvious-functionality)
 - [General Features and Functionality](#general-features-and-functionality)
-- [Development](#Development)
 - [Deployment](#Deployment)
 
 ## Development
