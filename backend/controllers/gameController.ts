@@ -1,8 +1,8 @@
 import express from 'express';
 import { getUserAuth } from '../util/authMiddleware';
-import { Game } from '../models/Game';
+import { Game, GameMove } from '../models/Game';
 import {v4 as uuidv4} from 'uuid';
-import { generateGameToken } from '../services/gameService';
+import { decodeGameToken, fieldIsOccupied, generateGameToken, getWinner, playNextMove } from '../services/gameService';
 import { checkIfUserIsMemberOfGroup, getSingleGroup } from '../services/groupService';
 import { Group, GroupType } from '../models/Group';
 
@@ -40,8 +40,9 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 					moves: [],
 				};
 			
+				console.log(game);
 				res.status(201);
-				res.send({game: game, gameToken: generateGameToken(game)});
+				res.send({game: game, gameToken: generateGameToken(game), win: null});
 			} 
 			else {
 				res.status(403);
@@ -59,6 +60,47 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 			}
 		});
 
+});
+
+/**
+ * Register a new game move
+ */
+
+router.patch('/', getUserAuth, (req: express.Request, res: express.Response) => {
+	const gameToken = req.body.gameToken;
+	const userMove: GameMove = req.body.move;
+	let game: Game | null = decodeGameToken(gameToken);
+
+	if (game && userMove) {
+		if (fieldIsOccupied(game, userMove) 
+		|| userMove.row > 2 || userMove.column < 0 || userMove.row > 2 || userMove.column < 0) {
+			res.status(400);
+			res.send({error: 'invalid move'});
+		}
+		if (req.decoded?.userId && req.decoded.userId === game.userId) {
+			game.moves.push(userMove);
+			if (game.moves.length >= 9) {
+				console.log(getWinner(game)? true : false);
+				res.status(200);
+				res.send({game: game, gameToken: generateGameToken(game), won: getWinner(game)? true : false});
+				return;
+			}
+			if (getWinner(game) === null) {
+				game = playNextMove(game);
+			}
+
+			res.status(200);
+			res.send({game: game, gameToken: generateGameToken(game), won: getWinner(game)});
+		}
+		else {
+			res.status(403);
+			res.send();
+		}
+	}
+	else {
+		res.status(400);
+		res.send({error: 'missing or malformed gameToken/move'});
+	}
 });
 
 export {router as gameRouter};

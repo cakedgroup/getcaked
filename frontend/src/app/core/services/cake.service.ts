@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Game, GameMove, GameResponse } from 'src/app/models/game.model';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 
@@ -46,6 +47,17 @@ export class CakeService {
       );
   }
 
+  playGameMove(move: GameMove, gameToken: string): Observable<GameResponse> {
+    return this.http.patch<GameResponse>(
+      `${this.basePath}/games`, 
+      {
+        move: move,
+        gameToken: gameToken
+      },
+      {headers: this.authService.getAuthHeader()}
+    );
+  }
+
   createCakeEvent(gameToken: string) {
     if (this.authService.getUser() === null)
       return this.http.post(
@@ -63,8 +75,4 @@ export class CakeService {
         {headers: this.authService.getAuthHeader()}
       );
   }
-}
-
-interface GameResponse {
-  gameToken: string
 }

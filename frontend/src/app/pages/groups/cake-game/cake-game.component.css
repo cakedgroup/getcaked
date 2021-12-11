@@ -1,0 +1,63 @@
+.ttt-container {
+    width: max-content;
+    margin: 0 auto;
+    border-style: solid;
+    border-color: var(--primary-color);
+    border-width: 0.5rem;
+    border-radius: 1rem;
+    margin-top: 4rem;
+    position: relative;
+}
+
+.ttt-item {
+    height: 4rem;
+    width: 4rem;
+    border-radius: 0;
+    background-color: transparent;
+    border-style: none;
+    border-color: var(--primary-color);
+    border-width: 0.2rem;
+    border-radius: 0.5rem;
+    font-size: 3rem;
+    font-family: 'Quicksand', sans-serif;
+    color: var(--secondary-color);
+    font-weight: 700;
+}
+
+
+.ttt-item:hover {
+    outline-color: var(--highlight-color);
+    outline-style: solid;
+    outline-offset: -0.5rem;
+    outline-width: 0.5rem;
+}
+
+.ttt-item-lost {
+    border-color: transparent;
+}
+
+.ttt-item-lost:hover {
+    outline-style: none;
+}
+
+.ttt-container-lost {
+    border-color: transparent;
+}
+
+.lost-message {
+    text-align: center;
+    color: var(--highlight-color);
+    font-size: 3rem;
+}
+
+@media only screen and (min-width: 768px) {
+    .ttt-item {
+        height: 8rem;
+        width: 8rem;
+        font-size: 6rem;
+    }
+
+    .lost-message {
+        font-size: 5rem;
+    }
+}
