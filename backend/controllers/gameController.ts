@@ -29,7 +29,6 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 
 	getSingleGroup(groupId, cakeVictimId)
 		.then( async (group: Group) => {
-			console.log(group);
 			if (group.type === GroupType.PUBLIC_GROUP || await checkIfUserIsMemberOfGroup(groupId, cakeVictimId)) {
 				const game: Game = {
 					gameId: uuidv4(),

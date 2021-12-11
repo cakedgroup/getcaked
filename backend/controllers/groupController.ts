@@ -53,7 +53,6 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 					res.status(err);
 				}
 				else {
-					console.log(err);
 					res.status(500);
 				}
 				res.send();

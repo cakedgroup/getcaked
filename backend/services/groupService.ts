@@ -352,7 +352,6 @@ export function checkIfUserHasAccessToGroup(groupId: string, userId: string | un
 				resolve(false);
 			}
 			else if (rows.length > 0) {
-				console.log(rows);
 				resolve(true);
 			}
 			else {
@@ -384,7 +383,6 @@ export function checkIfUserIsMemberOfGroup(groupId: string, userId: string | und
 				resolve(false);
 			}
 			else if (rows.length > 0) {
-				console.log(rows);
 				resolve(true);
 			}
 			else {

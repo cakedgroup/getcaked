@@ -27,3 +27,40 @@ export async function createCakeEvent(cakeEvent: CakeEvent) {
 		});
 	});
 }
+
+export function getCakeEvent(cakeId: string) {
+	return new Promise<CakeEvent>((resolve, reject) => {
+		db.get('SELECT * FROM cakeEvents WHERE cakeId = ?', cakeId, (err, row) => {
+			if (err)
+				reject(err);
+			else if (row){
+				const cakeEvent: CakeEvent = {
+					cakeId: row['cakeId'],
+					timeStamp: row['timestamp'],
+					cakeVictimId: row['userId'],
+					username: row['username'],
+					cakeDelivered: row['cakeDelivered'],
+					groupId: row['groupId'],
+					gameId: row['gameId']
+				};
+				resolve(cakeEvent);
+			}
+			else
+				reject();
+		});
+	});
+}
+
+export function changeStatusOfCakeEvent(isDelivered: boolean, cakeId: string) {
+	return new Promise<void>((resolve, reject) => {
+		db.run('UPDATE cakeEvents SET cakeDelivered = ? WHERE cakeId = ?', 
+			[isDelivered, cakeId],
+			(err) => {
+				if (err)
+					reject(err);
+				else 
+					resolve();
+			}
+		);
+	});
+}

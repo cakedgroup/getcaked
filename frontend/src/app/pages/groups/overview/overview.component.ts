@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { CakeService } from 'src/app/core/services/cake.service';
 import { GroupService } from 'src/app/core/services/group.service';
 import { Group, GroupType } from 'src/app/models/group.model';
 import { User } from 'src/app/models/user.model';
@@ -25,8 +26,9 @@ export class OverviewComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private groupService: GroupService,
-    private authService: AuthService) {
-  }
+    private authService: AuthService,
+    private cakeService: CakeService
+  ) {}
 
   ngOnInit(): void {
     let groupId = this.route.snapshot.params['groupId'];
@@ -134,5 +136,9 @@ export class OverviewComponent implements OnInit {
           this.userCanCake = false;
         }
       );
+  }
+
+  changeCakeStatus(cakeId:string, cakeDelivered: boolean) {
+    this.cakeService.updateCakeStatus(cakeId, cakeDelivered).subscribe();
   }
 }

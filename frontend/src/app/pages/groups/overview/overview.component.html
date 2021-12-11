@@ -20,5 +20,5 @@
 <app-chip *ngIf="!mostRecentCake">No successfull cakes so far</app-chip>
 
 <div *ngFor="let cakeEvent of cakeEvents">
-    <app-cakechip-group [cakeEvent]="cakeEvent"></app-cakechip-group>
+    <app-cakechip-group [cakeEvent]="cakeEvent" [isEditable]="isAdmin()" (isClosedChanges)="changeCakeStatus(cakeEvent.cakeId, $event)"></app-cakechip-group>
 </div>

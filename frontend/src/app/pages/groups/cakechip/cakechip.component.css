@@ -15,3 +15,15 @@
 .cakePending {
     color: limegreen;
 }
+
+.edit-icon {
+    height: 1rem;
+    transform: translateY(4px);
+    margin-left: 1rem;
+}
+
+.open-edit-selection {
+    border-style: none;
+    background-color: transparent;
+    appearance: none;
+}

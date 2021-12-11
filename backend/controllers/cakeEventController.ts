@@ -4,8 +4,9 @@ import { Game } from '../models/Game';
 import { checkIfGameIdIsFree, decodeGameToken } from '../services/gameService';
 import { getUserAuth } from '../util/authMiddleware';
 import {v4 as uuidv4} from 'uuid';
-import { createCakeEvent } from '../services/cakeEventService';
+import { changeStatusOfCakeEvent, createCakeEvent, getCakeEvent } from '../services/cakeEventService';
 import {getUserInfo} from '../services/userService';
+import { getGroupAdmin } from '../services/groupService';
 
 const router = express.Router();
 
@@ -20,7 +21,6 @@ router.post('/', getUserAuth, async (req: express.Request, res: express.Response
 		game.username = (await getUserInfo(game.userId)).username;
 	}
 	if (game && game.username) {
-		console.log(Date.now() - game.startTime, Date.now(), game.startTime);
 		if (Date.now() - game.startTime >= 30000) {
 			try {
 				if (await checkIfGameIdIsFree(game.gameId)) {
@@ -62,6 +62,47 @@ router.post('/', getUserAuth, async (req: express.Request, res: express.Response
 	else {
 		res.status(403);
 		res.send({authError: 'authentification failed'});
+	}
+});
+
+/**
+ * used to close a cake-event
+ */
+
+router.patch('/:cakeId', getUserAuth, (req: express.Request, res: express.Response) => {
+	const cakeId = req.params.cakeId;
+	const cakeDelivered: boolean = req.body.cakeDelivered;
+
+	if (cakeDelivered === undefined) {
+		res.status(400);
+		res.send({missingParameters: ['cakeDelivered']});
+	}
+
+	if (req.decoded && req.decoded.userId) {
+		getCakeEvent(cakeId).then((cakeEvent) => {
+			getGroupAdmin(cakeEvent.groupId).then((adminId: string) => {
+				if (adminId === req.decoded?.userId) {
+					changeStatusOfCakeEvent(cakeDelivered, cakeId).then(() => {
+						res.status(200);
+						res.send();
+					}).catch(() => {
+						res.status(500);
+						res.send();
+					});
+				}
+				else {
+					res.status(403);
+					res.send();
+				}
+			});
+		}).catch(() => {
+			res.status(404);
+			res.send();
+		});
+	}
+	else {
+		res.status(401);
+		res.send();
 	}
 });
 
