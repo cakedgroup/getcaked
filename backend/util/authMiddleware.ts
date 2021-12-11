@@ -18,7 +18,7 @@ export function getUserAuth(req: express.Request, res: express.Response, next: e
 			getUserInfo(req.decoded.userId).then(() => {
 				next();
 			}).catch(() => {
-				res.status(401);
+				res.status(403);
 				res.send();
 			} );
 		}
