@@ -24,6 +24,8 @@ export class AdminComponent implements OnInit {
   groupNameInput: string;
   groupTypeInput: string;
 
+  adminIdInput: string;
+
   userIdInput: string;
 
   constructor(
@@ -98,23 +100,12 @@ export class AdminComponent implements OnInit {
   }
 
   confirmChanges = () => {
-    if (!this.groupNameInput && this.groupTypeInput === this.groupTypeOptions[0]) {
+    if (!this.groupNameInput && this.groupTypeInput === this.groupTypeOptions[0] && !this.adminIdInput) {
       this.errorMessage = 'no changes entered'
     }
     else {
-      if (this.groupTypeInput === this.groupTypeOptions[0]) {
-        this.groupService.changeInfos(this.group.groupId, this.groupNameInput, null)
-          .subscribe(
-            () => {
-              this.router.navigate([`/group/${this.group.groupId}/overview`])
-            },
-            () => {
-              this.errorMessage = 'something went wrong - nothing changed';
-            }
-          );
-      }
-      else {
-        let type = this.group.type
+      let type = null;
+      if (this.groupTypeInput !== this.groupTypeOptions[0]) {
         if (this.groupTypeInput === this.groupTypeOptions[1]) {
           type = GroupType.PRIVATE_GROUP
         }
@@ -124,16 +115,30 @@ export class AdminComponent implements OnInit {
         else if (this.groupTypeInput === this.groupTypeOptions[3]) {
           type = GroupType.PRIVATE_INVISIBLE_GROUP
         }
-        this.groupService.changeInfos(this.group.groupId, this.groupNameInput, type)
-          .subscribe(
-            () => {
-              this.router.navigate([`/group/${this.group.groupId}/overview`])
-            },
-            () => {
-              this.errorMessage = 'something went wrong - nothing changed';
-            }
-          );
       }
+      this.groupService.changeInfos(this.group.groupId, this.groupNameInput, type, this.adminIdInput)
+        .subscribe(
+          () => {
+            this.router.navigate([`/group/${this.group.groupId}/overview`])
+          },
+          (err: HttpErrorResponse) => {
+            switch (err.status) {
+              case 400:
+                this.errorMessage = 'no Parameters given';
+                break;
+              case 403:
+                this.errorMessage = 'you are not allowed to change the group\'s info';
+                break;
+              case 418:
+                this.errorMessage = 'new Admin is not yet part of the group and thus can\'t be the new Admin';
+                break;
+              default:
+                console.log(err.status);
+                this.errorMessage = 'something went wrong - nothing changed';
+                break;
+            }
+          }
+        );
     }
   }
 

@@ -38,36 +38,39 @@ export class OverviewComponent implements OnInit {
         (group: Group) => {
           this.group = group;
           this.checkIfUserCanCake()
+
+          this.groupService.getCakeEvents(groupId)
+          .subscribe(
+            (cakeEvents: CakeEvent[]) => {
+              this.cakeEvents = cakeEvents;
+              const user = this.authService.getUser();
+              if (this.cakeEvents[0]){
+                if (user && this.cakeEvents[0] && this.cakeEvents[0].username === user.username) {
+                  this.mostRecentCake = "You"
+                }
+                else {
+                  this.mostRecentCake = this.cakeEvents[0].username;
+                }
+              }
+            },
+            (err: HttpErrorResponse) => {
+              console.log(err);
+            });
+
+        this.groupService.getUsersOfGroup(groupId)
+          .subscribe(
+            (users: User[]) => {
+              this.members = users;
+            },
+            (err) => {
+              console.log(err);
+            }
+          );
+
         },
         (err: HttpErrorResponse) => {
           this.router.navigate(['/404']);
         })
-
-    this.groupService.getCakeEvents(groupId)
-      .subscribe(
-        (cakeEvents: CakeEvent[]) => {
-          this.cakeEvents = cakeEvents;
-          const user = this.authService.getUser();
-          if (user && this.cakeEvents[0].username === user.username) {
-            this.mostRecentCake = "You"
-          }
-          else {
-            this.mostRecentCake = this.cakeEvents[0].username;
-          }
-        },
-        (err: HttpErrorResponse) => {
-          console.log(err);
-        })
-
-    this.groupService.getUsersOfGroup(groupId)
-      .subscribe(
-        (users: User[]) => {
-          this.members = users;
-        },
-        (err) => {
-          console.log(err);
-        }
-      )
 
     // Scroll to top when navigating to overview
     this.router.events.subscribe((event: any) => {
@@ -89,9 +92,11 @@ export class OverviewComponent implements OnInit {
       return false;
     else {
       const userId = this.authService.getUser().userId;
-      for (let member of this.members) {
-        if (member.userId === userId) {
-          return true;
+      if (this.members){
+        for (let member of this.members) {
+          if (member.userId === userId) {
+            return true;
+          }
         }
       }
       return false;

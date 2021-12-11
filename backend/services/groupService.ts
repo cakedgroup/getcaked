@@ -8,12 +8,33 @@ import { CakeEvent } from '../models/Cake';
 /**
  * function to fetch all Groups and their associated data from the DB
  */
-export async function getAllGroups(userId?: string): Promise<Array<Group>> {
+export async function getAllGroups(userId?: string, searchQuery?: string): Promise<Array<Group>> {
+	const hasSearch: boolean = searchQuery !== undefined;
+	let query: string;
+	let params: string[];
+
+	searchQuery = '%' + searchQuery + '%';
+	if (hasSearch) {
+		query = `SELECT DISTINCT groups.groupId, groupName, type, adminId 
+					FROM groups JOIN members ON groups.groupId = members.groupId 
+					WHERE (userId = ? OR type IN ('public', 'private'))
+					AND groups.groupName LIKE ?;`;
+		if (userId)
+			params = [userId, searchQuery];
+		else 
+			params = ['', searchQuery];
+	}
+	else {
+		query = `SELECT DISTINCT groups.groupId, groupName, type, adminId 
+					FROM groups JOIN members ON groups.groupId = members.groupId 
+					WHERE userId = ? OR type IN ('public', 'private');`;
+		if (userId)
+			params = [userId];
+		else 
+			params = [''];
+	}
 	return new Promise<Array<Group>>((resolve, reject) => {
-		db.all(`SELECT DISTINCT groups.groupId, groupName, type, adminId 
-				FROM groups JOIN members ON groups.groupId = members.groupId 
-				WHERE userId = ? OR type IN ('public', 'private')`,
-		userId, function (err, rows) {
+		db.all(query, params, function (err, rows) {
 			if (err) {
 				console.log(err);
 				reject(err);
@@ -76,14 +97,22 @@ export async function createNewGroup(groupName: string, type: GroupType, adminId
 }
 
 export async function changeGroupInfo(groupId: string, groupName: string | undefined,
-	type: GroupType | undefined): Promise<void> {
+	type: GroupType | undefined, newAdminId: string): Promise<void> {
 
-	if (!groupName && !type){
+	if (!groupName && !type && !newAdminId){
 		throw(400);
 	}
 	else {
 		let sql = 'UPDATE groups SET';
 		const params: Array<string> = [];
+		if (newAdminId) {
+			if (!(await checkIfUserIsMemberOfGroup(groupId, newAdminId))) {
+				throw(418);
+			}
+			sql += ' adminId = ?';
+			params.push(newAdminId);
+			if (groupName || type) sql += ',';
+		}
 		if (groupName) {
 			sql += ' groupName = ?';
 			params.push(groupName);
@@ -264,10 +293,7 @@ export function getCakeEventsOfGroup(groupId: string): Promise<CakeEvent[]> {
 			if (err) {
 				reject(err);
 			}
-			else if (rows.length === 0) {
-				reject(404);
-			}
-			else if (rows.length > 0) {
+			else if (rows.length >= 0) {
 				const cakeEvents: CakeEvent[] = [];
 				for (const row of rows) {
 					cakeEvents.push({

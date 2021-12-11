@@ -26,7 +26,8 @@ const router = express.Router();
  * fetch data of all groups
  */
 router.get('/', getUserAuth, (req: express.Request, res: express.Response) => {
-	getAllGroups(req.decoded?.userId).then((groups: Array<Group>) => {
+	const searchQuery = req.query.search?.toString();
+	getAllGroups(req.decoded?.userId, searchQuery).then((groups: Array<Group>) => {
 		res.status(200);
 		res.json(groups);
 	}).catch(() => {
@@ -83,16 +84,18 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 router.patch('/:groupId', getUserAuth, (req: express.Request, res: express.Response) => {
 	const groupName = req.body.groupName;
 	const type = req.body.type;
+	const newAdminId = req.body.newAdminId;
+	console.log(type);
 	const groupId = req.params.groupId;
 
-	if (!groupName && !type && !Object.values(GroupType).includes(type)) {
+	if (!groupName && !type && !Object.values(GroupType).includes(type) && !newAdminId) {
 		res.status(400);
 		res.send();
 	}
 	else if (groupId) {
 		getGroupAdmin(groupId).then((adminId: string) => {
 			if (req.decoded && req.decoded.userId && req.decoded.userId === adminId) {
-				changeGroupInfo(groupId, groupName, type).then( () => {
+				changeGroupInfo(groupId, groupName, type, newAdminId).then( () => {
 					res.status(204);
 					res.send();
 				}).catch( (err) => {
@@ -361,7 +364,8 @@ router.get('/:groupId/cakeEvents', getUserAuth, async (req: express.Request, res
 			getCakeEventsOfGroup(groupId).then((cakeEvents: CakeEvent[]) => {
 				res.status(200);
 				res.send(cakeEvents);
-			}).catch(() => {
+			}).catch((err) => {
+				console.log(err);
 				// all errors should have been caught to this point
 				res.status(500);
 				res.send();
