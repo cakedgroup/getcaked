@@ -365,7 +365,8 @@ router.get('/:groupId/cakeEvents', getUserAuth, async (req: express.Request, res
 			getCakeEventsOfGroup(groupId).then((cakeEvents: CakeEvent[]) => {
 				res.status(200);
 				res.send(cakeEvents);
-			}).catch(() => {
+			}).catch((err) => {
+				console.log(err);
 				// all errors should have been caught to this point
 				res.status(500);
 				res.send();

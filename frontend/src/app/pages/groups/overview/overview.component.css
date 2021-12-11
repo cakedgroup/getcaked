@@ -23,21 +23,6 @@
     margin: 0 auto;
 }
 
-.leave-button-container {
-    width: fit-content;
-    max-width: var(--content-width);
-    margin: 0 auto 1em;
-
-    background-color: var(--secondary-background-color);
-    color: var(--secondary-color);
-    border-radius: 2em;
-    padding: 0.5em 1em;
-
-    font-family: 'Quicksand', sans-serif;
-    font-size: 1.2rem;
-    word-wrap: break-word;
-}
-
 .group-overview-admin-link {
     font-size: 0.8rem;
     text-align: right;
