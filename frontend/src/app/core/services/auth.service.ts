@@ -63,6 +63,7 @@ export class AuthService {
 
     this.user = undefined;
     this.authToken = undefined;
+    this.password = undefined;
   }
   
   getAuthToken(): string | null {
@@ -76,7 +77,7 @@ export class AuthService {
   }
   
   getUser(): User | null {
-    if (this.user === undefined)
+    if (!this.user)
       return null;
     else
       return this.user;
