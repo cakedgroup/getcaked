@@ -1,6 +1,6 @@
 {
   "name": "getcaked-backend",
-  "version": "0.3.4",
+  "version": "1.0.0",
   "description": "Cake all of your security vulnerabilities",
   "main": "app.ts",
   "scripts": {
@@ -8,7 +8,7 @@
     "dev": "nodemon"
   },
   "keywords": [],
-  "author": "Jannik Springer, Amos Gross",
+  "author": "Freddie Mercury",
   "license": "AGPL",
   "dependencies": {
     "@types/express-jwt": "^6.0.2",

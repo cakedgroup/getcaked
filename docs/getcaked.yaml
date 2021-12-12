@@ -416,7 +416,7 @@ paths:
               properties:
                 username:
                   type: string
-                  example: 'Amos'
+                  example: 'Rocket Man'
                 password:
                   type: string
                   format: password
@@ -576,7 +576,7 @@ paths:
               properties:
                 username:
                   type: string
-                  example: 'Amos'
+                  example: 'Piano Man'
                 password:
                   type: string
                   format: password
@@ -836,7 +836,7 @@ components:
           example: '1969-04-20T17:32:28Z'
         username:
           type: string
-          example: 'j-to-g-to-the-jannik as guest'
+          example: 'a bittersweet symphony'
         cakeVictimId:
           type: string
           format: uuid

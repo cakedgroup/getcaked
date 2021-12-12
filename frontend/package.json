@@ -1,8 +1,8 @@
 {
   "name": "getcaked-frontend",
-  "version": "0.3.4",
+  "version": "1.0.0",
   "description": "Cake all of your security vulnerabilities",
-  "author": "Jannik Springer, Amos Gross",
+  "author": "Freddie Mercury",
   "license": "AGPL",
   "scripts": {
     "ng": "ng",

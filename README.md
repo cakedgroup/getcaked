@@ -68,15 +68,3 @@ As soon as a user has actually baked a cake and thus deliverd on "their" promise
 ## OpenAPI spec
 This project (or rather its backend) is also documented in OpenAPI.
 If you wish to view the spec, you can do so in `./docs/getcaked.yaml`.
-
-## Deployment
-
-To build our docker image and push it to a registry, run:
-
-```bash
-docker build -t getcaked:latest -f ./deployment/Dockerfile .
-
-# optional
-docker image tag getcaked some-registry.com/getcaked:latest
-docker push some-registry.com/getcaked:latest
-```
