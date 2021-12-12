@@ -46,7 +46,6 @@ export class CakeGameComponent implements OnInit {
           this.redrawBoard(response.game);
           this.gameToken = response.gameToken;
           this.gameState = response.gameState;
-          console.log(response.gameState);
           if (this.gameState === 1 || this.gameState === 2) {
             setTimeout(() => {
               this.gameTokenChanges.emit(this.gameToken);
