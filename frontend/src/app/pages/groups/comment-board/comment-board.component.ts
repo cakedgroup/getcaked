@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Comment} from '../../../models/comment.model';
 import {GroupService} from '../../../core/services/group.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-comment-board',
@@ -16,6 +16,7 @@ export class CommentBoardComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private groupService: GroupService
   ) { }
 
@@ -29,6 +30,8 @@ export class CommentBoardComponent implements OnInit {
     .subscribe(
       (comments: Comment[]) => {
         this.comments = comments;
+      }, (err) => {
+        if (err.status) this.router.navigate(['/404']);
       }
     )
   }
