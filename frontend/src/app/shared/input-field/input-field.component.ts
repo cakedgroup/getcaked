@@ -14,7 +14,10 @@ export class InputFieldComponent implements OnInit {
   @Input() hideInput: boolean = false;
   @Input() onEnter: Function;
 
+  @Input() isSendBox: boolean = false;
+
   userInput: string;
+  isFocused: boolean;
 
   constructor() { }
 
