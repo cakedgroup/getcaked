@@ -58,6 +58,7 @@ export class AdminComponent implements OnInit {
           },
           (err) => {
             console.log(err);
+            if (err.status === 404) this.router.navigate(['/404']);
           }
         );
 
@@ -95,7 +96,7 @@ export class AdminComponent implements OnInit {
           if (err.status === 409)
             this.userErrorMessage = 'User already added';
           else
-            this.userErrorMessage = 'User could not be added' 
+            this.userErrorMessage = 'User could not be added'
           this.userAddedSuccessfully = false;
         }
       );

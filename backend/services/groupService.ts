@@ -199,11 +199,18 @@ export function deleteGroup(groupId: string): Promise<void> {
 				reject(err);
 			}
 			else {
-				db.run('DELETE FROM groups WHERE groupId = ?', groupId, (err) => {
-					if (err)
+				db.run('DELETE FROM cakeEvents WHERE groupId = ?;', groupId, (err) => {
+					if (err) {
 						reject(err);
-					else
-						resolve();
+					}
+					else {
+						db.run('DELETE FROM groups WHERE groupId = ?;', groupId, (err) => {
+							if (err)
+								reject(err);
+							else
+								resolve();
+						});
+					}
 				});
 			}
 		});
