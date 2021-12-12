@@ -1,0 +1,10 @@
+.comment-input {
+  border: var(--primary-background-color) solid 0.2em;
+  padding: 0.5em;
+  border-radius: 1em;
+  margin: 0.5em 0;
+}
+
+p {
+  margin: 0 0 0 0.5em;
+}

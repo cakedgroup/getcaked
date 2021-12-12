@@ -17,10 +17,14 @@
     <p *ngIf="isMember() && !isAdmin()" class="group-overview-admin-link clickable" (click)="leave()">leave grooup</p>
 </app-body-block>
 
-<app-chip *ngIf="!mostRecentCake">No successfull cakes so far</app-chip>
+<p (click)="switchView()" class="centered clickable">{{(showingOverview)?'show Comments':'show Cakes'}}</p>
 
-<div *ngFor="let cakeEvent of cakeEvents">
-    <app-cakechip-group [cakeEvent]="cakeEvent" [isEditable]="isAdmin()" (isClosedChanges)="changeCakeStatus(cakeEvent.cakeId, $event)"></app-cakechip-group>
+<div *ngIf="showingOverview">
+  <app-chip *ngIf="!mostRecentCake">No successfull cakes so far</app-chip>
+
+  <div *ngFor="let cakeEvent of cakeEvents">
+      <app-cakechip-group [cakeEvent]="cakeEvent" [isEditable]="isAdmin()" (isClosedChanges)="changeCakeStatus(cakeEvent.cakeId, $event)"></app-cakechip-group>
+  </div>
 </div>
 
-<app-comment-board></app-comment-board>
+<app-comment-board *ngIf="!showingOverview"></app-comment-board>

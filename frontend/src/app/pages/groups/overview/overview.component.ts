@@ -22,6 +22,8 @@ export class OverviewComponent implements OnInit {
   mostRecentCake: string;
   userCanCake: boolean = false;
 
+  showingOverview: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -140,5 +142,9 @@ export class OverviewComponent implements OnInit {
 
   changeCakeStatus(cakeId:string, cakeDelivered: boolean) {
     this.cakeService.updateCakeStatus(cakeId, cakeDelivered).subscribe();
+  }
+
+  switchView(){
+    this.showingOverview = !this.showingOverview;
   }
 }

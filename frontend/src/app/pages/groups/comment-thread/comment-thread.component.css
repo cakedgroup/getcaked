@@ -1,3 +1,24 @@
 .indented {
   margin-left: 1em;
 }
+
+.actions {
+  margin: 0 0 0 0.5em;
+}
+
+.content-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.replies {
+  border-left: var(--primary-background-color) solid 0.2em;
+}
+
+.hidden {
+  display: none;
+}
+
+.comment {
+  margin: 0.5em 0 0;
+}

@@ -14,6 +14,7 @@ export class CommentThreadComponent implements OnInit {
 
   isReplying: boolean = false;
   isLoggedIn: boolean = false;
+  isExtended: boolean = true;
 
   constructor(
     private authService: AuthService
@@ -25,6 +26,12 @@ export class CommentThreadComponent implements OnInit {
 
   toggleReplying () {
     this.isReplying = !this.isReplying;
+  }
+
+  toggleExtended () {
+    if (this.layer < 5) {
+      this.isExtended = !this.isExtended;
+    }
   }
 
 }
