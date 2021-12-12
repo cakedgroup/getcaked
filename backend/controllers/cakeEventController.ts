@@ -22,7 +22,7 @@ router.post('/', getUserAuth, async (req: express.Request, res: express.Response
 	}
 	if (game && game.username) {
 		if (Date.now() - game.startTime >= 30000) {
-			if (game.userId && !getWinner(game)) {
+			if (game.userId && getWinner(game) === false) {
 				res.status(400);
 				res.send({error: 'game has not been completed'});
 				return;
