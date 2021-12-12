@@ -14,6 +14,6 @@ export interface GameMove {
 
 export interface GameResponse {
     gameToken: string,
-    won: boolean | null,
+    gameState: number,
     game: Game
   }

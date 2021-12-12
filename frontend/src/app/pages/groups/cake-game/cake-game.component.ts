@@ -19,7 +19,8 @@ export class CakeGameComponent implements OnInit {
   @Output() gameStatusChanges = new EventEmitter<boolean>();
 
   board: string[][] = [];
-  hasLost: boolean = false;
+  // 0 = in Progress, 1 = Player won, 2 = Tied, 3 = Player lost
+  gameState: number = 0;
   errorMessage: string;
 
   constructor(
@@ -35,7 +36,7 @@ export class CakeGameComponent implements OnInit {
   }
 
   playMove(row: number, col: number) {
-    if (this.board[row][col] === EMPTY && !this.hasLost) {
+    if (this.board[row][col] === EMPTY && !this.gameState) {
       this.board[row][col] = PLAYER;
       this.cakeService.playGameMove({
         row: row,
@@ -44,12 +45,12 @@ export class CakeGameComponent implements OnInit {
         (response: GameResponse) => {
           this.redrawBoard(response.game);
           this.gameToken = response.gameToken;
-          if (response.won) {
-            this.gameTokenChanges.emit(this.gameToken);
-            this.gameStatusChanges.emit(true);
-          }
-          else if (response.won === false) {
-            this.hasLost = true;
+          this.gameState = response.gameState;
+          if (this.gameState === 1 || this.gameState === 2) {
+            setTimeout(() => {
+              this.gameTokenChanges.emit(this.gameToken);
+              this.gameStatusChanges.emit(true);
+            }, 3000);
           }
         },
         (err: HttpErrorResponse) => {

@@ -77,17 +77,37 @@ router.patch('/', getUserAuth, (req: express.Request, res: express.Response) => 
 		}
 		if (req.decoded?.userId && req.decoded.userId === game.userId) {
 			game.moves.push(userMove);
+			let gameState = 0;
 			if (game.moves.length >= 9) {
 				res.status(200);
-				res.send({game: game, gameToken: generateGameToken(game), won: getWinner(game)? true : false});
+				switch (getWinner(game)) {
+				case true:
+					gameState = 1;
+					break;
+				case null:
+					gameState = 2;
+					break;
+				case false:
+					gameState = 3;
+					break;
+				}
+				res.send({game: game, gameToken: generateGameToken(game), gameState: gameState});
 				return;
 			}
 			if (getWinner(game) === null) {
 				game = playNextMove(game);
+				switch (getWinner(game)) {
+				case true:
+					gameState = 1;
+					break;
+				case false:
+					gameState = 3;
+					break;
+				}
 			}
 
 			res.status(200);
-			res.send({game: game, gameToken: generateGameToken(game), won: getWinner(game)});
+			res.send({game: game, gameToken: generateGameToken(game), gameState: gameState});
 		}
 		else {
 			res.status(403);
