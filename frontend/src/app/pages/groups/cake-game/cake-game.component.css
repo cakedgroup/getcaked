@@ -44,7 +44,7 @@
     border-color: transparent;
 }
 
-.lost-message {
+.game-end-message {
     text-align: center;
     color: var(--highlight-color);
     font-size: 3rem;
