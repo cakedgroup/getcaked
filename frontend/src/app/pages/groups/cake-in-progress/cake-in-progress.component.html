@@ -4,7 +4,7 @@
     <div *ngIf="isEnteringUsername">
         <p>Looks like no one is logged in here.</p>
         <p>But that won't stop you from caking them! Who would you like to cake?</p>
-        <app-input-field descriptor="name" placeholder="person with free cake" (userInputChange)="userProvidedUsername = $event" [onEnter]="initiateCakeSequence"></app-input-field>
+        <app-input-field descriptor="name" placeholder="person with free cake" (userInputChange)="userProvidedUsername = $event" [onSend]="initiateCakeSequence"></app-input-field>
         <app-error-message [errorMessage]="errorMessage"></app-error-message>
         <app-action-button content="cake em!" [onClick]="finishEntering"></app-action-button>
     </div>    

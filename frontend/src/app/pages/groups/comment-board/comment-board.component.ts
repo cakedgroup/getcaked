@@ -10,6 +10,8 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class CommentBoardComponent implements OnInit {
 
+  private groupId: string;
+
   comments: Array<Comment>
 
   constructor(
@@ -18,13 +20,17 @@ export class CommentBoardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let groupId = this.route.snapshot.params['groupId'];
-    this.groupService.getComments(groupId)
-      .subscribe(
-        (comments: Comment[]) => {
-          this.comments = comments;
-        }
-      )
+    this.groupId = this.route.snapshot.params['groupId'];
+    this.updateComments();
+  }
+
+  updateComments = () => {
+    this.groupService.getComments(this.groupId)
+    .subscribe(
+      (comments: Comment[]) => {
+        this.comments = comments;
+      }
+    )
   }
 
 }

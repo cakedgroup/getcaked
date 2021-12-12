@@ -11,13 +11,15 @@ export class CommentThreadComponent implements OnInit {
 
   @Input() comment: Comment
   @Input() layer: number
+  @Input() onSend: Function
 
   isReplying: boolean = false;
   isLoggedIn: boolean = false;
   isExtended: boolean = true;
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+
   ) { }
 
   ngOnInit(): void {
@@ -33,5 +35,7 @@ export class CommentThreadComponent implements OnInit {
       this.isExtended = !this.isExtended;
     }
   }
+
+  
 
 }

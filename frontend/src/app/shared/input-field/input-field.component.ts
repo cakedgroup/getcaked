@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-input-field',
@@ -12,7 +13,7 @@ export class InputFieldComponent implements OnInit {
   @Input() descriptor: string;
   @Input() placeholder: string;
   @Input() hideInput: boolean = false;
-  @Input() onEnter: Function;
+  @Input() onSend: Function;
 
   @Input() isSendBox: boolean = false;
 

@@ -1,7 +1,7 @@
 <div class="inputfield-container">
     <div class="input" [ngClass]="{'focused' : isFocused}">
-      <input (focusin)="isFocused = true" (focusout)="isFocused = false" [(ngModel)]="userInput" (ngModelChange)="onChange($event)" (keyup.enter)="onEnter()" class="inputfield-input" [ngClass]="hideInput? 'inputfield-password': ''" [placeholder]="placeholder" type="{{ hideInput ? 'password' : 'text' }}"/>
-      <img src="assets/img/send.svg" *ngIf="isSendBox" class="send clickable" (click)="onEnter()">
+      <input (focusin)="isFocused = true" (focusout)="isFocused = false" [(ngModel)]="userInput" (ngModelChange)="onChange($event)" (keyup.enter)="onSend(); userInput = ''" class="inputfield-input" [ngClass]="hideInput? 'inputfield-password': ''" [placeholder]="placeholder" type="{{ hideInput ? 'password' : 'text' }}"/>
+      <img src="assets/img/send.svg" *ngIf="isSendBox" class="send clickable send-image" (click)="onSend(); userInput = ''">
     </div>
     <p class="inputfield-descriptor">{{descriptor}}</p>
 </div>

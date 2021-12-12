@@ -43,8 +43,13 @@
     outline-color: var(--highlight-color);
 }
 
-/*.input:selected {*/
-/*    outline-width: 3px;*/
-/*    outline-style: dashed;*/
-/*    outline-color: var(--highlight-color);*/
-/*}*/
+
+.send-image {
+  filter: invert(33%) sepia(81%) saturate(308%) hue-rotate(349deg) brightness(99%) contrast(90%);
+}
+
+@media (prefers-color-scheme: dark) {
+  .send-image {
+    filter: invert(99%) sepia(99%) saturate(430%) hue-rotate(295deg) brightness(107%) contrast(103%);
+  }
+}

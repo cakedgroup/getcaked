@@ -22,7 +22,7 @@ export class OverviewComponent implements OnInit {
   mostRecentCake: string;
   userCanCake: boolean = false;
 
-  showingOverview: boolean = false;
+  showingOverview: boolean = true;
 
   constructor(
     private route: ActivatedRoute,

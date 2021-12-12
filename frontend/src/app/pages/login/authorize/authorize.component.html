@@ -2,7 +2,7 @@
 <app-body-block>
     <div class="login-container">
         <app-input-field descriptor="username" placeholder="Username" (userInputChange)="usernameInput = $event"></app-input-field>
-        <app-input-field descriptor="password" placeholder="********" [hideInput]="true" (userInputChange)="passwordInput = $event" [onEnter]="login"></app-input-field>
+        <app-input-field descriptor="password" placeholder="********" [hideInput]="true" (userInputChange)="passwordInput = $event" [onSend]="login"></app-input-field>
         <app-error-message [errorMessage]="errorMessage"></app-error-message>
         <div class="login-button-container">
             <p class="login-register-link clickable" routerLink="/login/register">register</p>

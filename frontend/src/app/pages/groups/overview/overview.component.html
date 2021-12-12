@@ -17,7 +17,7 @@
     <p *ngIf="isMember() && !isAdmin()" class="group-overview-admin-link clickable" (click)="leave()">leave grooup</p>
 </app-body-block>
 
-<p (click)="switchView()" class="centered clickable">{{(showingOverview)?'show Comments':'show Cakes'}}</p>
+<p (click)="switchView()" class="centered clickable show-cakes">{{(showingOverview)?'show Comments':'show Cakes'}}</p>
 
 <div *ngIf="showingOverview">
   <app-chip *ngIf="!mostRecentCake">No successfull cakes so far</app-chip>

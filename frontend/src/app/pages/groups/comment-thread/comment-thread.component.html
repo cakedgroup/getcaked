@@ -1,16 +1,20 @@
 <div class="comment-thread" [ngClass]="{'indented': (layer > 0 && layer < 5)}">
-  <div class="comment">
+  <div class="comment clickable" (click)="toggleExtended()">
     <span class="author">{{comment.author}}:</span> <br>
     <div class="content-wrapper">
-      <span class="content clickable" (click)="toggleExtended()">{{comment.content}}</span>
-      <span class="actions clickable" *ngIf="isLoggedIn" (click)="toggleReplying()">reply</span>
+      <div class="content-text">
+        <span class="content">{{comment.content}}</span>
+      </div>
+      <span class="actions clickable" *ngIf="isLoggedIn" (click)="toggleReplying()">
+        <img src="assets/img/reply.svg" class="reply-icon"/>
+      </span>
     </div>
   </div>
-  <app-comment-input *ngIf="isReplying" [placeholder]="'Reply'" [parentId]="comment.id"></app-comment-input>
+  <app-comment-input [onSend]="onSend" *ngIf="isReplying" [placeholder]="'Reply'" [parentId]="comment.id"></app-comment-input>
   <div [ngClass]="{'replies': (layer < 4)}">
     <div [ngClass]="{'indented': (layer < 4), 'hidden': (isExtended || comment.replies.length === 0)}">...</div>
     <div [ngClass]="{'hidden': (!isExtended)}">
-      <app-comment-thread *ngFor="let reply of comment.replies" [comment]="reply" [layer]="layer + 1"></app-comment-thread>
+      <app-comment-thread [onSend]="onSend" *ngFor="let reply of comment.replies" [comment]="reply" [layer]="layer + 1"></app-comment-thread>
     </div>
   </div>
 </div>

@@ -12,6 +12,7 @@ export class CommentInputComponent implements OnInit {
 
   @Input() parentId: string | null = null
   @Input() placeholder: string = "Comment"
+  @Input() onSend: Function
 
   private groupId : string
 
@@ -29,10 +30,11 @@ export class CommentInputComponent implements OnInit {
     this.groupId = this.route.snapshot.params['groupId'];
   }
 
-  send() {
+  send = () => {
     this.groupService.postComment(this.groupId, this.content, this.parentId)
       .subscribe(() => {
-        window.location.reload();
+        this.onSend();
+        this.content = '';
       })
   }
 
