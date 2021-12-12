@@ -131,7 +131,6 @@ export class OverviewComponent implements OnInit {
           else {
             // check if user is in the group
             this.userCanCake = users.filter(user => user.userId === this.authService.getUser().userId).length > 0;
-            console.log(users.filter(user => user.userId === this.authService.getUser().userId));
           }
         },
         () => {

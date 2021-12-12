@@ -1,4 +1,4 @@
-<app-sub-header content="Let's play tic tac toe" isFirst="true"></app-sub-header>
+<app-sub-header content="Let's play tic tac toe" [isFirst]="true"></app-sub-header>
 <p>Since whomever you're caking is logged in, it looks like you get to play tic tac toe.</p>
 <p>To start, click on a field of your choice</p>
 <p class="game-end-message" *ngIf="gameState === 1">YOU WON!<br>proceeding to cake...</p>

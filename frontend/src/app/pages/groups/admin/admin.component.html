@@ -1,6 +1,6 @@
 <app-title-pane [title]="'Admin: ' + group.groupName"></app-title-pane>
 <app-body-block>
-    <app-sub-header content="Invite Token:" isFirst="true"></app-sub-header>
+    <app-sub-header content="Invite Token:" [isFirst]="true"></app-sub-header>
     <p class="invite-link">{{inviteLink}}</p>
 
     <app-sub-header content="Change Group Information:"></app-sub-header>

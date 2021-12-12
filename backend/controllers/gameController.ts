@@ -39,7 +39,6 @@ router.post('/', getUserAuth, (req: express.Request, res: express.Response) => {
 					moves: [],
 				};
 			
-				console.log(game);
 				res.status(201);
 				res.send({game: game, gameToken: generateGameToken(game), win: null});
 			} 
@@ -80,7 +79,6 @@ router.patch('/', getUserAuth, (req: express.Request, res: express.Response) => 
 			game.moves.push(userMove);
 			let gameState = 0;
 			if (game.moves.length >= 9) {
-				console.log(getWinner(game));
 				res.status(200);
 				switch (getWinner(game)) {
 				case true:

@@ -58,7 +58,6 @@ export function checkIfGameIdIsFree(gameId: string): Promise<boolean> {
 	});
 }
 
-let someConst = 0;
 
 /**
  * generate next game move
@@ -66,16 +65,8 @@ let someConst = 0;
 export function playNextMove(game: Game): Game {
 
 	const board = getBoardFromGame(game);
-	// const board = [
-	// 	[COMPUTER, PLAYER, EMPTY],
-	// 	[EMPTY, PLAYER, EMPTY],
-	// 	[PLAYER, COMPUTER, EMPTY]
-	// ];
-	someConst = 0;
-	
+
 	const tmp = getBestNextMove(board, false);
-	console.log(tmp);
-	console.log(someConst);
 
 	game.moves.push(tmp.move);
 	
@@ -83,7 +74,6 @@ export function playNextMove(game: Game): Game {
 }
 
 function getBestNextMove(board: number[][], playersMove: boolean): EvaluatedGameMove {
-	someConst += 1;
 	let bestMove: GameMove | null = null;
 	let bestEvalNum: number| null = null;
 
@@ -121,13 +111,7 @@ function getBestNextMove(board: number[][], playersMove: boolean): EvaluatedGame
 			}
 		}
 	}
-	// console.log('---------------');
-	// for (const row of board) {
-	// 	console.log(row);
-	// }
-	// console.log(playersMove);
-	// console.log('best', bestMove, bestEvalNum, '\n\n\n');
-	// console.log('---------------');
+	
 	if (bestEvalNum === null || bestMove === null) {
 		return {
 			move: {row: -1, column: -1},

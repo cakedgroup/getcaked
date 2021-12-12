@@ -1,12 +1,13 @@
 .searchchip-container {
     margin: 0;
+    display: flex;
 }
 
 .searchchip-icon {
     height: 1.2rem;
     vertical-align: middle;
     margin-right: 0.7rem;
-    transform: translateY(-2px);
+    transform: translateY(2px);
 }
 
 .searchchip-input {
@@ -16,7 +17,7 @@
     color: var(--tertiary-color);
     font-size: 1.2rem;
     min-width: 50%;
-    width: 90%;
+    width: 100%;
 }
 
 .searchchip-input:focus {
@@ -24,7 +25,5 @@
     border-top-style: hidden;
     border-left-style: hidden;
     border-right-style: hidden;
-    /* border-bottom-style: solid; */
-    /* border-color: var(--tertiary-color); */
     min-width: 0;
 }
