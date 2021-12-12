@@ -88,7 +88,7 @@ router.patch('/:cakeId', getUserAuth, (req: express.Request, res: express.Respon
 			getGroupAdmin(cakeEvent.groupId).then((adminId: string) => {
 				if (adminId === req.decoded?.userId) {
 					changeStatusOfCakeEvent(cakeDelivered, cakeId).then(() => {
-						res.status(200);
+						res.status(204);
 						res.send();
 					}).catch(() => {
 						res.status(500);
@@ -106,7 +106,7 @@ router.patch('/:cakeId', getUserAuth, (req: express.Request, res: express.Respon
 		});
 	}
 	else {
-		res.status(401);
+		res.status(403);
 		res.send();
 	}
 });
