@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Comment} from '../../../models/Comment.model';
+import {Comment} from '../../../models/comment.model';
+import {AuthService} from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-comment-thread',
@@ -11,9 +12,19 @@ export class CommentThreadComponent implements OnInit {
   @Input() comment: Comment
   @Input() layer: number
 
-  constructor() { }
+  isReplying: boolean = false;
+  isLoggedIn: boolean = false;
+
+  constructor(
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
+    this.isLoggedIn = (this.authService.getUser() !== null);
+  }
+
+  toggleReplying () {
+    this.isReplying = !this.isReplying;
   }
 
 }

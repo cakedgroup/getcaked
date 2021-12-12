@@ -69,4 +69,19 @@ function createTables(): void {
 			console.log('4. Run' + err);
 		}
 	});
+	db.run(`CREATE TABLE IF NOT EXISTS comments(
+    			commentId TEXT NOT NULL,
+    			content TEXT NOT NULL,
+    			groupId TEXT NOT NULL,
+    			userId TEXT NOT NULL,
+    			parentId TEXT,
+    			FOREIGN KEY (userId) REFERENCES users(userId),
+    			FOREIGN KEY (groupId) REFERENCES groups(groupId),
+    			FOREIGN KEY (parentId) REFERENCES comments(commentId),
+    			PRIMARY KEY (commentId)
+			);`, (err) => {
+		if (err) {
+			console.log('5. Run' + err);
+		}
+	});
 }

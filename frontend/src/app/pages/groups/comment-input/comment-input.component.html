@@ -1,0 +1,11 @@
+<div class="comment-input">
+  <div *ngIf="isLoggedIn">
+    <app-input-field [placeholder]="placeholder"(userInputChange)="content = $event"></app-input-field>
+    <span class="actions">
+      <p (click)="send()" class="clickable">send</p>
+    </span>
+  </div>
+  <div *ngIf="!isLoggedIn">
+    <p>You need to be logged in to send comments</p>
+  </div>
+</div>

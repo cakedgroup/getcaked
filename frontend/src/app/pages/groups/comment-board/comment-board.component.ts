@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {Comment} from '../../../models/Comment.model';
+import {Comment} from '../../../models/comment.model';
+import {GroupService} from '../../../core/services/group.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-comment-board',
@@ -10,46 +12,19 @@ export class CommentBoardComponent implements OnInit {
 
   comments: Array<Comment>
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    private groupService: GroupService
+  ) { }
 
   ngOnInit(): void {
-    this.comments = [
-      {
-        content: "comment1",
-        replies: [
-          {
-            content: "comment1.1",
-            replies: [
-              {
-                content: "comment1.1.1",
-                replies: [
-                  {
-                    content: "comment1.1.1.1",
-                    replies: [
-                      {
-                        content: "comment1.1.1.1.1",
-                        replies: [
-                          {
-                            content: "comment1.1.1.1.1.1",
-                            replies: [
-
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        content: "comment2",
-        replies:[]
-      }
-    ]
+    let groupId = this.route.snapshot.params['groupId'];
+    this.groupService.getComments(groupId)
+      .subscribe(
+        (comments: Comment[]) => {
+          this.comments = comments;
+        }
+      )
   }
 
 }

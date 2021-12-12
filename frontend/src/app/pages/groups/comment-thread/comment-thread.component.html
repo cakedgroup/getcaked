@@ -1,7 +1,12 @@
 <div class="comment-thread" [ngClass]="{'indented': (layer > 0 && layer < 5)}">
   <div class="comment">
-    <span>{{comment.content}}</span>
+    <span class="author">{{comment.author}}:</span> <br>
+    <span class="content">{{comment.content}}</span>
+    <span class="actions">
+      <p *ngIf="isLoggedIn" (click)="toggleReplying()" class="clickable">reply</p>
+    </span>
   </div>
+  <app-comment-input *ngIf="isReplying" [placeholder]="'Reply'" [parentId]="comment.id"></app-comment-input>
   <div class="replies">
     <app-comment-thread *ngFor="let reply of comment.replies" [comment]="reply" [layer]="layer + 1"></app-comment-thread>
   </div>
