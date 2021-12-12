@@ -1,8 +1,8 @@
 <div class="comment-thread" [ngClass]="{'indented': (layer > 0 && layer < 5)}">
-  <div class="comment clickable" (click)="toggleExtended()">
-    <span class="author">{{comment.author}}:</span> <br>
+  <div class="comment">
+    <span class="author clickable" (click)="toggleExtended()">{{comment.author}}:</span>
     <div class="content-wrapper">
-      <div class="content-text">
+      <div class="content-text clickable" (click)="toggleExtended()">
         <span class="content">{{comment.content}}</span>
       </div>
       <span class="actions clickable" *ngIf="isLoggedIn" (click)="toggleReplying()">

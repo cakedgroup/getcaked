@@ -12,7 +12,8 @@
 }
 
 .content-text {
-  word-break: break-all;
+  word-break: break-word;
+  width: 100%;
 }
 
 .replies {
@@ -27,6 +28,7 @@
 .author {
   color: var(--primary-color);
   font-weight: 700;
+  display: block;
 }
 
 .reply-icon {
@@ -36,7 +38,9 @@
 .comment {
   margin: 0.5em 0 0;
   padding: 0.5rem;
-  
+
+  display: block;
+
   border-style: solid;
   border-color: var(--primary-background-color);
   border-radius: 0.5rem;
