@@ -12,6 +12,7 @@ export class RegisterComponent implements OnInit {
 
   usernameInput: string;
   passwordInput: string;
+  confirmPasswordInput: string;
 
   errorMessage: string = '';
   registering: boolean = false;
@@ -23,8 +24,11 @@ export class RegisterComponent implements OnInit {
   }
 
   register = () => {
-    if (!this.usernameInput || !this.passwordInput) {
+    if (!this.usernameInput || !this.passwordInput || !this.confirmPasswordInput) {
       this.errorMessage = 'All fields must be provided';
+    }
+    else if (this.passwordInput !== this.confirmPasswordInput) {
+      this.errorMessage = 'Passwords must match';
     }
     else if (!this.registering){
       this.errorMessage = ''
@@ -34,7 +38,7 @@ export class RegisterComponent implements OnInit {
       .subscribe(
         () => {
           this.router.navigate(['/']);
-        }, 
+        },
         (err: HttpErrorResponse) => {
           if (err.status === 409)
             this.errorMessage = 'Username already exists, please pick another one'
