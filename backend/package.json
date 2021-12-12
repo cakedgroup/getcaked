@@ -8,8 +8,8 @@
     "dev": "nodemon"
   },
   "keywords": [],
-  "author": "Lukas Paffen",
-  "license": "ISC",
+  "author": "Jannik Springer, Amos Gross",
+  "license": "AGPL",
   "dependencies": {
     "@types/express-jwt": "^6.0.2",
     "@types/jsonwebtoken": "^8.5.6",

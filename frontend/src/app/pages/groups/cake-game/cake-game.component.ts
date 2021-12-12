@@ -44,7 +44,6 @@ export class CakeGameComponent implements OnInit {
         (response: GameResponse) => {
           this.redrawBoard(response.game);
           this.gameToken = response.gameToken;
-          console.log(response.won);
           if (response.won) {
             this.gameTokenChanges.emit(this.gameToken);
             this.gameStatusChanges.emit(true);

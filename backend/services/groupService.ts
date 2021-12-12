@@ -429,8 +429,6 @@ export function getComments(groupId: string): Promise<Comment[]> {
 						}
 					}
 					catch {
-						console.log (`something went wrong at building thread-structure 
-						while accessing parentId: ${parentId} or id: ${id}`);
 						reject(500);
 					}
 				}
