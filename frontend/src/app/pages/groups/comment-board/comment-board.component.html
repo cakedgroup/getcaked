@@ -1,0 +1,9 @@
+<app-body-block>
+  <h2>Comments</h2>
+  <br/>
+  <app-comment-input [onSend]="updateComments"></app-comment-input>
+  <div class="comment-display">
+    <app-comment-thread [onSend]="updateComments" *ngFor="let comment of comments" [comment]="comment" [layer]="0"></app-comment-thread>
+  </div>
+</app-body-block>
+

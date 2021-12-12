@@ -1,12 +1,26 @@
-.inputfield-input {
+.input {
     width: 100%;
-    box-sizing: border-box; 
+    box-sizing: border-box;
     border-style: hidden;
     background: var(--primary-background-color);
     color: var(--secondary-color);
     padding: 0.6rem;
     font-size: 1.1rem;
     border-radius: 0.8rem;
+
+    display: flex;
+}
+
+.send {
+  margin-left: 0.5rem;
+}
+
+.inputfield-input {
+  width: 100%;
+  border-style: hidden;
+  font-size: 1.1rem;
+  background: var(--primary-background-color);
+  color: var(--secondary-color);
 }
 
 .inputfield-password {
@@ -20,13 +34,22 @@
 }
 
 .inputfield-input:focus {
+  outline-style: none;
+}
+
+.focused {
     outline-width: 3px;
     outline-style: dashed;
     outline-color: var(--highlight-color);
 }
 
-.inputfield-input:selected {
-    outline-width: 3px;
-    outline-style: dashed;
-    outline-color: var(--highlight-color);
+
+.send-image {
+  filter: invert(33%) sepia(81%) saturate(308%) hue-rotate(349deg) brightness(99%) contrast(90%);
+}
+
+@media (prefers-color-scheme: dark) {
+  .send-image {
+    filter: invert(99%) sepia(99%) saturate(430%) hue-rotate(295deg) brightness(107%) contrast(103%);
+  }
 }

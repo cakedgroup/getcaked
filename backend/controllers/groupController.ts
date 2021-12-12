@@ -10,15 +10,16 @@ import {
 	deleteGroup,
 	generateInviteToken,
 	getAllGroups,
-	getCakeEventsOfGroup,
+	getCakeEventsOfGroup, getComments,
 	getGroupAdmin,
 	getSingleGroup,
 	getUsersOfGroup,
-	inviteTokenIsValid,
+	inviteTokenIsValid, postComment,
 	removeUserFromGroup
 } from '../services/groupService';
 import {getUserAuth} from '../util/authMiddleware';
 import { getMissingOrInvalidParameters } from '../util/general';
+import {Comment} from '../models/Comment';
 
 const router = express.Router();
 
@@ -379,6 +380,72 @@ router.get('/:groupId/cakeEvents', getUserAuth, async (req: express.Request, res
 	} 
 	catch (error) {
 		res.status(500);
+		res.send();
+	}
+});
+
+router.get('/:groupId/comments', getUserAuth, async (req: express.Request, res: express.Response) => {
+	const groupId: string = req.params.groupId;
+
+	if (groupId && await checkIfUserHasAccessToGroup(groupId, req.decoded?.userId)) {
+		getComments(groupId).then((comments: Comment[]) => {
+			res.status(200);
+			res.json(comments);
+		}).catch((err) => {
+			if (typeof (err) === 'number') {
+				res.status(err);
+				res.send();
+			}
+			else {
+				console.log(err);
+				res.status(500);
+				res.send();
+			}
+		});
+	}
+});
+
+router.post('/:groupId/comments', getUserAuth, async (req: express.Request, res: express.Response) => {
+	const groupId: string = req.params.groupId;
+	const userId = req.body.userId;
+	const content = req.body.content;
+	let parentId = req.body.parentId;
+
+	//explicitly use null, since parentId can be given as null, empty string or not given (undefined)
+	if (!parentId) parentId = null;
+
+	if (groupId && userId && content) {
+		try {
+			if (req.decoded && req.decoded.userId && await checkIfUserHasAccessToGroup(groupId, req.decoded.userId)) {
+
+				postComment(groupId, userId, content, parentId).then(() => {
+					res.status(201);
+					res.send();
+				}).catch((err) => {
+					if (typeof(err) === 'number') {
+						res.status(err);
+						res.send();
+					}
+					else {
+						console.log(err);
+						res.status(500);
+						res.send();
+					}
+				});
+			}
+			else {
+				// 404 because no access to a group and not found are handled the same
+				res.status(404);
+				res.send();
+			}
+		}
+		catch (error) {
+			res.status(500);
+			res.send();
+		}
+	}
+	else {
+		res.status(400);
 		res.send();
 	}
 });

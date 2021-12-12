@@ -1,12 +1,13 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import {Observable, throwError} from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Group, GroupType } from 'src/app/models/group.model';
 import { User } from 'src/app/models/user.model';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 import {CakeEvent} from '../../models/cake.model';
+import {Comment} from '../../models/comment.model';
 
 @Injectable({
   providedIn: 'root'
@@ -130,6 +131,27 @@ export class GroupService {
       return this.http.get<CakeEvent[]>(`${this.basePath}/groups/${groupId}/cakeEvents`, {headers: this.authService.getAuthHeader()});
     else
       return this.http.get<CakeEvent[]>(`${this.basePath}/groups/${groupId}/cakeEvents`);
+  }
+
+  getComments(groupId: string): Observable<Comment[]> {
+    if (this.authService.getUser() !== null)
+      return this.http.get<Comment[]>(`${this.basePath}/groups/${groupId}/comments`, {headers: this.authService.getAuthHeader()});
+    else
+      return this.http.get<Comment[]>(`${this.basePath}/groups/${groupId}/comments`);
+  }
+
+  postComment(groupId:string, content: string, parentId: string | null): Observable<void> {
+    const user = this.authService.getUser();
+    if (user !== null)
+      return this.http.post<void>(`${this.basePath}/groups/${groupId}/comments`,
+        {
+          userId: user.userId,
+          content: content,
+          parentId: parentId
+        },
+        {headers: this.authService.getAuthHeader()});
+    else
+      return throwError(403);
   }
 }
 

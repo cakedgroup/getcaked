@@ -6,7 +6,7 @@
         <br/>
         
         <app-input-field descriptor="username" placeholder="Username" (userInputChange)="usernameInput = $event"></app-input-field>
-        <app-input-field descriptor="password" placeholder="********" [hideInput]="true" (userInputChange)="passwordInput = $event" [onEnter]="register"></app-input-field>
+        <app-input-field descriptor="password" placeholder="********" [hideInput]="true" (userInputChange)="passwordInput = $event" [onSend]="register"></app-input-field>
         <app-error-message [errorMessage]="errorMessage"></app-error-message>
         <app-action-button content="Register" [onClick]="register"></app-action-button>
     </div>

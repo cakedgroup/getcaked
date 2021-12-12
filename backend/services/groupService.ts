@@ -4,6 +4,7 @@ import {Group, GroupType} from '../models/Group';
 import { User } from '../models/User';
 import jwt from 'jsonwebtoken';
 import { CakeEvent } from '../models/Cake';
+import {Comment} from '../models/Comment';
 
 /**
  * function to fetch all Groups and their associated data from the DB
@@ -391,5 +392,70 @@ export function checkIfUserIsMemberOfGroup(groupId: string, userId: string | und
 			}
 		}
 		);
+	});
+}
+
+export function getComments(groupId: string): Promise<Comment[]> {
+	return new Promise<Comment[]>((resolve, reject) => {
+		// eslint-disable-next-line max-len
+		db.all('SELECT commentId, content, parentId, username FROM comments c JOIN users u ON c.userId = u.userId WHERE groupId = ?', [groupId], (err, rows) => {
+			if (err) {
+				reject(err);
+			}
+			else {
+				// build comment-array
+				const comments: {[commentId: string]: Comment} = {};
+				for (const row of rows) {
+					const id = row.commentId;
+					comments[id] = {
+						id: id,
+						content: row.content,
+						author: row.username,
+						replies: []
+					};
+				}
+
+				const rootComments: Comment[] = [];
+				// build thread-structure independent of order of returned comments
+				for (const row of rows) {
+					const id = row.commentId;
+					const parentId = row.parentId;
+					try {
+						if (parentId === null) {
+							rootComments.push(comments[id]);
+						}
+						else {
+							comments[parentId].replies.push(comments[id]);
+						}
+					}
+					catch {
+						console.log (`something went wrong at building thread-structure 
+						while accessing parentId: ${parentId} or id: ${id}`);
+						reject(500);
+					}
+				}
+
+				resolve(rootComments);
+			}
+		});
+	});
+}
+
+export function postComment(groupId: string, userId: string, content: string, parentId: string | null): Promise<void> {
+	return new Promise<void>((resolve, reject) => {
+		const commentId = uuidv4();
+
+		db.run('INSERT INTO comments (commentId, content, groupId, userId, parentId) VALUES (?, ?, ?, ?, ?)',
+			[commentId, content, groupId, userId, parentId], function (err) {
+				if (err) {
+					reject (err);
+				}
+				else if (this.changes === 0) {
+					reject (400);
+				}
+				else {
+					resolve();
+				}
+			});
 	});
 }

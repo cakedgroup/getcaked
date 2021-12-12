@@ -1,0 +1,8 @@
+<div class="comment-input">
+  <div *ngIf="isLoggedIn" class="comment-container">
+    <app-input-field [placeholder]="placeholder" (userInputChange)="content = $event" [onSend]="send" [isSendBox]="true"></app-input-field>
+  </div>
+  <div *ngIf="!isLoggedIn">
+    <p>You need to be logged in to send comments</p>
+  </div>
+</div>

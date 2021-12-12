@@ -14,7 +14,6 @@
 
 .cake-overview-header {
     margin: 0 auto;
-    /* margin-top: 2rem; */
     max-width: 80vw;
 }
 
@@ -33,4 +32,8 @@
 
 .centered {
     text-align: center;
+}
+
+.show-cakes {
+    font-family: 'Quicksand', sans-serif;
 }
