@@ -403,6 +403,11 @@ router.get('/:groupId/comments', getUserAuth, async (req: express.Request, res: 
 			}
 		});
 	}
+	else {
+		// 404 because no access to a group and not found are handled the same
+		res.status(404);
+		res.send();
+	}
 });
 
 router.post('/:groupId/comments', getUserAuth, async (req: express.Request, res: express.Response) => {

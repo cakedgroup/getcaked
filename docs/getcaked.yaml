@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: GetCaked
   description: Website project used for caking your ignorant coworkers/friends/classmates
-  version: 0.0.7
+  version: 1.0.0
   license:
     name: AGPL
     url: https://github.com/cakedgroup/getcaked/blob/master/LICENSE
@@ -11,12 +11,16 @@ servers:
 tags:
   - name: groups
     description: Group based Requests
+  - name: comments
+    description: Requests for user discourse
   - name: users
     description: User based Requests
-  - name: cakeevents
+  - name: cakeEvents
     description: CakeEvent based Requests
-  - name: debugging
-    description: Requests used for debugging the code
+  - name: games
+    description: Game play related requests
+security:
+  - jwtAuth: []
 paths:
   /groups:
     get:
@@ -26,12 +30,12 @@ paths:
       description: Get list of groups (that match the search query)
       parameters:
         - in: query
-          name: search_query
+          name: searchQuery
           required: false
           description: Search Query to find Groups by name (if empty returns all groups)
           schema:
             type: string
-          example: 'TINF'
+          example: 'testgroup'
       responses:
         '200':
           description: List of all groups found
@@ -40,35 +44,24 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                      format: uuid
-                      example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-                    name:
-                      type: string
-                      example: "TINF20D"
-                    type:
-                      type: string
-                      example: "public"
+                  $ref: '#/components/schemas/Group'
     post:
       tags:
         - groups
       summary: Creates a new Group
-      description: |
-        Creates a new Group and saves it in the database.
-        Requesting user becomes the group's admin
+      description: Creates a new Group and saves it in the database. Requesting user becomes the group's admin
+      security:
+        - jwtAuth: []
       requestBody:
         content:
           application/json:
             schema:
               type: object
               required:
-                - name
+                - groupName
                 - type
               properties:
-                name:
+                groupName:
                   type: string
                   example: 'TINF20D'
                 type:
@@ -80,12 +73,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+                $ref: '#/components/schemas/Group'
         '400':
           description: Bad request
           content:
@@ -109,6 +97,77 @@ paths:
           description: Groupname already exists - didn't create group
 
   /groups/{groupid}:
+    patch:
+      tags:
+        - groups
+      summary: Updates Data of a group
+      description: Updates a Group
+      security:
+        - jwtAuth: []
+      parameters:
+        - in: path
+          name: groupid
+          required: true
+          description: UUID of group
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - groupName
+                - type
+              properties:
+                groupName:
+                  type: string
+                  example: 'TINF20D'
+                type:
+                  type: string
+                  example: 'public'
+      responses:
+        '204':
+          description: all changes made successfully
+        '404':
+          description: group does not exist
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invalid-parameters:
+                    type: array
+                    items:
+                      type: string
+                      example: type
+        '403':
+          description: Action not permitted - requesting user is not the group's admin
+    delete:
+      tags:
+        - groups
+      summary: deletes group
+      description: Deletes a single group specified by the groupid
+      security:
+        - jwtAuth: []
+      parameters:
+        - in: path
+          name: groupid
+          required: true
+          description: UUID of group
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: group has been successfully deleted
+        '403':
+          description: Action not permitted - requesting user is not the group's admin
+        '404':
+          description: group does not exist
     get:
       tags:
         - groups
@@ -131,13 +190,15 @@ paths:
                 $ref: '#/components/schemas/Group'
         '404':
           description: Group does not exist with that id
-        '403':
-          description: Action not permitted - requesting user is part of the group
-    patch:
+
+  /groups/{groupid}/users:
+    post:
       tags:
         - groups
-      summary: Updates Data of a group
-      description: Updates a Group
+      summary: add user to specific group
+      description: Add user to specific group
+      security:
+        - jwtAuth: []
       parameters:
         - in: path
           name: groupid
@@ -152,52 +213,25 @@ paths:
             schema:
               type: object
               required:
-                - name
-                - type
+                - userId
               properties:
-                name:
+                userId:
                   type: string
-                  example: 'TINF20D'
-                type:
+                  format: uuid
+                invite-token:
                   type: string
-                  example: 'public'
+                  example: 'super-secret-invite-token'
       responses:
-        '204':
-          description: all changes made successfully
+        '201':
+          description: User added to group
         '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  invalid-parameters:
-                    type: array
-                    items:
-                      type: string
-                      example: type
+          description: Invalid Request, group unchanged
         '403':
-          description: Action not permitted - requesting user is not the group's admin
-    delete:
-      tags:
-        - groups
-      summary: deletes group
-      description: Deletes a single group specified by the groupid
-      parameters:
-        - in: path
-          name: groupid
-          required: true
-          description: UUID of group
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '204':
-          description: group has been successfully deleted
-        '403':
-          description: Action not permitted - requesting user is not the group's admin
-
-  /groups/{groupid}/users/:
+          description: Action not permitted - missing invite token
+        '409':
+          description: User is already in group
+        '404':
+          description: group does not exist
     get:
       tags:
         - groups
@@ -220,44 +254,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-        '204':
-          description: No users for group
+        '403':
+          description: Action not permitted - requesting user is not the group's admin
         '404':
-          description: Group object not found
-        '403':
-          description: Action not permitted - requesting user is part of the group
-    post:
-      tags:
-        - groups
-      summary: add user to specific group
-      description: Add user to specific group
-      parameters:
-        - in: path
-          name: groupid
-          required: true
-          description: UUID of group
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                userid:
-                  type: string
-                  format: uuid
-                invite-token:
-                  type: string
-                  example: 'super-secret-invite-token'
-      responses:
-        '200':
-          description: User added to group
-        '400':
-          description: Invalid Request, group unchanged
-        '403':
-          description: Action not permitted - missing invite token
+          description: Group not found
 
   /groups/{groupid}/users/{userid}:
     delete:
@@ -265,6 +265,8 @@ paths:
         - groups
       summary: remove user from group
       description: Remove user from specific groups
+      security:
+        - jwtAuth: []
       parameters:
         - in: path
           name: groupid
@@ -281,7 +283,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        '204':
           description: User removed from group
         '400':
           description: Invalid Request, group unchanged
@@ -315,6 +317,87 @@ paths:
                     example: 'super-secret-invite-token'
         '403':
           description: Action not permitted - requesting user is not the group's admin
+        '400':
+          description: Invalid or missing groupId
+
+  /groups/{groupid}/cakeEvents:
+    get:
+      tags:
+        - cakeEvents
+      summary: get group's cakeevents
+      description: get a list of all cakeevents associated with the group identified by groupid
+      parameters:
+        - in: path
+          name: groupid
+          required: true
+          description: UUID of group
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: list of all cakeevents associated with the group
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CakeEvent'
+        '404':
+          description: group does not exist
+
+  /groups/{groupid}/comments:
+    post:
+      tags:
+        - comments
+      summary: add a comment under a specific group
+      description: Add a user's comment to the comments section of a group
+      security:
+        - jwtAuth: []
+      parameters:
+        - in: path
+          name: groupid
+          required: true
+          description: UUID of group
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        '201':
+          description: Comment created
+        '400':
+          description: Invalid Request, comment was not created
+        '404':
+          description: group does not exist
+    get:
+      tags:
+        - comments
+      summary: get all comments of a specific group
+      description: Get comments of a specific group by UUID
+      parameters:
+        - in: path
+          name: groupid
+          required: true
+          description: UUID of group
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: array of all comments for group
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        '404':
+          description: Group not found
 
   /users:
     post:
@@ -373,7 +456,7 @@ paths:
         - in: path
           name: userid
           required: true
-          description: UUID of group
+          description: UUID of user
           schema:
             type: string
             format: uuid
@@ -385,7 +468,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         '404':
-          description: Group does not exist with that id
+          description: User does not exist with that id
     patch:
       tags:
         - users
@@ -395,7 +478,7 @@ paths:
         - in: path
           name: userid
           required: true
-          description: UUID of group
+          description: UUID of user
           schema:
             type: string
             format: uuid
@@ -449,25 +532,54 @@ paths:
         '403':
           description: Action not permitted - requesting user is not the user to be deleted
 
-  /auth:
+  /users/{userid}/cakeEvents:
     get:
+      tags:
+        - cakeEvents
+      summary: get all cakeEvents of a user
+      description: get's all cakeEvents in which the requesting user is the one that has been caked
+      parameters:
+        - in: path
+          name: userid
+          required: true
+          description: UUID of user
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: list of all cakeevents associated with the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CakeEvent'
+        '403':
+          description: a user can only get their own cakeEvents
+
+
+  /auth:
+    post:
       tags:
         - users
       summary: get auth-token
       description: Get JWT token for new user session when logging in
-      parameters:
-        - in: query
-          name: username
-          required: true
-          description: Name of the Useraccount to login to
-          schema:
-            type: string
-        - in: query
-          name: password
-          required: true
-          description: User's password in plain text
-          schema:
-            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: 'Amos'
+                password:
+                  type: string
+                  format: password
       responses:
         '200':
           description: auth-token for current user session
@@ -498,26 +610,94 @@ paths:
   /cakeevents:
     post:
       tags:
-        - groups
-        - cakeevents
-      summary: add a new cakeevent
-      description: creates a new cakeevent associated with the group identified by groupid
+        - cakeEvents
+      summary: add a new cakeEvent
+      description: creates a new cakeEvent associated with the group identified by groupid
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CakeEvent'
+              $ref: '#/components/schemas/Game'
       responses:
         '201':
           description: created a new cakeevent
+        '400':
+          description: game has not been completed
+        '403':
+          description: not enough time has passed or authentification failed
+        '409':
+          description: game has already been completed
+
+  /cakeevents/{cakeeventid}:
+    patch:
+      tags:
+        - cakeEvents
+      summary: get a specific cakeevent
+      description: Get a cakeevent based on uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cake-delivered:
+                  type: boolean
+                  example: 'false'
+      parameters:
+        - in: path
+          name: cakeeventid
+          required: true
+          description: UUID of cakeevent
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: cakeevent object updated
+        '400':
+          description: Missing cakeeventid or malformed cakeEvent object
+        '403':
+          description: Action not permitted - requesting user is not the admin of the group this cakeEvent is assigned to
+        '404':
+          description: No Cakeevents found under that uuid
+
+  /games:
+    post:
+      tags:
+        - games
+      summary: initialize game
+      description: creates a new game, in order to cake a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cakeVictitimName:
+                  type: string
+                  example: "bobby the bro"
+                cakeVictitimId:
+                  type: string
+                  format: uuid
+                  example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                groupId:
+                  type: string
+                  format: uuid
+                  example: d290f1ee-6c54-4b01-90e6-d701748f0851
+
+      responses:
+        '201':
+          description: created a new game
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  id:
+                  gameToken:
                     type: string
-                    format: uuid
+                  game:
+                    $ref: '#/components/schemas/Game'
+
         '400':
           description: Bad request
           content:
@@ -535,151 +715,80 @@ paths:
                     items:
                       type: string
                       example: timestamp
-
-  /cakeevents/{cakeeventid}:
+        '403':
+          description: User credentials incorrect
     patch:
       tags:
-        - groups
-        - cakeevents
-      summary: get a specific cakeevent
-      description: Get a cakeevent based on uuid
+        - games
+      summary: play a move
+      description: adds a game move to the existing game and signs the change off in the gameToken
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                approved:
-                  type: boolean
-                  example: true
-                cake-delivered:
-                  type: boolean
-                  example: 'false'
-      parameters:
-        - in: path
-          name: cakeeventid
-          required: true
-          description: UUID of cakeevent
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '204':
-          description: cakeevent object updated
-        '400':
-          description: Missing cakeeventid
-        '404':
-          description: No Cakeevents found under that uuid
-    delete:
-      tags:
-        - groups
-        - cakeevents
-      summary: delete a specific cakeevent
-      description: Remove a cakeevent based on uuid
-      parameters:
-        - in: path
-          name: cakeeventid
-          required: true
-          description: UUID of cakeevent
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '204':
-          description: cakeevent object deleted
-        '400':
-          description: Missing cakeeventid
-        '404':
-          description: No Cakeevents found under that uuid
-    get:
-      tags:
-        - groups
-        - cakeevents
-      summary: get a specific cakeevent
-      description: Get a cakeevent based on uuid
-      parameters:
-        - in: path
-          name: cakeeventid
-          required: true
-          description: UUID of cakeevent
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: cakeevent object related to the given uuid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CakeEvent'
-        '400':
-          description: Missing cakeeventid
-        '404':
-          description: No Cakeevents found under that uuid
+                gameToken:
+                  type: string
+                  example: "secret-stuff"
+                game:
+                  $ref: '#/components/schemas/Game'
+                gameMove:
+                  $ref: '#/components/schemas/GameMove'
 
-  /cakeevents/bygroup/{groupid}:
-    get:
-      tags:
-        - groups
-        - cakeevents
-      summary: get group's cakeevents
-      description: get a list of all cakeevents associated with the group identified by groupid
-      parameters:
-        - in: path
-          name: groupid
-          required: true
-          description: UUID of group
-          schema:
-            type: string
-            format: uuid
       responses:
         '200':
-          description: list of all cakeevents associated with the group
+          description: updated game
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CakeEvent'
-        '400':
-          description: missing groupid
+                type: object
+                properties:
+                  gameToken:
+                    type: string
+                  game:
+                    $ref: '#/components/schemas/Game'
+                  gameState:
+                    type: number
+                    example: 1
 
-  /cakeevents/byuser/{userid}:
-    get:
-      tags:
-        - users
-        - cakeevents
-      summary: get user's cakeevents
-      description: get a list of all cakeevents associated with the user identified by userid
-      parameters:
-        - in: path
-          name: userid
-          required: true
-          description: UUID of user
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: list of all cakeevents associated with the user
+        '400':
+          description: Bad request
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CakeEvent'
-        '400':
-          description: missing userid
+                type: object
+                properties:
+                  missing-parameters:
+                    type: array
+                    items:
+                      type: string
+                      example: gameToken
+                  invalid-parameters:
+                    type: array
+                    items:
+                      type: string
+                      example: game
+        '403':
+          description: User credentials incorrect
 
 components:
+  responses:
+    ForbiddenError:
+      description: Action not permitted - requesting user is not logged in
+  securitySchemes:
+    jwtAuth:
+      type: apiKey
+      in: header
+      name: Authorization
   schemas:
     Group:
       type: object
       required:
-        - id
-        - name
+        - groupId
+        - groupName
         - type
-        - admin
+        - adminId
       properties:
         id:
           type: string
@@ -698,7 +807,7 @@ components:
     User:
       type: object
       required:
-        - id
+        - userId
         - username
       properties:
         id:
@@ -711,7 +820,7 @@ components:
     CakeEvent:
       type: object
       required:
-        - id
+        - cakeId
         - groupid
         - timestamp
       properties:
@@ -725,15 +834,68 @@ components:
           type: string
           format: date-time
           example: '1969-04-20T17:32:28Z'
-        name:
+        username:
           type: string
           example: 'j-to-g-to-the-jannik as guest'
-        userid:
+        cakeVictimId:
           type: string
           format: uuid
-        approved:
-          type: boolean
-          example: true
-        cake-delivered:
+        cakeDelivered:
           type: boolean
           example: 'false'
+    Comment:
+      type: object
+      required:
+        - content
+        - author
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        content:
+          type: string
+          example: 'Some cool comment'
+        author:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        replies:
+          $ref: '#/components/schemas/Comment'
+    Game:
+      type: object
+      required:
+        - gameId
+        - startTime
+        - groupId
+        - moves
+      properties:
+        gameId:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        startTime:
+          type: string
+          format: date-time
+          example: '1969-04-20T17:32:28Z'
+        userId:
+          type: string
+          format: uuid
+        groupId:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        moves:
+          type: array
+          items:
+            $ref: '#/components/schemas/GameMove'
+    GameMove:
+      type: object
+      required:
+        - row
+        - column
+      properties:
+        row:
+          type: number
+        column:
+          type: number
